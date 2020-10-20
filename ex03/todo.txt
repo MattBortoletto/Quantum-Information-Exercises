@@ -1,0 +1,16 @@
+TODO
+
+[ ] Sistemare il fatto che se metto 1 come dimensione ma rispetto il fatto che ncols1 = nrows2 allora non si entra nel while 
+    In realtà non è un problema grande avere matrici 1xN, ma allora il controllo dentro dovrebbe avere minore, non minore o uguale.
+
+[ ] Vedere se si possono mettere più controlli usando il debugger. Error handling, pre/post conditions.
+
+[ ] Scrivere la documentazione.
+
+
+DUBBI 
+
+[ ] La 'variable to be printed' deve essere tipo 'nrwos1' o il suo valore? Oppure con variables intende altro che potrebbe essere 
+    utile stampare in generale?
+
+

@@ -1,0 +1,23 @@
+NO OPTIMIZATION FLAGS:
+Standard loop time  = 10.050432000000001
+Optimized loop time = 7.5916670000000011
+Matmul time         = 0.21150099999999838
+
+-O1 FLAG:
+Standard loop time  = 7.7155469999999999
+Optimized loop time = 4.9373729999999991
+Matmul time         = 0.20623099999999894
+
+-O2 FLAG:
+Standard loop time  = 3.3809030000000000
+Optimized loop time = 1.3644829999999999
+Matmul time         = 0.21433800000000058
+
+-03 FLAG:
+Standard loop time  = 2.5582159999999998
+Optimized loop time = 1.2250850000000000
+Matmul time         = 0.20309400000000011
+
+
+CONCLUSIONS:
+Matmul is always faster and its speed does not depend on the optimisation flag. Regarding the loops, we see that the optimised loop is faster and for both loops speed(O1) < speed(O2) < speed(O3). 
