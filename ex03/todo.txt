@@ -4,6 +4,7 @@ TODO
     In realtà non è un problema grande avere matrici 1xN, ma allora il controllo dentro dovrebbe avere minore, non minore o uguale.
 
 [ ] Vedere se si possono mettere più controlli usando il debugger. Error handling, pre/post conditions.
+    Per l'error handling vedi qui: https://stackoverflow.com/questions/48212806/does-exception-handling-exist-in-fortran
 
 [X] Scrivere la documentazione.
 

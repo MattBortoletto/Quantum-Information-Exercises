@@ -1,0 +1,17 @@
+! ask to enter the dimension until nrows and ncols are greater than 1
+    do while (nrows2 .ne. ncols1) 
+        call checkpoint(debug = debug_on, message = "The number of columns in the first matrix is not equal &
+                                                    &to the number of rows in the second matrix.", end = .false.)
+        print *, "Please enter the dimension of the first matrix [nrows, ncols]:"
+        read (*, *) nrows1, ncols1 
+        print *, "Please enter the dimension of the second matrix [nrows, ncols]:"
+        read (*, *) nrows2, ncols2 
+        do while ((nrows1 .le. 1) .or. (ncols1 .le. 1) .or. (nrows2 .le. 1) .or. (ncols2 .le. 1))
+            call checkpoint(debug = debug_on, message = "Non valid dimension! The number of rows and columns must &
+                                                        &be greater than 1.", end = .false.)
+            print *, "Please enter the dimension of the first matrix [nrows, ncols]:"
+            read (*, *) nrows1, ncols1 
+            print *, "Please enter the dimension of the second matrix [nrows, ncols]:"
+            read (*, *) nrows2, ncols2 
+        end do 
+    end do
