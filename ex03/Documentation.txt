@@ -1,0 +1,24 @@
+MATRIX MULTIPLICATION PROGRAM -- DOCUMENTATION 
+
+This program performs the matrix multiplication loop in two different orders and in addition it uses the intrinsic Fortran function
+'matmul'. 
+
+There are two modules:
+- debugger. It contains a subroutine that can be used as checkpoint for debugging. It includes a control on a logical variable
+  'debug' and it includes an optional message to be printed. Furthermore, it contains a variable 'end' which can stop the program 
+  in case of need. 
+- mult. It contains two functions:
+  - mult1. It performs the matrix multiplication using a loop which is not optimized.
+  - mult2. It performs the matrix multiplication usign a loop which is optimized according to the way Fortran stores matrices in 
+    memory, that is as columns. 
+
+The main program ('MyMatrixMultiplication') accepts as input the dimensions of the two matrices to multiply. Particular attention is
+paid to this step, in fact:
+- the dimensions must be greater or equal to 1 (allowing also vector-matrix multiplications);
+- the number of columns of the first matrix must be equal to the number of rows of the second one.
+If these conditions are not satisfied, the program will continue to ask to enter the dimension of the matrices. 
+
+The matrices will be filled with random integer numbers between 0 and 10.
+
+The user can will be asked if he wants to save the results of the computations in a text file ('results.txt), whereas the CPU 
+timings will be printed in the terminal. 

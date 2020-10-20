@@ -8,10 +8,12 @@ module debugger
 contains
 
     subroutine checkpoint(debug, variable, message, end)
+
         implicit none
+
         logical, intent(in) :: debug, end
         class(*), intent(in), optional :: variable
-        character(*) :: message 
+        character(*), optional :: message 
 
         ! if debug = true then the message will be printed and in case of presence of a variable
         ! it will also print the it
@@ -35,11 +37,12 @@ contains
                 end select
             end if 
             print *, "-----------------------------------------------------------------------------------------------------------"
-            ! if end is true then in case of error the program will stop
+            ! if end = true then in case of error the program will stop
             if (end) then 
                 stop 
             end if 
         end if 
+
     end subroutine checkpoint
 
 end module debugger 
@@ -49,9 +52,13 @@ module mult
 
     implicit none 
 
+    ! matrices (m1 x m2 = m3)
     real*8, dimension(:,:), allocatable :: m1, m2, m3
+    ! indices for loop and dimensions of the matrices
     integer*2 :: ii, jj, kk, nrows1, ncols1, nrows2, ncols2, ll, mm, nn, pp, rr
+    ! timing variables
     real*8 :: time_start1, time_stop1, time_start2, time_stop2, time_start3, time_stop3, time1, time2, time3
+    ! variable to store the user's aswer (y/n) when asked if he/she wants to save the results of the multiplication
     character (len = 1) :: save_results
 
 contains
@@ -59,6 +66,7 @@ contains
     function mult1(m_1, m_2) result(m_3) ! non optimized function
 
         implicit none 
+
         real*8, dimension(nrows1, ncols1) :: m_1 
         real*8, dimension(ncols1, ncols2) :: m_2
         real*8, dimension(nrows1, ncols2) :: m_3
@@ -77,6 +85,7 @@ contains
     function mult2(m_1, m_2) result(m_3) ! optimized function
 
         implicit none
+
         real*8, dimension(nrows1, ncols1) :: m_1 
         real*8, dimension(ncols1, ncols2) :: m_2
         real*8, dimension(nrows1, ncols2) :: m_3
@@ -98,13 +107,17 @@ contains
 end module mult
 
 
+
 program MyMatrixMultiplication
 
+    ! module for matrix multiplication
     use mult
+    ! module for debugging 
     use debugger
 
     implicit none
 
+    ! enable debugging
     debug_on = .true.
 
     ! enter the dimension of the matrix
@@ -115,24 +128,33 @@ program MyMatrixMultiplication
     print *, "Please enter the dimension of the second matrix [nrows, ncols]:"
     read (*, *) nrows2, ncols2 
 
-    ! ask to enter the dimension until nrows and ncols are greater than 1
-    do while (nrows2 .ne. ncols1) 
-        call checkpoint(debug = debug_on, message = "The number of columns in the first matrix is not equal &
-                                                    &to the number of rows in the second matrix.", end = .false.)
-        print *, "Please enter the dimension of the first matrix [nrows, ncols]:"
-        read (*, *) nrows1, ncols1 
-        print *, "Please enter the dimension of the second matrix [nrows, ncols]:"
-        read (*, *) nrows2, ncols2 
-        do while ((nrows1 .le. 1) .or. (ncols1 .le. 1) .or. (nrows2 .le. 1) .or. (ncols2 .le. 1))
+    ! ask to enter the dimension until nrows and ncols are greater or equal than 1 and nrows2=ncols1
+    do while ((nrows2 .ne. ncols1) .or. (((nrows1 .lt. 1) .or. (ncols1 .lt. 1)) .or. ((nrows2 .lt. 1) .or. (ncols2 .lt. 1))))
+        ! display two different messages according to the condition which is not satisfied
+
+        ! if nrows2=ncols1 warn the user that the number of rows of the second matrix must 
+        ! be equal to the number of columns of the first matrix
+        if (nrows2 .ne. ncols1) then 
+            call checkpoint(debug = debug_on, message = "The number of columns in the first matrix is not equal &
+                                                        &to the number of rows in the second matrix.", end = .false.)
+            print *, "Please enter the dimension of the first matrix [nrows, ncols]:"
+            read (*, *) nrows1, ncols1 
+            print *, "Please enter the dimension of the second matrix [nrows, ncols]:"
+            read (*, *) nrows2, ncols2 
+        end if 
+
+        ! if some of the dimensions is less than 1 warn the user 
+        if (((nrows1 .lt. 1) .or. (ncols1 .lt. 1)) .or. ((nrows2 .lt. 1) .or. (ncols2 .lt. 1))) then 
             call checkpoint(debug = debug_on, message = "Non valid dimension! The number of rows and columns must &
                                                         &be greater than 1.", end = .false.)
             print *, "Please enter the dimension of the first matrix [nrows, ncols]:"
             read (*, *) nrows1, ncols1 
             print *, "Please enter the dimension of the second matrix [nrows, ncols]:"
             read (*, *) nrows2, ncols2 
-        end do 
+        end if 
     end do
 
+    ! allocate the memory
     allocate(m1(nrows1, ncols1))
     allocate(m2(nrows2, ncols2))
     allocate(m3(nrows1, ncols2))
