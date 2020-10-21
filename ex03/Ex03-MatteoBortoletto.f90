@@ -2,16 +2,13 @@ module debugger
 
     implicit none
 
-    ! set a logical flag to enable debugging 
-    logical :: debug_on
-
 contains
 
-    subroutine checkpoint(debug, variable, message, end)
+    subroutine checkpoint(debug, variable, message, end_program)
 
         implicit none
 
-        logical, intent(in) :: debug, end
+        logical, intent(in) :: debug, end_program
         class(*), intent(in), optional :: variable
         character(*), optional :: message 
 
@@ -38,8 +35,8 @@ contains
             end if 
             print *, "-----------------------------------------------------------------------------------------------------------"
             ! if end = true then in case of error the program will stop
-            if (end) then 
-                stop 
+            if (end_program) then 
+                stop
             end if 
         end if 
 
@@ -117,9 +114,6 @@ program MyMatrixMultiplication
 
     implicit none
 
-    ! enable debugging
-    debug_on = .true.
-
     ! enter the dimension of the matrix
     print *, "Please insert the dimension of the two matrices to multiply. Please recall that &
              &the number of columns in the first matrix must be equal to the number of rows in the second matrix."
@@ -135,8 +129,8 @@ program MyMatrixMultiplication
         ! if nrows2=ncols1 warn the user that the number of rows of the second matrix must 
         ! be equal to the number of columns of the first matrix
         if (nrows2 .ne. ncols1) then 
-            call checkpoint(debug = debug_on, message = "The number of columns in the first matrix is not equal &
-                                                        &to the number of rows in the second matrix.", end = .false.)
+            call checkpoint(debug = .true., message = "The number of columns in the first matrix is not equal &
+                                                        &to the number of rows in the second matrix.", end_program = .false.)
             print *, "Please enter the dimension of the first matrix [nrows, ncols]:"
             read (*, *) nrows1, ncols1 
             print *, "Please enter the dimension of the second matrix [nrows, ncols]:"
@@ -145,8 +139,8 @@ program MyMatrixMultiplication
 
         ! if some of the dimensions is less than 1 warn the user 
         if (((nrows1 .lt. 1) .or. (ncols1 .lt. 1)) .or. ((nrows2 .lt. 1) .or. (ncols2 .lt. 1))) then 
-            call checkpoint(debug = debug_on, message = "Non valid dimension! The number of rows and columns must &
-                                                        &be greater than 1.", end = .false.)
+            call checkpoint(debug = .true., message = "Non valid dimension! The number of rows and columns must &
+                                                        &be greater or equal than 1.", end_program = .false.)
             print *, "Please enter the dimension of the first matrix [nrows, ncols]:"
             read (*, *) nrows1, ncols1 
             print *, "Please enter the dimension of the second matrix [nrows, ncols]:"
