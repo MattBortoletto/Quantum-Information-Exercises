@@ -9,26 +9,31 @@ TODO
 
 [X] Scrivere la documentazione.
 
-[ ] Scrivere più commenti sopra le funzioni, includendo pre e post conditions 
+[X] Scrivere più commenti sopra le funzioni, includendo pre e post conditions 
 
 
 DUBBI 
 
-[ ] La 'variable to be printed' deve essere tipo 'nrwos1' o il suo valore? Oppure con variables intende altro che potrebbe essere 
+[X] La 'variable to be printed' deve essere tipo 'nrwos1' o il suo valore? Oppure con variables intende altro che potrebbe essere 
     utile stampare in generale?
+
+[X] Btw, il debugger servirebbe per la fase di test del codice, come roba che printi con una frase e una variabile per vedere se va
+    tutto bene. Il modo in cui lo uso ora è più un avviso per l'error handling.
 
 
 IMPROVEMENTS
 
-[ ] Creare una subroutine per stampare i risultati. Includere la stampa dei tempi della CPU.
+[NO] Creare una subroutine per stampare i risultati. Includere la stampa dei tempi della CPU.
 
 [ ] Aggiungere che venga stampato il giusto numero di righe della seconda matrice nel caso si sbagli e si metta un numero diverso 
     dal numero di colonne nella prima. Questo sarebbe fatto dando come input 'variable=ncols1' e stampando come messaggio qualcosa 
     del tipo 'Bla bla. In this case the number of rows of the second matrix should have been ' + variable.  
 
+[X] Nelle funzioni mettere intent(in) per le matrici. 
+
 
 REPORT 
 
-[ ] Aggiungere i commenti sopra le funzioni e quindi scrivere che il codice è ben commentato con la spiegazione di cosa fanno le 
+[X] Aggiungere i commenti sopra le funzioni e quindi scrivere che il codice è ben commentato con la spiegazione di cosa fanno le 
     funzioni e che argomenti prendono, incluse pre e post conditions.
 

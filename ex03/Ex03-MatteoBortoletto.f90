@@ -1,5 +1,8 @@
 module debugger 
 
+    ! module for debugging
+    ! It contains a subroutine that can be used as checkpoint for debugging. 
+
     implicit none
 
 contains
@@ -8,8 +11,12 @@ contains
 
         implicit none
 
+        ! debug: logical variable that enables debugging if it is .true.
+        ! end_program: logical variable that stops the program if is .true.
         logical, intent(in) :: debug, end_program
+        ! optional variable to be printed 
         class(*), intent(in), optional :: variable
+        ! optional message to be printed 
         character(*), optional :: message 
 
         ! if debug = true then the message will be printed and in case of presence of a variable
@@ -34,7 +41,7 @@ contains
                 end select
             end if 
             print *, "-----------------------------------------------------------------------------------------------------------"
-            ! if end = true then in case of error the program will stop
+            ! if end_program = true then in case of error the program will stop
             if (end_program) then 
                 stop
             end if 
@@ -47,12 +54,14 @@ end module debugger
 
 module mult 
 
+    ! module for matrix multiplication 
+
     implicit none 
 
     ! matrices (m1 x m2 = m3)
     real*8, dimension(:,:), allocatable :: m1, m2, m3
     ! indices for loop and dimensions of the matrices
-    integer*2 :: ii, jj, kk, nrows1, ncols1, nrows2, ncols2, ll, mm, nn, pp, rr
+    integer*2 :: ii, jj, kk, ll, mm, nn, pp, rr, nrows1, ncols1, nrows2, ncols2
     ! timing variables
     real*8 :: time_start1, time_stop1, time_start2, time_stop2, time_start3, time_stop3, time1, time2, time3
     ! variable to store the user's aswer (y/n) when asked if he/she wants to save the results of the multiplication
@@ -60,7 +69,13 @@ module mult
 
 contains
 
-    function mult1(m_1, m_2) result(m_3) ! non optimized function
+    function mult1(m_1, m_2) result(m_3) 
+        ! non optimized function for matrix multiplication
+
+        ! pre: real*8 matrix multiplication.
+        !      the number of columns of m1 must be equal to the number of rows of m2.
+        ! post: a real*8 matrix m3 which elements are the dot product of the i-th row 
+        !       of m1 and the j-th column of m2 is returned.
 
         implicit none 
 
@@ -79,7 +94,13 @@ contains
 
     end function mult1
 
-    function mult2(m_1, m_2) result(m_3) ! optimized function
+    function mult2(m_1, m_2) result(m_3) 
+        ! optimized function for matrix multiplication
+
+        ! pre: real*8 matrix multiplication.
+        !      The number of columns of m1 must be equal to the number of rows of m2.
+        ! post: a real*8 matrix m3 which elements are the dot product of the i-th row 
+        !       of m1 and the j-th column of m2 is returned.
 
         implicit none
 
@@ -137,7 +158,7 @@ program MyMatrixMultiplication
             read (*, *) nrows2, ncols2 
         end if 
 
-        ! if some of the dimensions is less than 1 warn the user 
+        ! if some of the dimensions is less than 1 warn the user and ask to enter again
         if (((nrows1 .lt. 1) .or. (ncols1 .lt. 1)) .or. ((nrows2 .lt. 1) .or. (ncols2 .lt. 1))) then 
             call checkpoint(debug = .true., message = "Non valid dimension! The number of rows and columns must &
                                                         &be greater or equal than 1.", end_program = .false.)
