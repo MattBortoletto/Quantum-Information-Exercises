@@ -22,7 +22,7 @@ contains
         ! if debug = true then the message will be printed and in case of presence of a variable
         ! it will also print the it
         if (debug) then
-            print *, "[Debugger] ------------------------------------------------------------------------------------------------"
+            print *, "[Debugger] -----------------------------------------------------------"
             print *, message
             if (present(variable)) then
                 select type(variable) 
@@ -38,9 +38,11 @@ contains
                         print *, variable
                     type is (complex(16))
                         print *, variable
+                    type is (logical)
+                        print *, variable
                 end select
             end if 
-            print *, "-----------------------------------------------------------------------------------------------------------"
+            print *, "----------------------------------------------------------------------"
             ! if end_program = true then in case of error the program will stop
             if (end_program) then 
                 stop

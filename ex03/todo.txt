@@ -25,7 +25,7 @@ IMPROVEMENTS
 
 [NO] Creare una subroutine per stampare i risultati. Includere la stampa dei tempi della CPU.
 
-[ ] Aggiungere che venga stampato il giusto numero di righe della seconda matrice nel caso si sbagli e si metta un numero diverso 
+[X] Aggiungere che venga stampato il giusto numero di righe della seconda matrice nel caso si sbagli e si metta un numero diverso 
     dal numero di colonne nella prima. Questo sarebbe fatto dando come input 'variable=ncols1' e stampando come messaggio qualcosa 
     del tipo 'Bla bla. In this case the number of rows of the second matrix should have been ' + variable.  
 
