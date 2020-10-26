@@ -67,7 +67,7 @@ module mult
     ! timing variables
     real*8 :: time_start1, time_stop1, time_start2, time_stop2, time_start3, time_stop3, time1, time2, time3
     ! variable to store the user's aswer (y/n) when asked if he/she wants to save the results of the multiplication
-    character(1) :: save_results
+    !character(1) :: save_results
 
 contains
 
@@ -135,19 +135,69 @@ contains
         ! array to store the dimensions
         integer, dimension(4) :: dimensions
         ! value for the iostat specifier
-        integer :: stat 
+        integer :: iostat 
 
-        open(unit = 3, file = filename, action = "read", status = "old")
-        stat = 0
+        open(unit = 10, file = filename, status = "old")
         ii = 1
-        do while(stat == 0)
-            read(3, *, iostat = stat) dimensions(ii)
+        do while(ii < 5)
+            read(10, *, iostat=iostat) dimensions(ii)
+            if(iostat < 0) then
+                write(6,'(A)') "Warning: File containts less than 4 entries."
+                exit
+            else if(iostat > 0) then
+                write(6,'(A)') 'Error reading file.'
+                stop
+            end if
             ii = ii + 1
         end do
 
-        close(3)
+        close(10)
+
+        ! -------------------------------------------------------------------------------
+
+        ! open(unit = 3, file = filename, action = "read", status = "old")
+        ! ! if (stat .ne. 0) then 
+        ! !     print *, "Cannot open file"
+        ! !     stop
+        ! ! end if 
+        ! do ii = 1, 4
+        !     ! read(3, *, iostat = stat) dimensions(ii)
+        !     read(3, *) dimensions(ii)
+        ! end do
+
+        ! close(3)
 
     end subroutine LoadDimensions
+
+    subroutine StoreResult(filename, var)
+        ! this subroutine is used to store some results in a txt file
+        ! in particular, it will be used to store the CPU times for the
+        ! different matrix multiplication methods
+
+        implicit none
+
+        !name of the file
+        character(*), intent(in) :: filename 
+        ! variable to store the time 
+        real*8, intent(in) :: var 
+        ! logical variable to see if the file 'filename' altrady exists
+        logical :: exists 
+        
+        ! check if the file exists
+        inquire(file=filename, exist=exists)
+        ! if the file exists then open it, otherwise create it 
+        if (exists) then 
+            open(unit = 3, file = filename, action = "write", status = "old", position = "append")
+        else 
+            open(unit = 3, file = filename, action = "write", status = "new")
+        end if 
+        
+        ! write the result
+        write(3, *) nrows1, var
+        ! close the file 
+        close(3)
+
+    end subroutine StoreResult
 
 end module mult
 
@@ -166,7 +216,11 @@ program MyMatrixMultiplication
 
     ! load the dimension of the matrices
     call LoadDimensions('matrix_dimensions.txt', dims)
-    
+
+    ! ----------------------------
+    print *, 'fortran dims:', dims
+    ! ----------------------------
+
     ! assign the dimensions
     nrows1 = dims(1)
     ncols1 = dims(2)
@@ -206,80 +260,29 @@ program MyMatrixMultiplication
     m1 = int(m1*10)
     m2 = int(m2*10)
 
-    ! open a file to save the results of the computations
-    ! warning: if the matrices are big, the txt file can be very large (~100 MB)
-    print *, 'Do you want to save the results in a txt file (in case of big matrices it can be very large, ~100 MB) [y/n]?'
-    read *, save_results
-    if (save_results == 'y') then 
-        open(unit = 2, file = 'results.txt', action = "write", status = "replace") 
-        write(2, *) "m1:"
-        do ll = 1, nrows1
-            write(2, *) real(m1(ll, :)) 
-        end do
-        write(2, *) " "
-        write(2, *) "m2:"
-        do mm = 1, ncols1
-            write(2, *) real(m2(mm, :))
-        end do
-    end if
-
     ! non optimized function
     call cpu_time(time_start1)
     m3 = mult1(m1, m2)
     call cpu_time(time_stop1)
     time1 = time_stop1 - time_start1
-    print *, "Standard loop time = ", time1
-
-    ! write the results in the txt file
-    if (save_results == 'y') then
-        write(2, *) " "
-        write(2, *) "m3 with mult1:"
-        do nn = 1, nrows1
-            write(2, *) real(m3(nn, :))
-        end do
-    end if
+    !print *, "Standard loop time = ", time1
+    call StoreResult("not-optimized.txt", time1)
 
     ! optimized function
     call cpu_time(time_start2)
     m3 = mult2(m1, m2)
     call cpu_time(time_stop2)
     time2 = time_stop2 - time_start2
-    print *, "Optimized loop time = ", time2
-
-    ! check if the optimized function is faster
-    if (time2 < time1) then 
-        print *, "The optimized loop is faster!"
-    else 
-        print *, "The optimized loop is not faster!"
-    end if 
-
-    ! write the results in the txt file
-    if (save_results == 'y') then
-        write(2, *) " "
-        write(2, *) "m3 with mult2:"
-        do pp = 1, nrows1
-            write(2, *) real(m3(pp, :))
-        end do
-    end if
+    !print *, "Optimized loop time = ", time2
+    call StoreResult("optimized.txt", time2)
 
     ! instrinsic function
     call cpu_time(time_start3)
     m3 = matmul(m1, m2)
     call cpu_time(time_stop3)
     time3 = time_stop3 - time_start3
-    print *, "Matmul time = ", time3
-
-    ! write the results in the txt file
-    if (save_results == 'y') then
-        write(2, *) " "
-        write(2, *) "m3 with matmul:"
-        do rr = 1, nrows1
-            write(2, *) real(m3(rr, :))
-        end do
-    end if 
-
-    ! close the txt file
-    close(2)
+    !print *, "Matmul time = ", time3
+    call StoreResult("matmul.txt", time3)
 
     deallocate(m1, m2, m3)
 

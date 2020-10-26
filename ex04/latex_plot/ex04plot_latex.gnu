@@ -1,14 +1,14 @@
-set terminal png size 1024, 768 font "Verdana, 18"
-set output 'CPU_time_plt.png'
+set terminal epslatex standalone color colortext 12
+set output 'CPU_time_plt.tex'
 set title "Matrix multiplication - CPU times"
 set xlabel "Matrix dimension"
 set ylabel "CPU time (s)"
 set grid
 set logscale y
 array methods_files[3]
-methods_files[1] = "not-optimized.txt"
-methods_files[2] = "optimized.txt"
-methods_files[3] = "matmul.txt"
+methods_files[1] = "../not-optimized.txt"
+methods_files[2] = "../optimized.txt"
+methods_files[3] = "../matmul.txt"
 array label_list[3]
 label_list[1] = "not optimized"
 label_list[2] = "optimized"

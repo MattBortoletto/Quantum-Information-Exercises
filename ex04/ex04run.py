@@ -4,47 +4,53 @@ import os
 import subprocess
 
 
-#asking the user to insert the dimensions
 N_min = 0
-while (N_min<=0):
-    # catching eventual non-integer values.
+while (N_min <= 0):
     try:
-        N_min = int(input("Please enter the minimum size: "))
+        N_min = int(input("Please enter the minimum dimension N_min: "))
     except ValueError:
-        print("Invalid value: integer needed.")
-    # if the integer is non valid
-    if (N_min<=0):
-        print("Invalid dimension: less or equal to 0.")
+        print("Error! The input must be an integer.")
 
 N_max = 0
-while (N_max<=0 or N_max<N_min):
-    # catching eventual non-integer values.
+while (N_max <= 0 or N_max < N_min):
     try:
-        N_max = int(input("Please enter the maximum size: "))
+        N_max = int(input("Please enter the maximum dimension N_max: "))
     except ValueError:
-        print("Invalid value: integer needed.")
-    # if the integer is non valid
-    if (N_max<=0 or N_max<N_min):
-        print("Invalid dimension: N_max should be positive and greater than N_min=",N_min)
+        print("Error! The input must be an integer.")
+    # if N_max <= 0:
+    #     print("The input must be an integer.")
+    if N_max < N_min:
+        print("N_max must be greater than N_min.")
 
-# the number of steps from N_min to N_man
-num_intermediate = 30
+iterations = 20
+dimensions = np.logspace(np.log10(N_min), np.log10(N_max), iterations, dtype=np.int16)
+print('dimensions:', dimensions)
 
-# creating the sizes; logarithmic
-dims = np.logspace(np.log10(N_min), np.log10(N_max), num_intermediate, dtype=np.int16)
+fileSource = "Ex04-MatteoBortoletto.f90"
+fileExec = "Ex04.x"
+dimensionsFile = "matrix_dimensions.txt"
+outputFiles = ['not-optimized.txt', 'optimized.txt', 'matmul.txt']
 
-print(dims)
+# if there exists already a file with the dimensions of the matrices, delete it
+if os.path.exists(dimensionsFile):
+    os.remove(dimensionsFile)
 
+# if there exist already files with the results, delete them
+for f in outputFiles:
+    if os.path.exists(f):
+        os.remove(f)
 
+# if there exists already the executable file, delete it 
+if os.path.exists(fileExec):
+    os.remove(fileExec)
 
+# compile the Fortran code 
+subprocess.call(["gfortran", fileSource, "-o", fileExec, "-O3"]) 
 
-
-# iterations = 5
-# n_runs = [i for i in range(N_min, N_max)]
-# print(n_runs)
-
-# fileSource = "Ex04-MatteoBortoletto.f90"
-# fileExec = "Ex04.x"
-
-# subprocess.call(["gfortran", "-o", fileExec, fileSource, "-O3"]) 
-# subprocess.call(["./", fileExec])                          
+# store the dimensions in the 'dimensionsFile' and launch the Fortran program
+for d in dimensions:
+    with open(dimensionsFile, "w+") as inputfile:
+        print("I'm printing", str(d))
+        inputfile.write(str(d) + '\n' + str(d) + '\n' + str(d) + '\n' + str(d) + '\n')
+    """subprocess.call(["./", fileExec])    # does not work ('Permission denied' error)"""
+    subprocess.run("./" + fileExec)
