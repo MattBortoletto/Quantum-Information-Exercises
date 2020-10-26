@@ -7,7 +7,7 @@ module debugger
 
 contains
 
-    subroutine checkpoint(debug, variable, message, end_program)
+    subroutine checkpoint(debug, variable, array_variable, message, end_program)
 
         implicit none
 
@@ -16,11 +16,13 @@ contains
         logical, intent(in) :: debug, end_program
         ! optional variable to be printed 
         class(*), intent(in), optional :: variable
+        ! optional array to be printed
+        class(*), dimension(:), intent(in), optional :: array_variable
         ! optional message to be printed 
         character(*), optional :: message 
 
         ! if debug = true then the message will be printed and in case of presence of a variable
-        ! it will also print the it
+        ! it will also print it
         if (debug) then
             print *, "[Debugger] -----------------------------------------------------------"
             print *, message
@@ -41,6 +43,22 @@ contains
                     type is (logical)
                         print *, variable
                 end select
+            end if
+            if (present(array_variable)) then
+                select type(array_variable) 
+                    type is (integer(2))
+                        print *, array_variable
+                    type is (integer(4))
+                        print *, array_variable
+                    type is (real(4))
+                        print *, array_variable
+                    type is (real(8))
+                        print *, array_variable
+                    type is (complex(8))
+                        print *, array_variable
+                    type is (complex(16))
+                        print *, array_variable
+                end select 
             end if 
             print *, "----------------------------------------------------------------------"
             ! if end_program = true then in case of error the program will stop
@@ -138,7 +156,7 @@ program MyMatrixMultiplication
     implicit none
 
     ! enter the dimension of the matrix
-    print *, "Please insert the dimension of the two matrices to multiply. Please recall that &
+    print *, "Please enter the dimension of the two matrices to multiply. Please recall that &
              &the number of columns in the first matrix must be equal to the number of rows in the second matrix."
     print *, "Please enter the dimension of the first matrix [nrows, ncols]:"
     read (*, *) nrows1, ncols1 
@@ -202,6 +220,11 @@ program MyMatrixMultiplication
     ! non optimized function
     call cpu_time(time_start1)
     m3 = mult1(m1, m2)
+    ! check if the dimension of m3 is correct 
+    ! call checkpoint(debug = (all(shape(m3) == (/nrows1,ncols2/))), &
+    !                 array_variable=shape(m3), &
+    !                 message="m3 has the right shape.", &
+    !                 end_program=.false.)
     call cpu_time(time_stop1)
     time1 = time_stop1 - time_start1
     print *, "Standard loop time = ", time1
@@ -218,6 +241,11 @@ program MyMatrixMultiplication
     ! optimized function
     call cpu_time(time_start2)
     m3 = mult2(m1, m2)
+    ! check if the dimension of m3 is correct 
+    ! call checkpoint(debug = (all(shape(m3) == (/nrows1,ncols2/))), &
+    !                 array_variable=shape(m3), &
+    !                 message="m3 has the right shape.", &
+    !                 end_program=.false.)
     call cpu_time(time_stop2)
     time2 = time_stop2 - time_start2
     print *, "Optimized loop time = ", time2
@@ -241,6 +269,11 @@ program MyMatrixMultiplication
     ! instrinsic function
     call cpu_time(time_start3)
     m3 = matmul(m1, m2)
+    ! check if the dimension of m3 is correct 
+    ! call checkpoint(debug = (all(shape(m3) == (/nrows1,ncols2/))), &
+    !                 array_variable=shape(m3), &
+    !                 message="m3 has the right shape.", &
+    !                 end_program=.false.)
     call cpu_time(time_stop3)
     time3 = time_stop3 - time_start3
     print *, "Matmul time = ", time3

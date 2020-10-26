@@ -1,16 +1,16 @@
 MATRIX MULTIPLICATION PROGRAM -- DOCUMENTATION 
 
-This program performs the matrix multiplication loop in two different orders and in addition it uses the intrinsic Fortran function
+This program performs real matrix multiplication loop in two different orders and in addition it uses the intrinsic Fortran function
 'matmul'. 
 
 There are two modules:
 - debugger. It contains a subroutine that can be used as checkpoint for debugging. It includes a control on a logical variable
-  'debug' and it includes an optional message to be printed. Furthermore, it contains a variable 'end' which can stop the program 
-  in case of need. 
+  'debug' and optional variable/array/message to be printed. Furthermore, it contains a logical variable 'end_program' which can stop 
+  the program in case of need. 
 - mult. It contains two functions:
-  - mult1. It performs the matrix multiplication using a loop which is not optimized.
-  - mult2. It performs the matrix multiplication usign a loop which is optimized according to the way Fortran stores matrices in 
-    memory, that is as columns. 
+  - mult1. It performs the matrix multiplication between two real*8 matrices using a loop which is not optimized.
+  - mult2. It performs the matrix multiplication between two real*8 matrices using a loop which is optimized according to the way 
+    Fortran stores matrices in memory, that is as columns. 
 
 The main program ('MyMatrixMultiplication') accepts as input the dimensions of the two matrices to multiply. Particular attention is
 paid to this step, in fact:
