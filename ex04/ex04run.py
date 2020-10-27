@@ -22,25 +22,26 @@ while (N_max <= 0 or N_max < N_min):
     if N_max < N_min:
         print("N_max must be greater than N_min.")
 
-iterations = 20
-dimensions = np.logspace(np.log10(N_min), np.log10(N_max), iterations, dtype=np.int16)
-print('dimensions:', dimensions)
+iterations = 50
+#dimensions = np.logspace(np.log10(N_min), np.log10(N_max), iterations, dtype=np.int16) 
+dimensions = np.linspace(N_min, N_max, iterations, dtype=int)
+#print('dimensions:', dimensions)
 
 fileSource = "Ex04-MatteoBortoletto.f90"
 fileExec = "Ex04.x"
 dimensionsFile = "matrix_dimensions.txt"
 outputFiles = ['not-optimized.txt', 'optimized.txt', 'matmul.txt']
 
-# if there exists already a file with the dimensions of the matrices, delete it
+# if there already exists a file with the dimensions of the matrices, delete it
 if os.path.exists(dimensionsFile):
     os.remove(dimensionsFile)
 
-# if there exist already files with the results, delete them
+# if there already exist files with the results, delete them
 for f in outputFiles:
     if os.path.exists(f):
         os.remove(f)
 
-# if there exists already the executable file, delete it 
+# if there already exists the executable file, delete it 
 if os.path.exists(fileExec):
     os.remove(fileExec)
 
@@ -50,7 +51,16 @@ subprocess.call(["gfortran", fileSource, "-o", fileExec, "-O3"])
 # store the dimensions in the 'dimensionsFile' and launch the Fortran program
 for d in dimensions:
     with open(dimensionsFile, "w+") as inputfile:
-        print("I'm printing", str(d))
+        print("Computing for N =", str(d))
         inputfile.write(str(d) + '\n' + str(d) + '\n' + str(d) + '\n' + str(d) + '\n')
     """subprocess.call(["./", fileExec])    # does not work ('Permission denied' error)"""
     subprocess.run("./" + fileExec)
+
+# if there already exists the plot, delete it
+plotImg = "CPU_time_plt.png"
+if os.path.exists(plotImg):
+    os.remove(plotImg)
+
+# execute the gnuplot script
+plotFile = "ex04plot.gnu"
+subprocess.call(["gnuplot", plotFile])

@@ -7,7 +7,7 @@ module debugger
 
 contains
 
-    subroutine checkpoint(debug, variable, message, end_program)
+    subroutine checkpoint(debug, variable, array_variable, message, end_program)
 
         implicit none
 
@@ -16,6 +16,8 @@ contains
         logical, intent(in) :: debug, end_program
         ! optional variable to be printed 
         class(*), intent(in), optional :: variable
+        ! optional array to be printed
+        class(*), dimension(:), intent(in), optional :: array_variable
         ! optional message to be printed 
         character(*), optional :: message 
 
@@ -41,6 +43,22 @@ contains
                     type is (logical)
                         print *, variable
                 end select
+            end if 
+            if (present(array_variable)) then
+                select type(array_variable) 
+                    type is (integer(2))
+                        print *, array_variable
+                    type is (integer(4))
+                        print *, array_variable
+                    type is (real(4))
+                        print *, array_variable
+                    type is (real(8))
+                        print *, array_variable
+                    type is (complex(8))
+                        print *, array_variable
+                    type is (complex(16))
+                        print *, array_variable
+                end select 
             end if 
             print *, "----------------------------------------------------------------------"
             ! if end_program = true then in case of error the program will stop
@@ -167,6 +185,8 @@ contains
 
         ! close(3)
 
+        ! -------------------------------------------------------------------------------
+
     end subroutine LoadDimensions
 
     subroutine StoreResult(filename, var)
@@ -217,9 +237,9 @@ program MyMatrixMultiplication
     ! load the dimension of the matrices
     call LoadDimensions('matrix_dimensions.txt', dims)
 
-    ! ----------------------------
-    print *, 'fortran dims:', dims
-    ! ----------------------------
+    ! -------------------------------------------------------------------------------
+    ! print *, 'fortran dims:', dims
+    ! -------------------------------------------------------------------------------
 
     ! assign the dimensions
     nrows1 = dims(1)

@@ -4,5 +4,4 @@ dvips -o CPU_time_plt.ps CPU_time_plt.dvi
 
 rm CPU_time_plt.aux
 rm CPU_time_plt.dvi
-rm CPU_time_plt.log
 rm CPU_time_plt-inc.eps

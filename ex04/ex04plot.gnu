@@ -1,6 +1,6 @@
 set terminal png size 1024, 768 font "Verdana, 18"
-set output 'CPU_time_plt.png'
-set title "Matrix multiplication - CPU times"
+set output "CPU_time_plt.png"
+set title "Matrix multiplication - CPU times" font "Verdana, 20"
 set xlabel "Matrix dimension"
 set ylabel "CPU time (s)"
 set grid
