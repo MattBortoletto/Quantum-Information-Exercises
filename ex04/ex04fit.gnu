@@ -2,10 +2,11 @@
 # -------------------------------------------------------------
 # $ gnuplot -e "filename='foo.txt'" -e "name='foo'" ex04fit.gnu
 # -------------------------------------------------------------
-# where foo.txt is the file you want to fit and plot. 
+# where 'foo.txt' is the file you want to fit and plot and 'name' 
+# is an identificative name for the dataset (e.g. 'optimized') 
+# which will be used in the output file name. 
 
 set terminal png size 1024, 768 font "Verdana, 18"
-#set output "CPU_time_fit.png"
 set output sprintf("%s%s%s", "CPU_time_fit_", name, ".png")
 set title "Matrix multiplication - CPU times" font "Verdana, 20"
 set xlabel "Matrix dimension"

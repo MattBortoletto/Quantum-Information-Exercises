@@ -53,7 +53,6 @@ for d in dimensions:
     with open(dimensionsFile, "w+") as inputfile:
         print("Computing for N =", str(d))
         inputfile.write(str(d) + '\n' + str(d) + '\n' + str(d) + '\n' + str(d) + '\n')
-    """subprocess.call(["./", fileExec])    # does not work ('Permission denied' error)"""
     subprocess.run("./" + fileExec)
 
 # if there already exists the plot, delete it

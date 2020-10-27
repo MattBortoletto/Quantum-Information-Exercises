@@ -5,6 +5,8 @@ set xlabel "Matrix dimension"
 set ylabel "CPU time (s)"
 set grid
 set logscale y
+set key bottom right box
+set format y '$%2.0t\times10^{%T}$'
 
 array methods_files[3]
 methods_files[1] = "../not-optimized.txt"

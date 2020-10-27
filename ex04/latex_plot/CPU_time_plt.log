@@ -1,9 +1,9 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=latex 2020.4.27)  27 OCT 2020 23:52
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=latex 2020.4.27)  27 OCT 2020 23:51
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**CPU_time_fit.tex
-(./CPU_time_fit.tex
+**CPU_time_plt.tex
+(./CPU_time_plt.tex
 LaTeX2e <2020-02-02> patch level 5
 L3 programming layer <2020-03-06>
 (/usr/local/texlive/2020/texmf-dist/tex/latex/base/minimal.cls
@@ -92,8 +92,8 @@ File: l3backend-dvips.def 2020-03-12 L3 backend support: dvips
 \g__pdf_backend_link_int=\count175
 \g__pdf_backend_link_sf_int=\count176
 )
-No file CPU_time_fit.aux.
-\openout1 = `CPU_time_fit.aux'.
+No file CPU_time_plt.aux.
+\openout1 = `CPU_time_plt.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 59.
 LaTeX Font Info:    ... okay on input line 59.
@@ -146,13 +146,13 @@ LaTeX Font Info:    ... okay on input line 59.
 \gptboxwidth=\skip51
 \gptboxtext=\box48
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <12> on input line 196.
+(Font)              <12> on input line 190.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 196.
+(Font)              <8> on input line 190.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 196.
-File: CPU_time_fit-inc.eps Graphic file (type eps)
-<CPU_time_fit-inc.eps> [1] (./CPU_time_fit.aux) ) 
+(Font)              <6> on input line 190.
+File: CPU_time_plt-inc.eps Graphic file (type eps)
+<CPU_time_plt-inc.eps> [1] (./CPU_time_plt.aux) ) 
 Here is how much of TeX's memory you used:
  1321 strings out of 480609
  20322 string characters out of 5903656
@@ -162,4 +162,4 @@ Here is how much of TeX's memory you used:
  1141 hyphenation exceptions out of 8191
  30i,6n,36p,207b,289s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on CPU_time_fit.dvi (1 page, 2256 bytes).
+Output written on CPU_time_plt.dvi (1 page, 2052 bytes).
