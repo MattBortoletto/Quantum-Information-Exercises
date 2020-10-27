@@ -1,0 +1,5 @@
+TODO EX04
+
+- [ ] fare uno script di python che fa il plot con tutti i fit assieme 
+- [X] scrivere la documentazione
+- [X] completare il README

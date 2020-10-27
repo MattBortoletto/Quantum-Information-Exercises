@@ -1,0 +1,38 @@
+MATRIX MULTIPLICATION PROGRAM -- DOCUMENTATION 
+
+This Fortran program performs real matrix multiplication loop in two different orders and in addition it uses the intrinsic Fortran 
+function 'matmul'. 
+
+There are two modules:
+- debugger. It contains a subroutine that can be used as checkpoint for debugging. It includes a control on a logical variable
+  'debug' and optional variable/array/message to be printed. Furthermore, it contains a logical variable 'end_program' which can stop 
+  the program in case of need. 
+- mult. It contains two functions:
+  - mult1. It performs the matrix multiplication between two real*8 matrices using a loop which is not optimized.
+  - mult2. It performs the matrix multiplication between two real*8 matrices using a loop which is optimized according to the way 
+    Fortran stores matrices in memory, that is as columns. 
+  It also contains two subroutines: 
+  - LoadDimensions. It is used to load the matrix dimensions from a text file.
+  - SaveResults. It is used to save the CPU times in a text file.
+
+The main program ('MyMatrixMultiplication') uses the subroutine 'LoadDimensions' to load the dimensions of the two matrices to 
+multiply. Particular attention is paid to this step, in fact:
+- the dimensions must be greater or equal to 1 (allowing also vector-matrix multiplications);
+- the number of columns of the first matrix must be equal to the number of rows of the second one.
+If these conditions are not satisfied the program will stop.
+
+The two matrices are filled with random integer numbers between 0 and 10 and the CPU times of the three different multiplication 
+functions will be saved into three different text files ('not-optimized.txt', 'optimized.txt', 'matmul.txt').
+
+The Fortran code is compiled and executed using a Python script ('ex04run.py'), which will ask the used to enter the minimum and the 
+maximum matrix dimensions. Then it will automatically divide the range [N_min, N_max] into 50 points to use as dimensions. The program
+will automatically manage the overwriting of the files in case of multiple runs (every time the script is launched it deleted the 
+pre-existing files). Finally, the code will run a gnuplot script ('ex04plot.gnu') which plots the CPU times vs. the dimension of the 
+matrices ('CPU_time_plt.png'). 
+
+Another Python script ('ex04fit_run.py') will run the gnuplot script 'ex04fit.gnu', which fits the CPU times vs. the dimension for the 
+three multiplication methods. It will produce three different plots ('CPU_time_fit_*.png').  
+
+Inside the folder there is a sub-folder 'latex_plots' which contains the gnuplot scripts for producing LaTeX plots both with and 
+without the fit functions. To run them, just run the compile scripts ('$ source *.sh'). Once obtained the .ps file, it can be 
+converted in .pdf.  
