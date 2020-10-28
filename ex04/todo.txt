@@ -1,5 +1,11 @@
 TODO EX04
 
-- [ ] fare uno script di python che fa il plot con tutti i fit assieme 
 - [X] scrivere la documentazione
 - [X] completare il README
+- [ ] aggiungere tipi di execpt allo script in python 
+- [ ] definire dimensions come un range di valori spaziati logaritmicamente perché
+      i tempi crescono non linearmente
+- [ ] togliere che scriva quattro volte d 
+
+REPORT
+- [ ] Commentare la parte iniziale dei fit che fa schifo

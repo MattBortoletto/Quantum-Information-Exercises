@@ -160,32 +160,16 @@ contains
         do while(ii < 5)
             read(10, *, iostat=iostat) dimensions(ii)
             if(iostat < 0) then
-                write(6,'(A)') "Warning: File containts less than 4 entries."
+                write(6, '(A)') "Warning: File containts less than 4 entries."
                 exit
             else if(iostat > 0) then
-                write(6,'(A)') 'Error reading file.'
+                write(6, '(A)') 'Error reading file.'
                 stop
             end if
             ii = ii + 1
         end do
 
         close(10)
-
-        ! -------------------------------------------------------------------------------
-
-        ! open(unit = 3, file = filename, action = "read", status = "old")
-        ! ! if (stat .ne. 0) then 
-        ! !     print *, "Cannot open file"
-        ! !     stop
-        ! ! end if 
-        ! do ii = 1, 4
-        !     ! read(3, *, iostat = stat) dimensions(ii)
-        !     read(3, *) dimensions(ii)
-        ! end do
-
-        ! close(3)
-
-        ! -------------------------------------------------------------------------------
 
     end subroutine LoadDimensions
 
@@ -238,7 +222,11 @@ program MyMatrixMultiplication
     call LoadDimensions('matrix_dimensions.txt', dims)
 
     ! -------------------------------------------------------------------------------
-    ! print *, 'fortran dims:', dims
+    ! check the dimension of the matrices
+    ! call checkpoint(debug = .true., &
+    !                 array_variable = dims, &
+    !                 message = "Loaded dimension:", &
+    !                 end_program = .false.)
     ! -------------------------------------------------------------------------------
 
     ! assign the dimensions

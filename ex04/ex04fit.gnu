@@ -13,11 +13,22 @@ set xlabel "Matrix dimension"
 set ylabel "CPU time (s)"
 set grid
 set logscale y
+# set logscale x 
+set key bottom right box height 1.7
+set format y '%2.0t*10^{%T}'
 
 fileLog = name."_fit.log"
 set fit logfile fileLog
 
-f(x) = a + b*x + c*x**2 + d*x**3
-fit f(x) filename using 1:2 via a, b, c, d
+#a = 0.1
+#b = 1e-10
+#c = 3
+#f(x) = a + b*x**c 
+#fit f(x) filename using 1:2 via a, b, c 
 
-plot f(x) title 'f(x)=a+b*x+c*x**2+d*x**3' lw 2, filename using 1:2 title filename with linespoints lw 2
+a = 1e-9
+b = 3
+f(x)= a*x**b
+fit f(x) filename using 1:2 via a, b 
+
+plot f(x) title 'f(x)=ax^b' lw 2, filename using 1:2 title name with linespoints lw 2
