@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=latex 2020.4.27)  29 OCT 2020 00:56
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=latex 2020.4.27)  1 NOV 2020 12:26
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -146,11 +146,11 @@ LaTeX Font Info:    ... okay on input line 59.
 \gptboxwidth=\skip51
 \gptboxtext=\box48
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <12> on input line 194.
+(Font)              <12> on input line 180.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 194.
+(Font)              <8> on input line 180.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 194.
+(Font)              <6> on input line 180.
 File: CPU_time_fit-inc.eps Graphic file (type eps)
 <CPU_time_fit-inc.eps> [1] (./CPU_time_fit.aux) ) 
 Here is how much of TeX's memory you used:
@@ -160,6 +160,6 @@ Here is how much of TeX's memory you used:
  17246 multiletter control sequences out of 15000+600000
  535074 words of font info for 33 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 30i,6n,36p,207b,288s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 30i,6n,36p,207b,281s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on CPU_time_fit.dvi (1 page, 2340 bytes).
+Output written on CPU_time_fit.dvi (1 page, 1948 bytes).

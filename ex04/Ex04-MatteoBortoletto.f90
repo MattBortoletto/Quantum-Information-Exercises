@@ -150,17 +150,17 @@ contains
 
         ! name of the file
         character(*), intent(in) :: filename
-        ! array to store the dimensions
-        integer, dimension(4) :: dimensions
+        ! variable to store the dimension
+        integer :: dimensions
         ! value for the iostat specifier
         integer :: iostat 
 
         open(unit = 10, file = filename, status = "old")
         ii = 1
-        do while(ii < 5)
-            read(10, *, iostat=iostat) dimensions(ii)
+        do while(ii < 2)
+            read(10, *, iostat=iostat) dimensions
             if(iostat < 0) then
-                write(6, '(A)') "Warning: File containts less than 4 entries."
+                write(6, '(A)') "Warning: the file containts no entries."
                 exit
             else if(iostat > 0) then
                 write(6, '(A)') 'Error reading file.'
@@ -216,9 +216,8 @@ program MyMatrixMultiplication
 
     implicit none
 
-    integer, dimension(4) :: dims
-
     ! load the dimension of the matrices
+    integer :: dims
     call LoadDimensions('matrix_dimensions.txt', dims)
 
     ! -------------------------------------------------------------------------------
@@ -230,10 +229,10 @@ program MyMatrixMultiplication
     ! -------------------------------------------------------------------------------
 
     ! assign the dimensions
-    nrows1 = dims(1)
-    ncols1 = dims(2)
-    nrows2 = dims(3)
-    ncols2 = dims(4)
+    nrows1 = dims
+    ncols1 = dims
+    nrows2 = dims
+    ncols2 = dims
 
     ! ask to enter the dimension until nrows and ncols are greater or equal than 1 and nrows2=ncols1
     do while ((nrows2 .ne. ncols1) .or. (((nrows1 .lt. 1) .or. (ncols1 .lt. 1)) .or. ((nrows2 .lt. 1) .or. (ncols2 .lt. 1))))

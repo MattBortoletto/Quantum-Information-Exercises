@@ -17,15 +17,16 @@ while (N_max <= 0 or N_max < N_min):
         N_max = int(input("Please enter the maximum dimension N_max: "))
     except ValueError:
         print("Error! The input must be an integer.")
-    # if N_max <= 0:
-    #     print("The input must be an integer.")
     if N_max < N_min:
-        print("N_max must be greater than N_min.")
+        print("Error! N_max must be greater than N_min.")
 
 iterations = 50
-#dimensions = np.logspace(np.log10(N_min), np.log10(N_max), iterations, dtype=np.int16) 
+##### for generating equally spaced points in log-log. 
+##### however it is better to have less points in the beginning
+##### so we use a linspace
+# dimensions = np.logspace(np.log10(N_min), np.log10(N_max), iterations, dtype=int)
+#####
 dimensions = np.linspace(N_min, N_max, iterations, dtype=int)
-#print('dimensions:', dimensions)
 
 fileSource = "Ex04-MatteoBortoletto.f90"
 fileExec = "Ex04.x"
@@ -52,7 +53,7 @@ subprocess.call(["gfortran", fileSource, "-o", fileExec, "-O3"])
 for d in dimensions:
     with open(dimensionsFile, "w+") as inputfile:
         print("Computing for N =", str(d))
-        inputfile.write(str(d) + '\n' + str(d) + '\n' + str(d) + '\n' + str(d) + '\n')
+        inputfile.write(str(d) + '\n') 
     subprocess.run("./" + fileExec)
 
 # if there already exists the plot, delete it
