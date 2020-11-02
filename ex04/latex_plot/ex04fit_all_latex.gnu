@@ -16,7 +16,7 @@ set grid
 ###########################################
 set key top left box 
 
-set format y '$%2.0t\times10^{%T}$'
+# set format y '$%2.0t\times10^{%T}$'
 
 array methods_files[3]
 methods_files[1] = "../not-optimized.txt"
