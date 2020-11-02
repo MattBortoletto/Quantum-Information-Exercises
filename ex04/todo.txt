@@ -12,4 +12,5 @@ REPORT
       poter essere usata in futuro per caricare dimensioni di matrici non quadrate
 - [X] scrivere che uso sempre l'ottimizzazione -O3 (?)
 - [X] scrivere che il fit dei dati not-optimized è fatto peggio
-- [ ] mettere i plot in log-log (?) 
+- [X] mettere i plot in log-log (?) 
+- [ ] ulteriori commenti sui plot (?)

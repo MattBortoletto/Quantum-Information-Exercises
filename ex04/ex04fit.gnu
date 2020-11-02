@@ -12,8 +12,7 @@ set title "Matrix multiplication - CPU times" font "Verdana, 27"
 set xlabel "Matrix dimension"
 set ylabel "CPU time (s)"
 set grid
-set logscale y
-# set logscale x 
+set logscale 
 set key bottom right box height 1.7
 set format y '%2.0t*10^{%T}'
 
@@ -25,4 +24,4 @@ b = 3
 f(x)= a*x**b
 fit f(x) filename using 1:2 via a, b 
 
-plot f(x) title 'f(x)=ax^b' lw 2, filename using 1:2 title name with linespoints lw 2
+plot f(x) title 'f(x)=ax^b' lw 2, filename using 1:2 title name with points lw 2

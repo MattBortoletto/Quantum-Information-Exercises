@@ -35,4 +35,4 @@ three multiplication methods. It will produce three different plots ('CPU_time_f
 
 Inside the folder there is a sub-folder 'latex_plots' which contains the gnuplot scripts for producing LaTeX plots both with and 
 without the fit functions. To run them, just run the compile scripts ('$ source *.sh'). Once obtained the .ps file, it can be 
-converted in .pdf.  
+converted in pdf.  

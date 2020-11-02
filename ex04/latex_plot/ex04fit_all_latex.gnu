@@ -9,11 +9,12 @@ set grid
 # set key bottom right horizontal width -3 height 1 box
 # set yrange [1e-7:100]
 ############ For log-log plots ############
-set logscale
-set key top left width -3 height 1 box
-set xrange [50:2500]
-set yrange [1e-04:1e02]
+# set logscale
+# set key top left width -3 height 1 box
+# set xrange [50:2500]
+# set yrange [1e-04:1e02]
 ###########################################
+set key top left box 
 
 set format y '$%2.0t\times10^{%T}$'
 
