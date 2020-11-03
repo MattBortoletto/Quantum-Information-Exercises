@@ -147,14 +147,6 @@ end module herm_rand_matrix
 
 
 program eigenproblem 
-
-    ! EX01 - EIGENPROBLEM
-    ! main logic:
-    ! - ask the user to insert the dimension n of the matrix
-    ! - fill it with random numbers
-    ! - call the subroutine to compute the eigenvalues 
-    ! - compute the s_i (create a subroutine/function)
-    ! - optional point
     
     use herm_rand_matrix
 
