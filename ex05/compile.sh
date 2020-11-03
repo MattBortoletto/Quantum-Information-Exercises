@@ -1,4 +1,3 @@
-# the option -framework Accelerate tells to use LAPACK on MacOS
-gfortran -c Ex05-MatteoBortoletto.f90 -framework Accelerate
+gfortran Ex05-MatteoBortoletto.f90 -o Ex05.x -O3 -framework Accelerate
 
-./Ex05.x 
+./Ex05.x
