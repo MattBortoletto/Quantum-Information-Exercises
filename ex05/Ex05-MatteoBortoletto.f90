@@ -35,7 +35,7 @@ contains
                 end do
             end do 
         else if (which_matrix == "d") then 
-            matr = cmplx(0.d0) 
+            matr = complex(0.d0, 0.d0)
             do ii = 1, d
                 call random_number(tmp)
                 matr(ii, ii) = tmp
@@ -175,6 +175,8 @@ program eigenproblem
 
     ! initialize the matrix 
     M = MatrixInit(N, which_matrix)
+
+    ! print *, M
 
     ! call the subroutine to compute the eigenvalues 
     call ComputeEigenvalues(M, eig)
