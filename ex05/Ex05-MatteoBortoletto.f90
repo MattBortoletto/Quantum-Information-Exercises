@@ -42,6 +42,7 @@ contains
             end do
         else 
             print *, "Non-valid input!" 
+            stop 
         end if 
 
     end function MatrixInit
@@ -81,7 +82,7 @@ contains
         
         call cheev(jobz,uplo,n,matr,lda,eig,work,lwork,rwork,info)
 
-        deallocate(rwork,work)
+        deallocate(rwork, work)
 
     end subroutine ComputeEigenvalues
 
@@ -96,7 +97,7 @@ contains
         real :: mean 
         integer :: ii
         
-        ! print *, eig
+        ! print *, "eig", eig
         
         do ii = 1, size(eig, 1) - 1
             spacings(ii) = eig(ii+1) - eig(ii)
@@ -104,7 +105,7 @@ contains
 
         ! print *, "spacings", spacings
         
-        mean = sum(spacings) / size(spacings)
+        mean = sum(spacings) / size(spacings, 1)
 
         ! print *, "mean", mean 
 
@@ -133,7 +134,6 @@ contains
         allocate(norm_spacings_local(size(spacings) - range + 1))
 
         do jj = 1, size(spacings) - range + 1
-            print *, jj
             norm_spacings_local(jj) = sum(spacings(jj: jj+range-1)) 
             norm_spacings_local(jj) = norm_spacings_local(jj) / range 
         end do 
@@ -141,6 +141,54 @@ contains
         !print *, "norm spacings local after normalization", norm_spacings_local
 
     end function ComputeSpacingsLocal
+
+
+    subroutine hist(x, nbins, counts, bin_centers)
+
+        ! input vector 
+        real, dimension(:), intent(in) :: x 
+        ! number of bins 
+        integer, intent(in) :: nbins
+        real :: bin_size, bin_increment    
+        real, dimension(:), allocatable :: right_edge
+        real, dimension(:), allocatable :: bin_centers      
+        integer :: ii, jj  
+        integer, dimension(:), allocatable :: counts
+
+        allocate(right_edge(nbins))
+        allocate(bin_centers(nbins))
+        allocate(counts(nbins))
+
+        bin_size = (maxval(x) - minval(x)) / nbins
+        ! print *, "bin size", bin_size
+        
+        bin_increment = minval(x)
+        do ii = 1, nbins
+            bin_increment = bin_increment + bin_size
+            right_edge(ii) = bin_increment
+        end do
+
+        bin_centers = right_edge - (bin_size/2)
+
+        ! print *, "right edges", right_edge 
+
+        counts = 0
+        do ii = 1, size(x,1)                       
+            do jj = 1, nbins-1
+                ! print *, "x_i", x(ii)                  
+                if (x(ii) .le. right_edge(jj)) then
+                counts(jj) = counts(jj) + 1
+                exit
+                end if           
+            end do                         
+            if (x(ii) >= right_edge(nbins-1)) counts(nbins) = counts(nbins) + 1
+        end do
+
+        ! print *, "from the inside ... ", counts
+
+        return 
+
+    end subroutine hist
 
 end module herm_rand_matrix
 
@@ -161,6 +209,11 @@ program eigenproblem
     ! flag 
     character(1) :: which_matrix
 
+    real, dimension(:), allocatable :: hist_bins 
+    integer, dimension(:), allocatable :: hist_counts
+
+    integer :: n_bins
+
     ! ask the user to enter the dimension of the matrix
     print *, "Please enter the dimension of the matrix: "
     read *, N 
@@ -172,6 +225,8 @@ program eigenproblem
     allocate(M(N, N))
     allocate(eig(N))
     allocate(norm_spacings(N))
+    ! allocate(hist_bins(n_bins))
+    ! allocate(hist_counts(n_bins))
 
     ! initialize the matrix 
     M = MatrixInit(N, which_matrix)
@@ -183,6 +238,12 @@ program eigenproblem
 
     ! call the function to compute the spacings 
     norm_spacings = ComputeSpacings(eig)
+
+    print *, "norm spacings", norm_spacings
+
+    norm_spacings = norm_spacings(1:size(norm_spacings, 1) - 1)
+
+    print *, "norm spacings", norm_spacings
 
     ! call the function to compute the local spacings 
     norm_spacings_local = ComputeSpacingsLocal(eig, 5)
@@ -196,8 +257,17 @@ program eigenproblem
     ! write(10, *)
     
     ! close(10) 
+
+    n_bins = 32
+
+    call hist(norm_spacings, n_bins, hist_counts, hist_bins)
+
+    print *, "counts", hist_counts
+    print *, "bins", hist_bins 
     
     deallocate(m)
     deallocate(eig)
+    ! deallocate(hist_counts)
+    ! deallocate(hist_bins)
     
 end program eigenproblem
