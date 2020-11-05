@@ -1,0 +1,219 @@
+
+
+*******************************************************************************
+Thu Nov  5 23:55:40 2020
+
+
+FIT:    data read from filename using 1:2
+        format = x:z
+        #datapoints = 92
+        residuals are weighted equally (unit weight)
+
+function used for fitting: p(x)
+	p(x) = a*exp(-b*x**beta)*x**alpha
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             beta          alpha        
+   0 2.9828076461e+04   0.00e+00  4.89e-01    4.000000e+00   2.000000e+00   1.000000e+00   1.000000e+00
+
+Current data point
+=========================
+#               = 1 out of 92
+x               = -27.0067       
+z               = 155.232        
+
+Current set of parameters
+=========================
+a               = -27.0067       
+b               = -8.87329       
+beta            = -3.3191        
+alpha           = -3.90794       
+
+BREAK: Function evaluation yields NaN ("not a number")
+
+*******************************************************************************
+Thu Nov  5 23:56:18 2020
+
+
+FIT:    data read from filename using 1:2
+        format = x:z
+        #datapoints = 92
+        residuals are weighted equally (unit weight)
+
+function used for fitting: p(x)
+	p(x) = a*exp(-b*x**beta)*x**alpha
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             beta          alpha        
+   0 2.9828076461e+04   0.00e+00  4.89e-01    4.000000e+00   2.000000e+00   1.000000e+00   1.000000e+00
+
+Current data point
+=========================
+#               = 1 out of 92
+x               = -27.0067       
+z               = 155.232        
+
+Current set of parameters
+=========================
+a               = -27.0067       
+b               = -8.87329       
+beta            = -3.3191        
+alpha           = -3.90794       
+
+BREAK: Function evaluation yields NaN ("not a number")
+
+*******************************************************************************
+Thu Nov  5 23:58:06 2020
+
+
+FIT:    data read from filename using 1:2
+        format = x:z
+        #datapoints = 92
+        residuals are weighted equally (unit weight)
+
+function used for fitting: p(x)
+	p(x) = a*exp(-b*x**beta)*x**alpha
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             beta          alpha        
+   0 2.9828076461e+04   0.00e+00  4.89e-01    4.000000e+00   2.000000e+00   1.000000e+00   1.000000e+00
+
+Current data point
+=========================
+#               = 1 out of 92
+x               = -27.0067       
+z               = 155.232        
+
+Current set of parameters
+=========================
+a               = -27.0067       
+b               = -8.87329       
+beta            = -3.3191        
+alpha           = -3.90794       
+
+BREAK: Function evaluation yields NaN ("not a number")
+
+*******************************************************************************
+Thu Nov  5 23:59:21 2020
+
+
+FIT:    data read from filename using 1:2
+        format = x:z
+        #datapoints = 92
+        residuals are weighted equally (unit weight)
+
+function used for fitting: p(x)
+	p(x) = a*exp(-b*x**beta)*x**alpha
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             beta          alpha        
+   0 2.9828076461e+04   0.00e+00  4.89e-01    4.000000e+00   2.000000e+00   1.000000e+00   1.000000e+00
+
+Current data point
+=========================
+#               = 1 out of 92
+x               = -27.0067       
+z               = 155.232        
+
+Current set of parameters
+=========================
+a               = -27.0067       
+b               = -8.87329       
+beta            = -3.3191        
+alpha           = -3.90794       
+
+BREAK: Function evaluation yields NaN ("not a number")
+
+*******************************************************************************
+Fri Nov  6 00:01:13 2020
+
+
+FIT:    data read from filename using 1:2
+        format = x:z
+        #datapoints = 92
+        residuals are weighted equally (unit weight)
+
+function used for fitting: p(x)
+	p(x) = a*exp(-b*x**beta)*x**alpha
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             beta          alpha        
+   0 2.9817223578e+04   0.00e+00  1.42e-01    1.000000e+00   1.000000e+00   1.000000e+00   1.000000e+00
+
+Current data point
+=========================
+#               = 1 out of 92
+x               = -20.0724       
+z               = 155.232        
+
+Current set of parameters
+=========================
+a               = -20.0724       
+b               = -10.4846       
+beta            = -4.80913       
+alpha           = -12.8587       
+
+BREAK: Function evaluation yields NaN ("not a number")
+
+*******************************************************************************
+Fri Nov  6 00:03:54 2020
+
+
+FIT:    data read from filename using 1:2
+        format = x:z
+        #datapoints = 92
+        residuals are weighted equally (unit weight)
+
+function used for fitting: p(x)
+	p(x) = a*exp(-b*x**beta)*x**alpha
+fitted parameters initialized with current variable values
+
+Warning: Initial value of parameter 'alpha' is zero.
+iter      chisq       delta/lim  lambda   a             b             beta          alpha        
+   0 2.9012013663e+04   0.00e+00  7.29e-01    1.800000e+00   2.000000e+00   8.000000e-01   1.000000e-30
+
+Current data point
+=========================
+#               = 1 out of 92
+x               = 48.8931        
+z               = 155.232        
+
+Current set of parameters
+=========================
+a               = 48.8931        
+b               = -34.0344       
+beta            = -43.9386       
+alpha           = 1e-30          
+
+BREAK: Function evaluation yields NaN ("not a number")
+
+*******************************************************************************
+Fri Nov  6 00:04:10 2020
+
+
+FIT:    data read from filename using 1:2
+        format = x:z
+        #datapoints = 92
+        residuals are weighted equally (unit weight)
+
+function used for fitting: p(x)
+	p(x) = a*exp(-b*x**beta)*x**alpha
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             beta          alpha        
+   0 2.9367178042e+04   0.00e+00  5.98e-01    1.800000e+00   2.000000e+00   8.000000e-01   1.000000e-01
+
+Current data point
+=========================
+#               = 1 out of 92
+x               = 1.09385        
+z               = 155.232        
+
+Current set of parameters
+=========================
+a               = 1.09385        
+b               = -57.3067       
+beta            = -33.8322       
+alpha           = -6.75085       
+
+BREAK: Function evaluation yields NaN ("not a number")
