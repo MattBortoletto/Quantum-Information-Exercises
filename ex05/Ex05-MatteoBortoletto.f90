@@ -198,16 +198,20 @@ contains
         allocate(norm_counts(nbins))
         allocate(dist(nbins))
 
+        ! compute the size of the bins 
         bin_size = (maxval(x) - minval(x)) / nbins
         
+        ! compute the right edges of the bins
         bin_increment = minval(x)
         do ii = 1, nbins
             bin_increment = bin_increment + bin_size
             right_edge(ii) = bin_increment
         end do
 
+        ! compute the bin centers
         bin_centers = right_edge - (bin_size/2)
 
+        ! fill the histogram
         counts = 0
         do ii = 1, size(x, 1)                       
             do jj = 1, nbins - 1                
