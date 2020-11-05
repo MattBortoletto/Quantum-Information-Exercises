@@ -4,6 +4,27 @@ module herm_rand_matrix
 
 contains
 
+    function BoxMuller(a, b) result(x) 
+
+        ! this function takes in input two values 'a' and 'b'
+        ! and computes a pair of gaussian distributed variables
+        ! with zero mean and unitary variance using the Box-Muller
+        ! algorithm  
+        
+        real*4, intent(in) :: a, b 
+        real*4, dimension(2) :: x 
+        real*4 :: TwoPi 
+
+        TwoPi = 8.0d0*atan(1.0)
+
+        x(1) = sqrt(-2.0*log(a))*cos(TwoPi*b)
+        x(2) = sqrt(-2.0*log(a))*cos(TwoPi*b)
+        
+        return 
+
+    end function BoxMuller
+
+
     function MatrixInit(d, which_matrix) result(matr) 
 
         ! dimension of the matrix
@@ -13,8 +34,10 @@ contains
         ! variables to loop
         integer :: ii, jj 
         ! real part and imaginary part
-        real :: RealPart, ImPart, tmp
-        ! flag
+        real*4 :: RealPart, ImPart
+        ! gaussian distributed real and imaginary parts
+        real*4, dimension(2) :: GaussReIm
+        ! flag to choose the type of matrix to initialize
         character(1), intent(in) :: which_matrix
 
         if (which_matrix == "h") then
@@ -23,27 +46,34 @@ contains
                 ! in order to be hermitian, the matrix must have its
                 ! diagonal elements with no imaginary part
                 call random_number(RealPart)
-                matr(ii, ii) = complex(RealPart, 0)
+                call random_number(ImPart)
+                GaussReIm = BoxMuller(RealPart, ImPart)
+                matr(ii, ii) = complex(GaussReIm(1), 0)
                 ! then fill the rest
                 ! in order to be hermitian, the matrix mush be such
                 ! that matr(ii, jj) = conj(matr(ii, jj)) 
                 do jj = ii + 1, d 
                     call random_number(RealPart)
                     call random_number(ImPart)
-                    matr(ii, jj) = complex(RealPart, ImPart)
+                    GaussReIm = BoxMuller(RealPart, ImPart)
+                    matr(ii, jj) = complex(GaussReIm(1), GaussReIm(2))
                     matr(jj, ii) = conjg(matr(ii, jj))
                 end do
             end do 
         else if (which_matrix == "d") then 
             matr = complex(0.d0, 0.d0)
             do ii = 1, d
-                call random_number(tmp)
-                matr(ii, ii) = tmp
+                call random_number(RealPart)
+                call random_number(ImPart)
+                GaussReIm = BoxMuller(RealPart, ImPart)
+                matr(ii, ii) = GaussReIm(1)
             end do
         else 
             print *, "Non-valid input!" 
             stop 
         end if 
+
+        return 
 
     end function MatrixInit
 
@@ -66,23 +96,25 @@ contains
         ! - info: output, if info = 0 the exit is successful
 
         complex, dimension(:, :), intent(in) :: matr
-        real, dimension(size(matr, 1)) :: eig 
-        real, dimension(:), allocatable :: rwork
+        real*4, dimension(size(matr, 1)) :: eig 
+        real*4, dimension(:), allocatable :: rwork
         complex, dimension(:), allocatable :: work
         character(1) :: jobz, uplo
         integer :: n, lda, lwork, info
         
         n = size(matr, 1)
         lda = size(matr, 1)
-        lwork = 2*size(matr, 1)-1
+        lwork = 2*size(matr, 1) - 1
         jobz = "N"
         uplo = "U"
         allocate(rwork(3*size(matr, 1)-2))
-        allocate(work(2*size(matr, 1) - 1))
+        allocate(work(2*size(matr, 1)-1))
         
-        call cheev(jobz,uplo,n,matr,lda,eig,work,lwork,rwork,info)
+        call cheev(jobz, uplo, n, matr, lda, eig, work, lwork, rwork, info)
 
         deallocate(rwork, work)
+
+        return 
 
     end subroutine ComputeEigenvalues
 
@@ -92,9 +124,9 @@ contains
         ! this subroutine computes the normalized spacings between eigenvalues.
         ! in order to do that we need to compute the difference between adjacent
         ! eigenvalues and the average of these spacings
-        real, dimension(:), intent(in) :: eig 
-        real, dimension(size(eig, 1)-1) :: spacings, norm_spacings
-        real :: mean 
+        real*4, dimension(:), intent(in) :: eig 
+        real*4, dimension(size(eig, 1)-1) :: spacings, norm_spacings
+        real*4 :: mean 
         integer :: ii
         
         ! print *, "eig", eig
@@ -113,6 +145,8 @@ contains
 
         ! print *, "norm spacings", norm_spacings
 
+        return 
+
     end function ComputeSpacings
 
 
@@ -121,9 +155,9 @@ contains
         ! this subroutine computes the normalized spacings between eigenvalues.
         ! in order to do that we need to compute the difference between adjacent
         ! eigenvalues and the average of these spacings
-        real, dimension(:), intent(in) :: eig 
-        real, dimension(size(eig, 1)-1) :: spacings
-        real, dimension(:), allocatable :: norm_spacings_local
+        real*4, dimension(:), intent(in) :: eig 
+        real*4, dimension(size(eig, 1)-1) :: spacings
+        real*4, dimension(:), allocatable :: norm_spacings_local
         integer :: ii, jj
         integer, intent(in) :: range 
         
@@ -134,33 +168,37 @@ contains
         allocate(norm_spacings_local(size(spacings) - range + 1))
 
         do jj = 1, size(spacings) - range + 1
-            norm_spacings_local(jj) = sum(spacings(jj: jj+range-1)) 
+            norm_spacings_local(jj) = sum(spacings(jj:jj+range-1)) 
             norm_spacings_local(jj) = norm_spacings_local(jj) / range 
         end do 
 
         !print *, "norm spacings local after normalization", norm_spacings_local
 
+        return  
+
     end function ComputeSpacingsLocal
 
 
-    subroutine hist(x, nbins, counts, bin_centers)
+    subroutine Hist(x, nbins, dist, bin_centers)
 
         ! input vector 
-        real, dimension(:), intent(in) :: x 
+        real*4, dimension(:), intent(in) :: x 
         ! number of bins 
         integer, intent(in) :: nbins
-        real :: bin_size, bin_increment    
-        real, dimension(:), allocatable :: right_edge
-        real, dimension(:), allocatable :: bin_centers      
+        real*4 :: bin_size, bin_increment    
+        real*4, dimension(:), allocatable :: right_edge
+        real*4, dimension(:), allocatable :: bin_centers      
         integer :: ii, jj  
         integer, dimension(:), allocatable :: counts
+        real*4, dimension(:), allocatable :: norm_counts, dist 
 
         allocate(right_edge(nbins))
         allocate(bin_centers(nbins))
         allocate(counts(nbins))
+        allocate(norm_counts(nbins))
+        allocate(dist(nbins))
 
         bin_size = (maxval(x) - minval(x)) / nbins
-        ! print *, "bin size", bin_size
         
         bin_increment = minval(x)
         do ii = 1, nbins
@@ -170,25 +208,37 @@ contains
 
         bin_centers = right_edge - (bin_size/2)
 
-        ! print *, "right edges", right_edge 
-
         counts = 0
-        do ii = 1, size(x,1)                       
-            do jj = 1, nbins-1
-                ! print *, "x_i", x(ii)                  
+        do ii = 1, size(x, 1)                       
+            do jj = 1, nbins - 1                
                 if (x(ii) .le. right_edge(jj)) then
-                counts(jj) = counts(jj) + 1
-                exit
+                    counts(jj) = counts(jj) + 1
+                    exit
                 end if           
             end do                         
-            if (x(ii) >= right_edge(nbins-1)) counts(nbins) = counts(nbins) + 1
+            if (x(ii) .ge. right_edge(nbins-1)) counts(nbins) = counts(nbins) + 1
         end do
 
-        ! print *, "from the inside ... ", counts
+        ! normalization 
+        norm_counts = real(counts) / sum(counts)
+
+        ! pdf 
+        do ii=1, nbins 
+            dist(ii) = norm_counts(ii) / (bin_size)
+        end do
 
         return 
 
-    end subroutine hist
+    end subroutine Hist
+
+
+    ! subroutine NormalizeHist(counts, norm_counts)
+        
+    !     integer, dimension(:), allocatable :: counts
+    !     real*4, dimension(:), allocatable :: norm_counts
+        
+    ! end subroutine NormalizeHist
+        
 
 end module herm_rand_matrix
 
@@ -201,24 +251,21 @@ program eigenproblem
     implicit none
 
     ! dimension of the matrix
-    integer :: N
+    integer :: N, ii 
     ! matrix
     complex, dimension(:,:), allocatable :: M
     ! array to store the eigenvalues 
-    real, dimension(:), allocatable :: eig, norm_spacings, norm_spacings_local
+    real*4, dimension(:), allocatable :: eig, norm_spacings, norm_spacings_local
     ! flag 
     character(1) :: which_matrix
-
-    real, dimension(:), allocatable :: hist_bins 
-    integer, dimension(:), allocatable :: hist_counts
-
+    real*4, dimension(:), allocatable :: hist_bins, hist_counts
     integer :: n_bins
 
     ! ask the user to enter the dimension of the matrix
     print *, "Please enter the dimension of the matrix: "
     read *, N 
 
-    print *, "Do you want a hermitian or a diagonal matrix?"
+    print *, "Do you want a hermitian or a diagonal matrix? [h/d]"
     read *, which_matrix
 
     ! allocate the memory
@@ -239,35 +286,31 @@ program eigenproblem
     ! call the function to compute the spacings 
     norm_spacings = ComputeSpacings(eig)
 
-    print *, "norm spacings", norm_spacings
-
-    norm_spacings = norm_spacings(1:size(norm_spacings, 1) - 1)
-
-    print *, "norm spacings", norm_spacings
+    ! norm_spacings = norm_spacings(1:size(norm_spacings, 1) - 1)
 
     ! call the function to compute the local spacings 
     norm_spacings_local = ComputeSpacingsLocal(eig, 5)
 
+    ! use Rice Rule to compute the optimal number of bins
+    ! nbins = 2*N^{1/3}
+    n_bins = int(2.0*N**(1.0/3.0))
+    print *, "nbins =", n_bins
+
+    ! call the subroutine which computes the pdf
+    call Hist(norm_spacings, n_bins, hist_counts, hist_bins)
+
     ! save the results in a text file 
-    ! open(10, file='results.txt', status='replace')
-    ! do ii = 1, n
-    !     write(10, *) ii, ????????????????????(ii)
-    !     ! 10 format(I3, '   ', f14.8)
-    ! end do
-    ! write(10, *)
+    open(10, file='hist.txt', status='replace')
+    do ii = 1, size(hist_bins)
+        write(10, *) hist_bins(ii), hist_counts(ii)
+    end do
+    write(10, *)
     
-    ! close(10) 
-
-    n_bins = 32
-
-    call hist(norm_spacings, n_bins, hist_counts, hist_bins)
-
-    print *, "counts", hist_counts
-    print *, "bins", hist_bins 
+    close(10) 
     
     deallocate(m)
     deallocate(eig)
-    ! deallocate(hist_counts)
-    ! deallocate(hist_bins)
+    deallocate(hist_counts)
+    deallocate(hist_bins)
     
 end program eigenproblem
