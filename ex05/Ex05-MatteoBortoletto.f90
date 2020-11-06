@@ -175,19 +175,17 @@ contains
             spacings(ii) = eig(ii+1) - eig(ii)
         end do
         
-        ! do jj = 1, size(spacings, 1) 
-        !     local_avg(jj) = sum(spacings( max(1, jj-range):min(jj+range, size(spacings)) ))
-        !     local_avg(jj) = local_avg(jj) / (min(jj+range, size(spacings)) - max(1, jj-range))
-        ! end do 
-
-        ! compute the local averages 
-        do jj = 1, size(spacings, 1) - range + 1 
-            local_avg(jj) = sum(spacings(jj:jj+range-1))
-            local_avg(jj) = local_avg(jj) / range  
-        end do
+        ! compute the local averages
+        do jj = 1, size(spacings, 1) 
+            local_avg(jj) = sum(spacings( max(1, jj-range):min(jj+range, size(spacings)) ))
+            local_avg(jj) = local_avg(jj) / (min(jj+range, size(spacings)) - max(1, jj-range))
+        end do 
 
         ! normalize 
         spacings_local = spacings / local_avg
+
+        print *, spacings_local
+        print *, " "
 
         return  
 
