@@ -79,7 +79,7 @@ contains
     end function MatrixInit
 
 
-    subroutine ComputeEigenvalues(matr, eig)
+    subroutine ComputeEigenvalues(matr, eig, info)
 
         ! this subroutine computes the eigenvalues of a complex hermitian matrix
         ! using the LAPACK subroutine 'cheev', which takes this arguments:
@@ -135,12 +135,15 @@ contains
         ! variable to loop
         integer :: ii
         
+        ! compute the spacings
         do ii = 1, size(eig, 1) - 1
             spacings(ii) = eig(ii+1) - eig(ii)
         end do
         
+        ! compute the mean of the spacings 
         mean = sum(spacings) / size(spacings, 1)
 
+        ! normalize the spacings
         norm_spacings = spacings / mean 
 
         return 
@@ -148,33 +151,43 @@ contains
     end function ComputeSpacings
 
 
-    function ComputeSpacingsLocal(eig, range) result(norm_spacings_local)
+    function ComputeSpacingsLocal(eig, range) result(spacings_local)
 
         ! this subroutine computes the normalized spacings between eigenvalues.
         ! in order to do that we need to compute the difference between adjacent
         ! eigenvalues and the average of these spacings
 
         ! vector which in our case stores the normalized spacings 
-        real*4, dimension(:), intent(in) :: eig
-        real*4, dimension(size(eig)-1) :: norm_spacings_local, spacings
+        real*4, dimension(:) :: eig
+        real*4, dimension(size(eig)-1) :: spacings, local_avg, spacings_local 
         ! variable to loop
         integer :: ii, jj
         ! window size 
         integer, intent(in) :: range 
 
+        if (range .gt. size(eig)) then 
+            print *, "The window size is too big!"
+            stop 
+        end if 
+
+        ! compute the spacings 
         do ii = 1, size(eig, 1) - 1
             spacings(ii) = eig(ii+1) - eig(ii)
         end do
         
         ! do jj = 1, size(spacings, 1) 
-        !     norm_spacings_local(jj) = sum(spacings(max(1, jj-range):min(jj+range, size(spacings, 1))))
-        !     norm_spacings_local(jj) = norm_spacings_local(jj) / (min(jj+range, size(spacings, 1)) - max(1, jj-range))
+        !     local_avg(jj) = sum(spacings( max(1, jj-range):min(jj+range, size(spacings)) ))
+        !     local_avg(jj) = local_avg(jj) / (min(jj+range, size(spacings)) - max(1, jj-range))
         ! end do 
 
+        ! compute the local averages 
         do jj = 1, size(spacings, 1) - range + 1 
-            norm_spacings_local(jj) = sum(spacings(jj:jj+range-1))
-            norm_spacings_local(jj) = norm_spacings_local(jj) / range 
+            local_avg(jj) = sum(spacings(jj:jj+range-1))
+            local_avg(jj) = local_avg(jj) / range  
         end do
+
+        ! normalize 
+        spacings_local = spacings / local_avg
 
         return  
 
@@ -197,11 +210,10 @@ contains
         ! vector to store the counts for the histogram
         integer, dimension(:), allocatable :: counts
         ! vectors which store the normalized counts and the pdf 
-        real*4, dimension(:), allocatable :: norm_counts, dist 
+        real*4, dimension(:), allocatable :: dist 
 
         allocate(right_edge(nbins))
         allocate(counts(nbins))
-        allocate(norm_counts(nbins))
 
         ! compute the size of the bins 
         bin_size = (maxval(x) - minval(x)) / nbins
@@ -229,18 +241,30 @@ contains
         end do
 
         ! normalization 
-        norm_counts = real(counts) / sum(counts)
-
-        ! compute the pdf 
-        do ii=1, nbins 
-            dist(ii) = norm_counts(ii) / (bin_size)
-        end do
+        dist = real(counts) / (sum(counts)*bin_size)
 
         deallocate(right_edge)
         deallocate(counts)
-        deallocate(norm_counts) 
 
     end subroutine ComputePDF
+
+
+    function ComputeR(spacings) result(r_mean) 
+
+        real*4, dimension(:) :: spacings
+        real*4, dimension(size(spacings-1)) :: r 
+        real*4 :: r_mean 
+        integer :: ii 
+
+        do ii = 1, size(r)
+            r(ii) = min(spacings(ii), spacings(ii+1)) / max(spacings(ii), spacings(ii+1))
+        end do 
+
+        r_mean = sum(r) / size(r) 
+
+        return
+
+    end function ComputeR
 
 end module rand_matrix
 
@@ -252,21 +276,33 @@ program RandomMatrix
 
     implicit none
 
-    ! dimension of the matrix (N) and variables to cycle
-    integer :: N, ii, trial, ntrials
+    ! N: dimension of the matrix
+    ! ii, trial: variables to cycle
+    ! ntrials: number of matrices generated to compute the distribution 
+    !          distribution of the spacings 
+    ! n_bins: number of bins for the histogram
+    ! div: number of local spacings groups
+    integer :: N, ii, trial, ntrials, info, n_bins, div
     ! matrix
     complex, dimension(:,:), allocatable :: M
-    ! array to store the eigenvalues, the normalized spacings of a 
-    ! single matrix and all the normalized spacings 
+    ! eig: array to store the eigenvalues
+    ! norm_spacings: array to store the normalized spacings of a 
+    !                single matrix 
+    ! all_s: vector to store all the normalized spacings 
     real*4, dimension(:), allocatable :: eig, norm_spacings, all_s
-    ! flag to choose the type of matrix (hermitian or real diagonal) 
+    ! which_matrix: flag to choose the type of matrix (hermitian or real diagonal) 
+    ! which_spacing: flag to choose the type of spacings (normalized
+    !                with respect to the global or local mean)
     character(1) :: which_matrix, which_spacing
-    ! histogram bin centers and counts 
-    real*4, dimension(:), allocatable :: hist_bins, hist_counts
-    ! number of bins for the histogram
-    integer :: n_bins
-    ! name for the text file in which the results are stored 
-    character(17) :: filename 
+    ! hist_bins: array to store the bin centers of the distribution
+    ! distribution: array to store the distribution points 
+    real*4, dimension(:), allocatable :: hist_bins, distribution 
+    ! filename: name for the text file in which the results are stored 
+    ! D: string to use in order to name the output file using the number
+    !    of divisions
+    character(30) :: filename, D 
+    ! variable to store <r>
+    real*4 :: r_mean 
 
     ! ask the user to enter the dimension of the matrix
     print *, "Please enter the dimension of the matrix: "
@@ -280,12 +316,16 @@ program RandomMatrix
         stop
     end if 
 
-    ! ask the user to choose between global or local spacings 
-    print *, "Do you want to compute the spacings or the local averages? [s/l]"
+    ! ask the user to choose between global or local mean  
+    print *, "Do you want to consider the global average or local averages? [g/l]"
     read *, which_spacing
-    if ((which_spacing .ne. "s") .and. (which_spacing .ne. "l")) then 
+    if ((which_spacing .ne. "g") .and. (which_spacing .ne. "l")) then 
         print *, "Invalid input."
         stop
+    end if 
+    if (which_spacing == "l") then
+        print *, "Please enter the number of divisions D to form the local spacings (N/D):"
+        read *, div 
     end if 
 
     ! allocate the memory
@@ -296,54 +336,70 @@ program RandomMatrix
 
     ! set the number random matrices which are used to
     ! compute the spacings distribution 
-    ntrials = 100
+
+    print *, "How many matrices do you want to generate?"
+    read *, ntrials 
 
     do trial = 1, ntrials
 
-        ! initialize the matrix 
-        M = MatrixInit(N, which_matrix)
+        print *, "Computing the spacings for matrix number", trial
 
-        ! call the subroutine to compute the eigenvalues 
-        call ComputeEigenvalues(M, eig)
+        ! use the info flag of the subroutine 'cheev' to check if the
+        ! diagonalization has been successful
+        info = 1
+        do while (info .ne. 0)
+            ! initialize the matrix 
+            M = MatrixInit(N, which_matrix)
+            ! call the subroutine to compute the eigenvalues 
+            call ComputeEigenvalues(M, eig, info)
+        end do 
 
         ! call the function to compute the spacings
-        if (which_spacing == "s") then  
+        if (which_spacing == "g") then  
             norm_spacings = ComputeSpacings(eig)
         else if (which_spacing == "l") then 
-            norm_spacings = ComputeSpacingsLocal(eig, N/100)
+            norm_spacings = ComputeSpacingsLocal(eig, N/div)
         end if 
 
         ! add the spacings we just computed to the vector of all 
         ! the spacings 
         all_s(1+(trial-1)*(N-2):trial*(N-2)) = norm_spacings
 
-        print *, "Computing the spacings for matrix number", trial
-
     end do 
+
+    ! compute the <r>
+    r_mean = ComputeR(all_s)
+    if (which_spacing == "l") then 
+        print *, "Locality level = N /", div
+    end if 
+    print *, "<r>", r_mean  
 
     ! use Rice Rule to compute the optimal number of bins
     ! nbins = 2*N^{1/3}
     n_bins = int(2.0*(ntrials*(N-2))**(1.0/3.0))
 
     allocate(hist_bins(n_bins))
-    allocate(hist_counts(n_bins))
+    allocate(distribution(n_bins))
 
     ! call the subroutine which computes the pdf
-    call ComputePDF(all_S, n_bins, hist_counts, hist_bins)
+    call ComputePDF(all_s, n_bins, distribution, hist_bins)
 
     ! save the results in a text file 
+    ! choose the name of the file according to the options the user chose
     if ((which_matrix == "h") .and. (which_spacing == "s")) then 
         filename = "herm_spacings.txt"
     else if ((which_matrix == "h") .and. (which_spacing == "l")) then 
-        filename = "herm_loc_aver.txt"
+        write (D, "(A)") div 
+        filename = "herm_loc_aver_" // trim(D) // ".txt"
     else if ((which_matrix == "d") .and. (which_spacing == "s")) then
         filename = "diag_spacings.txt"
     else if ((which_matrix == "d") .and. (which_spacing == "l")) then
-        filename = "diag_loc_aver.txt"
+        write (D, "(A)") div 
+        filename = "diag_loc_aver_" // trim(D) // ".txt"
     end if 
     open(10, file=filename, status='replace')
     do ii = 1, size(hist_bins)
-        write(10, *) hist_bins(ii), hist_counts(ii)
+        write(10, *) hist_bins(ii), distribution(ii)
     end do
     write(10, *)
     
@@ -351,7 +407,7 @@ program RandomMatrix
     
     deallocate(m)
     deallocate(eig)
-    deallocate(hist_counts)
+    deallocate(distribution)
     deallocate(hist_bins)
     
 end program RandomMatrix

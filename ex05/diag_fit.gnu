@@ -17,12 +17,14 @@ set key font ",18" box height 1 width 1
 fileLog = name."_fit.log"
 set fit logfile fileLog
 
-a = 1.8
-b = 2 
-beta = 0.8 
-alpha = 0.01
-p(x) = a*exp(-b*x**beta)*x**alpha
+a = 1
+b = 1
+beta = 1
+alpha = 1
+p(x) = exp(-b*(x**beta))
+#p(x) = (a*(x**alpha))*(exp(-b*(x**beta)))
 
-fit p(x) filename using 1:2 via a, b, beta, alpha  
+#fit p(x) filename using 1:2 via a, alpha, b, beta
+fit p(x) filename using 1:2 via b, beta  
 
 plot filename using 1:2 with p title "data", p(x) title "fit" lw 2
