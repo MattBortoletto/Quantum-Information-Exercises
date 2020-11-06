@@ -18,9 +18,9 @@ fileLog = name."_fit.log"
 set fit logfile fileLog
 
 a = 1.8
-b = 2
-beta = 0.8
-alpha = 0.1
+b = 2 
+beta = 0.8 
+alpha = 0.01
 p(x) = a*exp(-b*x**beta)*x**alpha
 
 fit p(x) filename using 1:2 via a, b, beta, alpha  

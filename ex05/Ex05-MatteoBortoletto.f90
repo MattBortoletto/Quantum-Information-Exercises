@@ -154,27 +154,27 @@ contains
         ! in order to do that we need to compute the difference between adjacent
         ! eigenvalues and the average of these spacings
 
-        ! vector to store the eigenvalues
-        real*4, dimension(:), intent(in) :: eig 
-        ! vectors to store the local spacings
-        real*4, dimension(size(eig, 1)-1) :: spacings
-        ! vectors to store the local normalized spacings
-        real*4, dimension(:), allocatable :: norm_spacings_local
-        ! variables to loop
+        ! vector which in our case stores the normalized spacings 
+        real*4, dimension(:), intent(in) :: eig
+        real*4, dimension(size(eig)-1) :: norm_spacings_local, spacings
+        ! variable to loop
         integer :: ii, jj
         ! window size 
         integer, intent(in) :: range 
-        
+
         do ii = 1, size(eig, 1) - 1
             spacings(ii) = eig(ii+1) - eig(ii)
-        end do 
+        end do
+        
+        ! do jj = 1, size(spacings, 1) 
+        !     norm_spacings_local(jj) = sum(spacings(max(1, jj-range):min(jj+range, size(spacings, 1))))
+        !     norm_spacings_local(jj) = norm_spacings_local(jj) / (min(jj+range, size(spacings, 1)) - max(1, jj-range))
+        ! end do 
 
-        allocate(norm_spacings_local(size(spacings) - range + 1))
-
-        do jj = 1, size(spacings) - range + 1
-            norm_spacings_local(jj) = sum(spacings(jj:jj+range-1)) 
+        do jj = 1, size(spacings, 1) - range + 1 
+            norm_spacings_local(jj) = sum(spacings(jj:jj+range-1))
             norm_spacings_local(jj) = norm_spacings_local(jj) / range 
-        end do 
+        end do
 
         return  
 
@@ -266,7 +266,7 @@ program RandomMatrix
     ! number of bins for the histogram
     integer :: n_bins
     ! name for the text file in which the results are stored 
-    character(21) :: filename 
+    character(17) :: filename 
 
     ! ask the user to enter the dimension of the matrix
     print *, "Please enter the dimension of the matrix: "
@@ -281,9 +281,9 @@ program RandomMatrix
     end if 
 
     ! ask the user to choose between global or local spacings 
-    print *, "Do you want to use global or local spacings? [g/l]"
+    print *, "Do you want to compute the spacings or the local averages? [s/l]"
     read *, which_spacing
-    if ((which_spacing .ne. "g") .and. (which_spacing .ne. "l")) then 
+    if ((which_spacing .ne. "s") .and. (which_spacing .ne. "l")) then 
         print *, "Invalid input."
         stop
     end if 
@@ -306,11 +306,11 @@ program RandomMatrix
         ! call the subroutine to compute the eigenvalues 
         call ComputeEigenvalues(M, eig)
 
-        ! call the function to compute the spacings 
-        if (which_spacing == "g") then 
+        ! call the function to compute the spacings
+        if (which_spacing == "s") then  
             norm_spacings = ComputeSpacings(eig)
         else if (which_spacing == "l") then 
-            norm_spacings = ComputeSpacingsLocal(eig, 5)
+            norm_spacings = ComputeSpacingsLocal(eig, N/100)
         end if 
 
         ! add the spacings we just computed to the vector of all 
@@ -324,7 +324,6 @@ program RandomMatrix
     ! use Rice Rule to compute the optimal number of bins
     ! nbins = 2*N^{1/3}
     n_bins = int(2.0*(ntrials*(N-2))**(1.0/3.0))
-    print *, n_bins
 
     allocate(hist_bins(n_bins))
     allocate(hist_counts(n_bins))
@@ -333,14 +332,14 @@ program RandomMatrix
     call ComputePDF(all_S, n_bins, hist_counts, hist_bins)
 
     ! save the results in a text file 
-    if ((which_matrix == "h") .and. (which_spacing == "g")) then 
-        filename = "herm_glo_spacings.txt"
+    if ((which_matrix == "h") .and. (which_spacing == "s")) then 
+        filename = "herm_spacings.txt"
     else if ((which_matrix == "h") .and. (which_spacing == "l")) then 
-        filename = "herm_loc_spacings.txt"
-    else if ((which_matrix == "d") .and. (which_spacing == "g")) then
-        filename = "diag_glo_spacings.txt"
+        filename = "herm_loc_aver.txt"
+    else if ((which_matrix == "d") .and. (which_spacing == "s")) then
+        filename = "diag_spacings.txt"
     else if ((which_matrix == "d") .and. (which_spacing == "l")) then
-        filename = "diag_loc_spacings.txt"
+        filename = "diag_loc_aver.txt"
     end if 
     open(10, file=filename, status='replace')
     do ii = 1, size(hist_bins)
