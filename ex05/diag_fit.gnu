@@ -17,7 +17,6 @@ set key font ",18" box height 1 width 1
 fileLog = name."_fit.log"
 set fit logfile fileLog
 
-a = 1
 b = 1
 beta = 1
 alpha = 1

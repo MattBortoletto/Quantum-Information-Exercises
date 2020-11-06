@@ -184,8 +184,8 @@ contains
         ! normalize 
         spacings_local = spacings / local_avg
 
-        print *, spacings_local
-        print *, " "
+        ! print *, spacings_local
+        ! print *, " "
 
         return  
 
@@ -264,6 +264,17 @@ contains
 
     end function ComputeR
 
+    function str(k) result(k_str)
+
+        ! convert an integer to string
+        integer, intent(in) :: k
+        character(30) :: k_str
+
+        write (k_str, *) k
+        k_str = adjustl(k_str)
+
+    end function str
+
 end module rand_matrix
 
 
@@ -296,9 +307,7 @@ program RandomMatrix
     ! distribution: array to store the distribution points 
     real*4, dimension(:), allocatable :: hist_bins, distribution 
     ! filename: name for the text file in which the results are stored 
-    ! D: string to use in order to name the output file using the number
-    !    of divisions
-    character(30) :: filename, D 
+    character(30) :: filename
     ! variable to store <r>
     real*4 :: r_mean 
 
@@ -384,16 +393,14 @@ program RandomMatrix
 
     ! save the results in a text file 
     ! choose the name of the file according to the options the user chose
-    if ((which_matrix == "h") .and. (which_spacing == "s")) then 
+    if ((which_matrix == "h") .and. (which_spacing == "g")) then 
         filename = "herm_spacings.txt"
     else if ((which_matrix == "h") .and. (which_spacing == "l")) then 
-        write (D, "(A)") div 
-        filename = "herm_loc_aver_" // trim(D) // ".txt"
-    else if ((which_matrix == "d") .and. (which_spacing == "s")) then
+        filename = "herm_loc_aver_"//trim(str(div))//".txt"
+    else if ((which_matrix == "d") .and. (which_spacing == "g")) then
         filename = "diag_spacings.txt"
     else if ((which_matrix == "d") .and. (which_spacing == "l")) then
-        write (D, "(A)") div 
-        filename = "diag_loc_aver_" // trim(D) // ".txt"
+        filename = "diag_loc_aver_"//trim(str(div))//".txt"
     end if 
     open(10, file=filename, status='replace')
     do ii = 1, size(hist_bins)
