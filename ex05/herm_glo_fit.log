@@ -38,3 +38,925 @@ a               1.000
 b               1.000  1.000 
 alpha           0.990  0.988  1.000 
 beta           -0.987 -0.989 -0.959  1.000 
+
+
+*******************************************************************************
+Sun Nov  8 23:39:47 2020
+
+
+FIT:    data read from filename
+        format = z
+        #datapoints = 116
+        residuals are weighted equally (unit weight)
+
+function used for fitting: p(x)
+	p(x) = a * (x**alpha) * exp(-b*(x**beta))
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             alpha         beta         
+   0 1.2420319115e+00   0.00e+00  3.26e-01    3.000000e+00   1.000000e+00   2.000000e+00   2.000000e+00
+ 152 6.3453231339e-03  -2.42e-01  3.26e-06    1.151040e+01   2.642916e+00   2.495479e+00   1.374242e+00
+
+After 152 iterations the fit converged.
+final sum of squares of residuals : 0.00634532
+rel. change during last iteration : -2.42157e-06
+
+degrees of freedom    (FIT_NDF)                        : 112
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.00752693
+variance of residuals (reduced chisquare) = WSSR/ndf   : 5.66547e-05
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 11.5104          +/- 1.831        (15.91%)
+b               = 2.64292          +/- 0.1611       (6.094%)
+alpha           = 2.49548          +/- 0.09105      (3.649%)
+beta            = 1.37424          +/- 0.0464       (3.376%)
+
+correlation matrix of the fit parameters:
+                a      b      alpha  beta   
+a               1.000 
+b               1.000  1.000 
+alpha           0.990  0.988  1.000 
+beta           -0.987 -0.989 -0.959  1.000 
+
+
+*******************************************************************************
+Sun Nov  8 23:40:23 2020
+
+
+FIT:    data read from filename
+        format = z
+        #datapoints = 116
+        residuals are weighted equally (unit weight)
+
+function used for fitting: p(x)
+	p(x) = a * (x**alpha) * exp(-b*(x**beta))
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             alpha         beta         
+   0 2.2218255546e+00   0.00e+00  1.84e-01    1.000000e+00   1.000000e+00   1.000000e+00   1.000000e+00
+
+Current data point
+=========================
+#               = 105 out of 116
+x               = -2.11473       
+z               = 0              
+
+Current set of parameters
+=========================
+a               = -2.11473       
+b               = -1.04035       
+alpha           = 0.441256       
+beta            = 2.64495        
+
+BREAK: Function evaluation yields NaN ("not a number")
+
+*******************************************************************************
+Sun Nov  8 23:41:10 2020
+
+
+FIT:    data read from filename
+        format = z
+        #datapoints = 116
+        residuals are weighted equally (unit weight)
+
+function used for fitting: p(x)
+	p(x) = a * (x**alpha) * exp(-b*(x**beta))
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             alpha         beta         
+   0 2.2218255546e+00   0.00e+00  1.84e-01    1.000000e+00   1.000000e+00   1.000000e+00   1.000000e+00
+
+Current data point
+=========================
+#               = 105 out of 116
+x               = -2.11473       
+z               = 0              
+
+Current set of parameters
+=========================
+a               = -2.11473       
+b               = -1.04035       
+alpha           = 0.441256       
+beta            = 2.64495        
+
+BREAK: Function evaluation yields NaN ("not a number")
+
+*******************************************************************************
+Sun Nov  8 23:41:52 2020
+
+
+FIT:    data read from filename
+        format = z
+        #datapoints = 116
+        residuals are weighted equally (unit weight)
+
+function used for fitting: p(x)
+	p(x) = a * (x**alpha) * exp(-b*(x**beta))
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             alpha         beta         
+   0 2.2218255546e+00   0.00e+00  1.84e-01    1.000000e+00   1.000000e+00   1.000000e+00   1.000000e+00
+
+Current data point
+=========================
+#               = 105 out of 116
+x               = -2.11473       
+z               = 0              
+
+Current set of parameters
+=========================
+a               = -2.11473       
+b               = -1.04035       
+alpha           = 0.441256       
+beta            = 2.64495        
+
+BREAK: Function evaluation yields NaN ("not a number")
+
+*******************************************************************************
+Sun Nov  8 23:42:54 2020
+
+
+FIT:    data read from filename
+        format = z
+        #datapoints = 116
+        residuals are weighted equally (unit weight)
+
+function used for fitting: p(x)
+	p(x) = a * (x**alpha) * exp(-b*(x**beta))
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             alpha         beta         
+   0 2.2218255546e+00   0.00e+00  1.84e-01    1.000000e+00   1.000000e+00   1.000000e+00   1.000000e+00
+
+Current data point
+=========================
+#               = 105 out of 116
+x               = -2.11473       
+z               = 0              
+
+Current set of parameters
+=========================
+a               = -2.11473       
+b               = -1.04035       
+alpha           = 0.441256       
+beta            = 2.64495        
+
+BREAK: Function evaluation yields NaN ("not a number")
+
+*******************************************************************************
+Sun Nov  8 23:43:23 2020
+
+
+FIT:    data read from filename
+        format = z
+        #datapoints = 116
+        residuals are weighted equally (unit weight)
+
+function used for fitting: p(x)
+	p(x) = a * (x**alpha) * exp(-b*(x**beta))
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             alpha         beta         
+   0 2.2218255546e+00   0.00e+00  1.84e-01    1.000000e+00   1.000000e+00   1.000000e+00   1.000000e+00
+
+Current data point
+=========================
+#               = 105 out of 116
+x               = -2.11473       
+z               = 0              
+
+Current set of parameters
+=========================
+a               = -2.11473       
+b               = -1.04035       
+alpha           = 0.441256       
+beta            = 2.64495        
+
+BREAK: Function evaluation yields NaN ("not a number")
+
+*******************************************************************************
+Sun Nov  8 23:44:06 2020
+
+
+FIT:    data read from filename
+        format = z
+        #datapoints = 116
+        residuals are weighted equally (unit weight)
+
+function used for fitting: p(x)
+	p(x) = a * (x**alpha) * exp(-b*(x**beta))
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             alpha         beta         
+   0 2.2218255546e+00   0.00e+00  1.84e-01    1.000000e+00   1.000000e+00   1.000000e+00   1.000000e+00
+
+Current data point
+=========================
+#               = 105 out of 116
+x               = -2.11473       
+z               = 0              
+
+Current set of parameters
+=========================
+a               = -2.11473       
+b               = -1.04035       
+alpha           = 0.441256       
+beta            = 2.64495        
+
+BREAK: Function evaluation yields NaN ("not a number")
+
+*******************************************************************************
+Sun Nov  8 23:44:24 2020
+
+
+FIT:    data read from filename
+        format = z
+        #datapoints = 116
+        residuals are weighted equally (unit weight)
+
+function used for fitting: p(x)
+	p(x) = a * (x**alpha) * exp(-b*(x**beta))
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             alpha         beta         
+   0 2.2218255546e+00   0.00e+00  1.84e-01    1.000000e+00   1.000000e+00   1.000000e+00   1.000000e+00
+
+Current data point
+=========================
+#               = 105 out of 116
+x               = -2.11473       
+z               = 0              
+
+Current set of parameters
+=========================
+a               = -2.11473       
+b               = -1.04035       
+alpha           = 0.441256       
+beta            = 2.64495        
+
+BREAK: Function evaluation yields NaN ("not a number")
+
+*******************************************************************************
+Sun Nov  8 23:46:12 2020
+
+
+FIT:    data read from filename
+        format = z
+        #datapoints = 116
+        residuals are weighted equally (unit weight)
+
+function used for fitting: p(x)
+	p(x) = a * (x**alpha) * exp(-b*(x**beta))
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             alpha         beta         
+   0 1.2420319115e+00   0.00e+00  3.26e-01    3.000000e+00   1.000000e+00   2.000000e+00   2.000000e+00
+ 152 6.3453231339e-03  -2.42e-01  3.26e-06    1.151040e+01   2.642916e+00   2.495479e+00   1.374242e+00
+
+After 152 iterations the fit converged.
+final sum of squares of residuals : 0.00634532
+rel. change during last iteration : -2.42157e-06
+
+degrees of freedom    (FIT_NDF)                        : 112
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.00752693
+variance of residuals (reduced chisquare) = WSSR/ndf   : 5.66547e-05
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 11.5104          +/- 1.831        (15.91%)
+b               = 2.64292          +/- 0.1611       (6.094%)
+alpha           = 2.49548          +/- 0.09105      (3.649%)
+beta            = 1.37424          +/- 0.0464       (3.376%)
+
+correlation matrix of the fit parameters:
+                a      b      alpha  beta   
+a               1.000 
+b               1.000  1.000 
+alpha           0.990  0.988  1.000 
+beta           -0.987 -0.989 -0.959  1.000 
+
+
+*******************************************************************************
+Sun Nov  8 23:53:14 2020
+
+
+FIT:    data read from filename
+        format = z
+        #datapoints = 116
+        residuals are weighted equally (unit weight)
+
+function used for fitting: p(x)
+	p(x) = a * (x**alpha) * exp(-b*(x**beta))
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             alpha         beta         
+   0 2.2218255546e+00   0.00e+00  1.84e-01    1.000000e+00   1.000000e+00   1.000000e+00   1.000000e+00
+
+Current data point
+=========================
+#               = 105 out of 116
+x               = -2.11473       
+z               = 0              
+
+Current set of parameters
+=========================
+a               = -2.11473       
+b               = -1.04035       
+alpha           = 0.441256       
+beta            = 2.64495        
+
+BREAK: Function evaluation yields NaN ("not a number")
+
+*******************************************************************************
+Sun Nov  8 23:54:11 2020
+
+
+FIT:    data read from filename
+        format = z
+        #datapoints = 116
+        residuals are weighted equally (unit weight)
+
+function used for fitting: p(x)
+	p(x) = a * (x**alpha) * exp(-b*(x**beta))
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             alpha         beta         
+   0 2.2218255546e+00   0.00e+00  1.84e-01    1.000000e+00   1.000000e+00   1.000000e+00   1.000000e+00
+
+Current data point
+=========================
+#               = 105 out of 116
+x               = -2.11473       
+z               = 0              
+
+Current set of parameters
+=========================
+a               = -2.11473       
+b               = -1.04035       
+alpha           = 0.441256       
+beta            = 2.64495        
+
+BREAK: Function evaluation yields NaN ("not a number")
+
+*******************************************************************************
+Sun Nov  8 23:54:15 2020
+
+
+FIT:    data read from filename
+        format = z
+        #datapoints = 116
+        residuals are weighted equally (unit weight)
+
+function used for fitting: p(x)
+	p(x) = a * (x**alpha) * exp(-b*(x**beta))
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             alpha         beta         
+   0 2.2218255546e+00   0.00e+00  1.84e-01    1.000000e+00   1.000000e+00   1.000000e+00   1.000000e+00
+
+Current data point
+=========================
+#               = 105 out of 116
+x               = -2.11473       
+z               = 0              
+
+Current set of parameters
+=========================
+a               = -2.11473       
+b               = -1.04035       
+alpha           = 0.441256       
+beta            = 2.64495        
+
+BREAK: Function evaluation yields NaN ("not a number")
+
+*******************************************************************************
+Sun Nov  8 23:54:52 2020
+
+
+FIT:    data read from filename
+        format = z
+        #datapoints = 116
+        residuals are weighted equally (unit weight)
+
+function used for fitting: p(x)
+	p(x) = a * (x**alpha) * exp(-b*(x**beta))
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             alpha         beta         
+   0 2.2218255546e+00   0.00e+00  1.84e-01    1.000000e+00   1.000000e+00   1.000000e+00   1.000000e+00
+
+Current data point
+=========================
+#               = 105 out of 116
+x               = -2.11473       
+z               = 0              
+
+Current set of parameters
+=========================
+a               = -2.11473       
+b               = -1.04035       
+alpha           = 0.441256       
+beta            = 2.64495        
+
+BREAK: Function evaluation yields NaN ("not a number")
+
+*******************************************************************************
+Sun Nov  8 23:54:54 2020
+
+
+FIT:    data read from filename
+        format = z
+        #datapoints = 116
+        residuals are weighted equally (unit weight)
+
+function used for fitting: p(x)
+	p(x) = a * (x**alpha) * exp(-b*(x**beta))
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             alpha         beta         
+   0 2.2218255546e+00   0.00e+00  1.84e-01    1.000000e+00   1.000000e+00   1.000000e+00   1.000000e+00
+
+Current data point
+=========================
+#               = 105 out of 116
+x               = -2.11473       
+z               = 0              
+
+Current set of parameters
+=========================
+a               = -2.11473       
+b               = -1.04035       
+alpha           = 0.441256       
+beta            = 2.64495        
+
+BREAK: Function evaluation yields NaN ("not a number")
+
+*******************************************************************************
+Sun Nov  8 23:57:41 2020
+
+
+FIT:    data read from filename
+        format = z
+        #datapoints = 116
+        residuals are weighted equally (unit weight)
+
+function used for fitting: p(x)
+	p(x) = a * (x**alpha) * exp(-b*(x**beta))
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             alpha         beta         
+   0 2.2218255546e+00   0.00e+00  1.84e-01    1.000000e+00   1.000000e+00   1.000000e+00   1.000000e+00
+
+Current data point
+=========================
+#               = 105 out of 116
+x               = -2.11473       
+z               = 0              
+
+Current set of parameters
+=========================
+a               = -2.11473       
+b               = -1.04035       
+alpha           = 0.441256       
+beta            = 2.64495        
+
+BREAK: Function evaluation yields NaN ("not a number")
+
+*******************************************************************************
+Mon Nov  9 00:01:24 2020
+
+
+FIT:    data read from filename
+        format = z
+        #datapoints = 116
+        residuals are weighted equally (unit weight)
+
+function used for fitting: p(x)
+	p(x) = a * (x**alpha) * exp(-b*(x**beta))
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             alpha         beta         
+   0 2.2218255546e+00   0.00e+00  1.84e-01    1.000000e+00   1.000000e+00   1.000000e+00   1.000000e+00
+
+Current data point
+=========================
+#               = 105 out of 116
+x               = -2.11473       
+z               = 0              
+
+Current set of parameters
+=========================
+a               = -2.11473       
+b               = -1.04035       
+alpha           = 0.441256       
+beta            = 2.64495        
+
+BREAK: Function evaluation yields NaN ("not a number")
+
+*******************************************************************************
+Mon Nov  9 00:01:29 2020
+
+
+FIT:    data read from filename
+        format = z
+        #datapoints = 116
+        residuals are weighted equally (unit weight)
+
+function used for fitting: p(x)
+	p(x) = a * (x**alpha) * exp(-b*(x**beta))
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             alpha         beta         
+   0 2.2218255546e+00   0.00e+00  1.84e-01    1.000000e+00   1.000000e+00   1.000000e+00   1.000000e+00
+
+Current data point
+=========================
+#               = 105 out of 116
+x               = -2.11473       
+z               = 0              
+
+Current set of parameters
+=========================
+a               = -2.11473       
+b               = -1.04035       
+alpha           = 0.441256       
+beta            = 2.64495        
+
+BREAK: Function evaluation yields NaN ("not a number")
+
+*******************************************************************************
+Mon Nov  9 00:01:39 2020
+
+
+FIT:    data read from filename
+        format = z
+        #datapoints = 116
+        residuals are weighted equally (unit weight)
+
+function used for fitting: p(x)
+	p(x) = a * (x**alpha) * exp(-b*(x**beta))
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             alpha         beta         
+   0 1.2420319115e+00   0.00e+00  3.26e-01    3.000000e+00   1.000000e+00   2.000000e+00   2.000000e+00
+ 152 6.3453231339e-03  -2.42e-01  3.26e-06    1.151040e+01   2.642916e+00   2.495479e+00   1.374242e+00
+
+After 152 iterations the fit converged.
+final sum of squares of residuals : 0.00634532
+rel. change during last iteration : -2.42157e-06
+
+degrees of freedom    (FIT_NDF)                        : 112
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.00752693
+variance of residuals (reduced chisquare) = WSSR/ndf   : 5.66547e-05
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 11.5104          +/- 1.831        (15.91%)
+b               = 2.64292          +/- 0.1611       (6.094%)
+alpha           = 2.49548          +/- 0.09105      (3.649%)
+beta            = 1.37424          +/- 0.0464       (3.376%)
+
+correlation matrix of the fit parameters:
+                a      b      alpha  beta   
+a               1.000 
+b               1.000  1.000 
+alpha           0.990  0.988  1.000 
+beta           -0.987 -0.989 -0.959  1.000 
+
+
+*******************************************************************************
+Mon Nov  9 00:02:57 2020
+
+
+FIT:    data read from filename
+        format = z
+        #datapoints = 116
+        residuals are weighted equally (unit weight)
+
+function used for fitting: p(x)
+	p(x) = a * (x**alpha) * exp(-b*(x**beta))
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             alpha         beta         
+   0 2.2218255546e+00   0.00e+00  1.84e-01    1.000000e+00   1.000000e+00   1.000000e+00   1.000000e+00
+
+Current data point
+=========================
+#               = 105 out of 116
+x               = -2.11473       
+z               = 0              
+
+Current set of parameters
+=========================
+a               = -2.11473       
+b               = -1.04035       
+alpha           = 0.441256       
+beta            = 2.64495        
+
+BREAK: Function evaluation yields NaN ("not a number")
+
+*******************************************************************************
+Mon Nov  9 00:03:08 2020
+
+
+FIT:    data read from filename
+        format = z
+        #datapoints = 116
+        residuals are weighted equally (unit weight)
+
+function used for fitting: p(x)
+	p(x) = a * (x**alpha) * exp(-b*(x**beta))
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             alpha         beta         
+   0 2.2218255546e+00   0.00e+00  1.84e-01    1.000000e+00   1.000000e+00   1.000000e+00   1.000000e+00
+
+Current data point
+=========================
+#               = 105 out of 116
+x               = -2.11473       
+z               = 0              
+
+Current set of parameters
+=========================
+a               = -2.11473       
+b               = -1.04035       
+alpha           = 0.441256       
+beta            = 2.64495        
+
+BREAK: Function evaluation yields NaN ("not a number")
+
+*******************************************************************************
+Mon Nov  9 00:03:11 2020
+
+
+FIT:    data read from filename
+        format = z
+        #datapoints = 116
+        residuals are weighted equally (unit weight)
+
+function used for fitting: p(x)
+	p(x) = a * (x**alpha) * exp(-b*(x**beta))
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             alpha         beta         
+   0 1.2420319115e+00   0.00e+00  3.26e-01    3.000000e+00   1.000000e+00   2.000000e+00   2.000000e+00
+ 152 6.3453231339e-03  -2.42e-01  3.26e-06    1.151040e+01   2.642916e+00   2.495479e+00   1.374242e+00
+
+After 152 iterations the fit converged.
+final sum of squares of residuals : 0.00634532
+rel. change during last iteration : -2.42157e-06
+
+degrees of freedom    (FIT_NDF)                        : 112
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.00752693
+variance of residuals (reduced chisquare) = WSSR/ndf   : 5.66547e-05
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 11.5104          +/- 1.831        (15.91%)
+b               = 2.64292          +/- 0.1611       (6.094%)
+alpha           = 2.49548          +/- 0.09105      (3.649%)
+beta            = 1.37424          +/- 0.0464       (3.376%)
+
+correlation matrix of the fit parameters:
+                a      b      alpha  beta   
+a               1.000 
+b               1.000  1.000 
+alpha           0.990  0.988  1.000 
+beta           -0.987 -0.989 -0.959  1.000 
+
+
+*******************************************************************************
+Mon Nov  9 00:04:08 2020
+
+
+FIT:    data read from filename
+        format = z
+        #datapoints = 116
+        residuals are weighted equally (unit weight)
+
+function used for fitting: p(x)
+	p(x) = a * (x**alpha) * exp(-b*(x**beta))
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             alpha         beta         
+   0 2.2218255546e+00   0.00e+00  1.84e-01    1.000000e+00   1.000000e+00   1.000000e+00   1.000000e+00
+
+Current data point
+=========================
+#               = 105 out of 116
+x               = -2.11473       
+z               = 0              
+
+Current set of parameters
+=========================
+a               = -2.11473       
+b               = -1.04035       
+alpha           = 0.441256       
+beta            = 2.64495        
+
+BREAK: Function evaluation yields NaN ("not a number")
+
+*******************************************************************************
+Mon Nov  9 00:04:29 2020
+
+
+FIT:    data read from filename
+        format = z
+        #datapoints = 116
+        residuals are weighted equally (unit weight)
+
+function used for fitting: p(x)
+	p(x) = a * (x**alpha) * exp(-b*(x**beta))
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             alpha         beta         
+   0 2.2218255546e+00   0.00e+00  1.84e-01    1.000000e+00   1.000000e+00   1.000000e+00   1.000000e+00
+
+Current data point
+=========================
+#               = 105 out of 116
+x               = -2.11473       
+z               = 0              
+
+Current set of parameters
+=========================
+a               = -2.11473       
+b               = -1.04035       
+alpha           = 0.441256       
+beta            = 2.64495        
+
+BREAK: Function evaluation yields NaN ("not a number")
+
+*******************************************************************************
+Mon Nov  9 00:05:10 2020
+
+
+FIT:    data read from filename
+        format = z
+        #datapoints = 116
+        residuals are weighted equally (unit weight)
+
+function used for fitting: p(x)
+	p(x) = a * (x**alpha) * exp(-b*(x**beta))
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             alpha         beta         
+   0 2.2218255546e+00   0.00e+00  1.84e-01    1.000000e+00   1.000000e+00   1.000000e+00   1.000000e+00
+
+Current data point
+=========================
+#               = 105 out of 116
+x               = -2.11473       
+z               = 0              
+
+Current set of parameters
+=========================
+a               = -2.11473       
+b               = -1.04035       
+alpha           = 0.441256       
+beta            = 2.64495        
+
+BREAK: Function evaluation yields NaN ("not a number")
+
+*******************************************************************************
+Mon Nov  9 00:05:30 2020
+
+
+FIT:    data read from filename
+        format = z
+        #datapoints = 116
+        residuals are weighted equally (unit weight)
+
+function used for fitting: p(x)
+	p(x) = a * (x**alpha) * exp(-b*(x**beta))
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             alpha         beta         
+   0 2.2218255546e+00   0.00e+00  1.84e-01    1.000000e+00   1.000000e+00   1.000000e+00   1.000000e+00
+
+Current data point
+=========================
+#               = 105 out of 116
+x               = -2.11473       
+z               = 0              
+
+Current set of parameters
+=========================
+a               = -2.11473       
+b               = -1.04035       
+alpha           = 0.441256       
+beta            = 2.64495        
+
+BREAK: Function evaluation yields NaN ("not a number")
+
+*******************************************************************************
+Mon Nov  9 00:06:02 2020
+
+
+FIT:    data read from filename
+        format = z
+        #datapoints = 116
+        residuals are weighted equally (unit weight)
+
+function used for fitting: p(x)
+	p(x) = a * (x**alpha) * exp(-b*(x**beta))
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             alpha         beta         
+   0 1.2420319115e+00   0.00e+00  3.26e-01    3.000000e+00   1.000000e+00   2.000000e+00   2.000000e+00
+ 152 6.3453231339e-03  -2.42e-01  3.26e-06    1.151040e+01   2.642916e+00   2.495479e+00   1.374242e+00
+
+After 152 iterations the fit converged.
+final sum of squares of residuals : 0.00634532
+rel. change during last iteration : -2.42157e-06
+
+degrees of freedom    (FIT_NDF)                        : 112
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.00752693
+variance of residuals (reduced chisquare) = WSSR/ndf   : 5.66547e-05
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 11.5104          +/- 1.831        (15.91%)
+b               = 2.64292          +/- 0.1611       (6.094%)
+alpha           = 2.49548          +/- 0.09105      (3.649%)
+beta            = 1.37424          +/- 0.0464       (3.376%)
+
+correlation matrix of the fit parameters:
+                a      b      alpha  beta   
+a               1.000 
+b               1.000  1.000 
+alpha           0.990  0.988  1.000 
+beta           -0.987 -0.989 -0.959  1.000 
+
+
+*******************************************************************************
+Mon Nov  9 00:24:17 2020
+
+
+FIT:    data read from filename
+        format = z
+        #datapoints = 116
+        residuals are weighted equally (unit weight)
+
+function used for fitting: p(x)
+	p(x) = a * (x**alpha) * exp(-b*(x**beta))
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             alpha         beta         
+   0 2.2218255546e+00   0.00e+00  1.84e-01    1.000000e+00   1.000000e+00   1.000000e+00   1.000000e+00
+
+Current data point
+=========================
+#               = 105 out of 116
+x               = -2.11473       
+z               = 0              
+
+Current set of parameters
+=========================
+a               = -2.11473       
+b               = -1.04035       
+alpha           = 0.441256       
+beta            = 2.64495        
+
+BREAK: Function evaluation yields NaN ("not a number")
+
+*******************************************************************************
+Mon Nov  9 00:25:46 2020
+
+
+FIT:    data read from filename
+        format = z
+        #datapoints = 116
+        residuals are weighted equally (unit weight)
+
+function used for fitting: p(x)
+	p(x) = a * (x**alpha) * exp(-b*(x**beta))
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             alpha         beta         
+   0 1.2420319115e+00   0.00e+00  3.26e-01    3.000000e+00   1.000000e+00   2.000000e+00   2.000000e+00
+ 152 6.3453231339e-03  -2.42e-01  3.26e-06    1.151040e+01   2.642916e+00   2.495479e+00   1.374242e+00
+
+After 152 iterations the fit converged.
+final sum of squares of residuals : 0.00634532
+rel. change during last iteration : -2.42157e-06
+
+degrees of freedom    (FIT_NDF)                        : 112
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.00752693
+variance of residuals (reduced chisquare) = WSSR/ndf   : 5.66547e-05
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 11.5104          +/- 1.831        (15.91%)
+b               = 2.64292          +/- 0.1611       (6.094%)
+alpha           = 2.49548          +/- 0.09105      (3.649%)
+beta            = 1.37424          +/- 0.0464       (3.376%)
+
+correlation matrix of the fit parameters:
+                a      b      alpha  beta   
+a               1.000 
+b               1.000  1.000 
+alpha           0.990  0.988  1.000 
+beta           -0.987 -0.989 -0.959  1.000 

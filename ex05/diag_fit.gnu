@@ -12,7 +12,7 @@ set title "Spacings distribution - Real diagonal matrix" font "Latin Modern Math
 set xlabel "s"
 set ylabel "P(s)"
 set grid
-set key font ",18" box height 1 width 1
+set key box height 1 width 1
 
 fileLog = name."_fit.log"
 set fit logfile fileLog
@@ -21,7 +21,16 @@ p(x) = a * (x**alpha) * exp(-b*(x**beta))
 
 fit p(x) filename via a, b, alpha, beta 
 
-#set encoding iso_8859_1
-#set label sprintf("a=%1.2f \261 %1.2f \n{/Symbol a}=%1.2f \261 %1.2f \nb=%1.2f \261 %1.2f \n{/Symbol b}=%1.2f \261 %1.2f", a,a_err,alpha,alpha_err,b,b_err,beta,beta_err) at 8, 0.7 font ", 18" 
+set encoding iso_8859_1
+stats filename using 2 nooutput
+ylabel_position = STATS_max
+stats filename using 1 nooutput
+xlabel_position = STATS_max
+set label sprintf("a = %1.3f \261 %1.3f \
+                   \n{/Symbol a} = %1.3f \261 %1.3f \
+                   \nb = %1.3f \261 %1.3f \
+                   \n{/Symbol b} = %1.3f \261 %1.3f", \
+                  a, a_err, alpha, alpha_err, b, b_err,beta, beta_err) \
+                  at 0.68*xlabel_position, 0.7*ylabel_position
 
 plot filename using 1:2 with p title "data", p(x) title "fit" lw 2

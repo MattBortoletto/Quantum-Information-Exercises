@@ -2,8 +2,8 @@ import os
 import subprocess
 
 
-logFiles = ["herm_spacings.log", "herm_loc_aver_100.log", "herm_loc_aver_50.log", 
-            "herm_loc_aver_10.log", "herm_loc_aver_5.log", "diag_spacings.log", 
+logFiles = ["herm_loc_aver_100.log", "herm_loc_aver_50.log", "herm_glo.log",  
+            "herm_loc_aver_10.log", "herm_loc_aver_5.log", "diag_glo.log", 
             "diag_loc_aver_100.log", "diag_loc_aver_50.log","diag_loc_aver_10.log", 
             "diag_loc_aver_5.log"]
 
