@@ -8,7 +8,7 @@
 
 set terminal pdf size 7, 5 font "Latin Modern Math, 25"
 set output sprintf("%s%s", name, ".pdf")
-set title "Spacings distribution - Complex Hermitian matrix" font "Latin Modern Math, 27"
+set title "Spacings distribution" font "Latin Modern Math, 27"
 set xlabel "s"
 set ylabel "P(s)"
 set grid
@@ -17,10 +17,6 @@ set key font ",18" box height 1 width 1
 fileLog = name."_fit.log"
 set fit logfile fileLog
 
-a = 3
-alpha = 2
-b = 1
-beta = 2
 p(x) = a * (x**alpha) * exp(-b*(x**beta))
 
 fit p(x) filename via a, b, alpha, beta 

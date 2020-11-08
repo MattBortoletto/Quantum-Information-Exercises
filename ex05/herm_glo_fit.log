@@ -1,7 +1,7 @@
 
 
 *******************************************************************************
-Sun Nov  8 22:14:38 2020
+Sun Nov  8 22:49:19 2020
 
 
 FIT:    data read from filename
@@ -14,19 +14,27 @@ function used for fitting: p(x)
 fitted parameters initialized with current variable values
 
 iter      chisq       delta/lim  lambda   a             b             alpha         beta         
-   0 2.2218255546e+00   0.00e+00  1.84e-01    1.000000e+00   1.000000e+00   1.000000e+00   1.000000e+00
+   0 1.2420319115e+00   0.00e+00  3.26e-01    3.000000e+00   1.000000e+00   2.000000e+00   2.000000e+00
+ 152 6.3453231339e-03  -2.42e-01  3.26e-06    1.151040e+01   2.642916e+00   2.495479e+00   1.374242e+00
 
-Current data point
-=========================
-#               = 105 out of 116
-x               = -2.11473       
-z               = 0              
+After 152 iterations the fit converged.
+final sum of squares of residuals : 0.00634532
+rel. change during last iteration : -2.42157e-06
 
-Current set of parameters
-=========================
-a               = -2.11473       
-b               = -1.04035       
-alpha           = 0.441256       
-beta            = 2.64495        
+degrees of freedom    (FIT_NDF)                        : 112
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.00752693
+variance of residuals (reduced chisquare) = WSSR/ndf   : 5.66547e-05
 
-BREAK: Function evaluation yields NaN ("not a number")
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 11.5104          +/- 1.831        (15.91%)
+b               = 2.64292          +/- 0.1611       (6.094%)
+alpha           = 2.49548          +/- 0.09105      (3.649%)
+beta            = 1.37424          +/- 0.0464       (3.376%)
+
+correlation matrix of the fit parameters:
+                a      b      alpha  beta   
+a               1.000 
+b               1.000  1.000 
+alpha           0.990  0.988  1.000 
+beta           -0.987 -0.989 -0.959  1.000 

@@ -311,8 +311,7 @@ program RandomMatrix
     ! ntrials: number of matrices generated to compute the distribution 
     !          distribution of the spacings 
     ! n_bins: number of bins for the histogram
-    ! div: number of local spacings groups -------------------------------------- TOGLIERE
-    integer :: N, ii, jj, trial, ntrials, info, n_bins !, div
+    integer :: N, ii, jj, trial, ntrials, info, n_bins 
     ! matrix
     complex, dimension(:,:), allocatable :: M
     ! eig: array to store the eigenvalues
@@ -333,9 +332,11 @@ program RandomMatrix
     real*4 :: r_mean 
     ! div
     integer, dimension(5) :: div
-    ! local_norm_spacings: array to store the locally normalized spacings
-    !                      of a single matrix for different locality levels
+    ! array to store the locally normalized spacings
+    ! of a single matrix for different locality levels
     real*4, dimension(:, :), allocatable :: local_norm_spacings
+    ! array to store the locally normalized spacings
+    ! for different locality levels
     real*4, dimension(:, :), allocatable :: all_local_s
 
     ! ask the user to enter the dimension of the matrix
@@ -357,10 +358,6 @@ program RandomMatrix
         print *, "Invalid input."
         stop
     end if 
-    ! if (which_spacing == "l") then
-    !     print *, "Please enter the number of divisions D to form the local spacings (N/D):"
-    !     read *, div 
-    ! end if 
 
     div = (/100, 50, 10, 5, 1/)
 
@@ -373,9 +370,9 @@ program RandomMatrix
     ! allocate the memory
     allocate(M(N, N))
     allocate(eig(N))
-    allocate(norm_spacings(N-1)) ! HO MESSO -1
+    allocate(norm_spacings(N-1)) 
     allocate(all_s((N-2)*ntrials))
-    allocate(local_norm_spacings(N-1, size(div))) ! HO MESSO -1
+    allocate(local_norm_spacings(N-1, size(div)))
     allocate(all_local_s((N-2)*ntrials, size(div)))
 
     do trial = 1, ntrials
@@ -405,10 +402,6 @@ program RandomMatrix
             end do 
         end if 
 
-        ! add the spacings we just computed to the vector of all 
-        ! the spacings 
-        ! all_s(1+(trial-1)*(N-2):trial*(N-2)) = norm_spacings
-
     end do 
 
     ! compute the <r>
@@ -429,28 +422,6 @@ program RandomMatrix
 
     allocate(hist_bins(n_bins))
     allocate(distribution(n_bins))
-
-    ! call the subroutine which computes the pdf
-    ! call ComputePDF(all_s, n_bins, distribution, hist_bins)
-
-    ! save the results in a text file according to the chosen options
-    ! if ((which_matrix == "h") .and. (which_spacing == "g")) then 
-    !     filename = "herm_spacings.txt"
-    !     open(10, file=filename, status='replace')
-    !     do ii = 1, size(hist_bins)
-    !         write(10, *) hist_bins(ii), distribution(ii)
-    !     end do
-    !     write(10, *)
-    !     close(10) 
-    ! else if ((which_matrix == "d") .and. (which_spacing == "g")) then
-    !     filename = "diag_spacings.txt"
-    !     open(10, file=filename, status='replace')
-    !     do ii = 1, size(hist_bins)
-    !         write(10, *) hist_bins(ii), distribution(ii)
-    !     end do
-    !     write(10, *)
-    !     close(10)
-    ! end if 
 
     ! save the results in a text file 
     ! choose the name of the file according to the options the user chose
