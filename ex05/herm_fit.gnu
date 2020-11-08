@@ -17,13 +17,9 @@ set key font ",18" box height 1 width 1
 fileLog = name."_fit.log"
 set fit logfile fileLog
 
-a = 3 
-b = 1 
-beta = 2 
-alpha = 2 
-p(x) = (a*(x**alpha))*(exp(-b*(x**beta)))
+p(x) = a * (x**alpha) * exp(-b*(x**beta))
 
-fit p(x) filename using 1:2 via a, alpha, b, beta 
+fit p(x) filename via a, b, alpha, beta 
 
 #set encoding iso_8859_1
 #set label sprintf("a=%1.2f \261 %1.2f \n{/Symbol a}=%1.2f \261 %1.2f \nb=%1.2f \261 %1.2f \n{/Symbol b}=%1.2f \261 %1.2f", a,a_err,alpha,alpha_err,b,b_err,beta,beta_err) at 8, 0.7 font ", 18" 

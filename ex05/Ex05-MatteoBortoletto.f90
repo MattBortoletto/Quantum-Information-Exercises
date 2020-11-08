@@ -36,7 +36,7 @@ contains
         ! real part and imaginary part
         real*4 :: RealPart, ImPart
         ! gaussian distributed real and imaginary parts
-        real*4, dimension(2) :: GaussReIm
+        !real*4, dimension(2) :: GaussReIm
         ! flag to choose the type of matrix to initialize
         character(1), intent(in) :: which_matrix
 
@@ -46,17 +46,22 @@ contains
                 ! in order to be hermitian, the matrix must have its
                 ! diagonal elements with no imaginary part
                 call random_number(RealPart)
-                call random_number(ImPart)
-                GaussReIm = BoxMuller(RealPart, ImPart)
-                matr(ii, ii) = complex(GaussReIm(1), 0)
+                !call random_number(ImPart)
+                !GaussReIm = BoxMuller(RealPart, ImPart)
+                !matr(ii, ii) = complex(GaussReIm(1), 0)
+                RealPart = 2.0*RealPart - 1.0
+                matr(ii, ii) = complex(RealPart, 0)
                 ! then fill the rest
                 ! in order to be hermitian, the matrix mush be such
                 ! that matr(ii, jj) = conj(matr(ii, jj)) 
                 do jj = ii + 1, d 
                     call random_number(RealPart)
                     call random_number(ImPart)
-                    GaussReIm = BoxMuller(RealPart, ImPart)
-                    matr(ii, jj) = complex(GaussReIm(1), GaussReIm(2))
+                    !GaussReIm = BoxMuller(RealPart, ImPart)
+                    !matr(ii, jj) = complex(GaussReIm(1), GaussReIm(2))
+                    RealPart = 2.0*RealPart - 1.0
+                    ImPart = 2.0*ImPart - 1.0
+                    matr(ii, jj) = complex(RealPart, ImPart)
                     matr(jj, ii) = conjg(matr(ii, jj))
                 end do
             end do 
@@ -65,9 +70,11 @@ contains
             matr = complex(0.d0, 0.d0)
             do ii = 1, d
                 call random_number(RealPart)
-                call random_number(ImPart)
-                GaussReIm = BoxMuller(RealPart, ImPart)
-                matr(ii, ii) = GaussReIm(1)
+                !call random_number(ImPart)
+                !GaussReIm = BoxMuller(RealPart, ImPart)
+                !matr(ii, ii) = GaussReIm(1)
+                RealPart = 2.0*RealPart - 1.0
+                matr(ii, ii) = RealPart
             end do
         else 
             print *, "Non-valid input!" 
@@ -88,7 +95,7 @@ contains
         ! - N = size(matr, 1): order of the matrix
         ! - a = matr: input matrix
         ! - lda = size(matr, 1): leading dimension of the matrix
-        ! - w = : if info = 0, the eigenvalues in ascending order
+        ! - w: if info = 0, the eigenvalues in ascending order
         ! - work: complex array of dimension (max(1,lwork))
         !         on exit, if info = 0, work(1) returns the optimal lwork
         ! - lwork: length of the array work
@@ -120,7 +127,26 @@ contains
     end subroutine ComputeEigenvalues
 
 
-    function ComputeSpacings(eig) result(norm_spacings)
+    function ComputeSpacings(eig) result(spacings)
+
+        ! vector to store the eigenvalues
+        real*4, dimension(:), intent(in) :: eig 
+        ! vectors to store the spacings and the normalized spacings
+        real*4, dimension(size(eig, 1)-1) :: spacings
+        ! variable to loop
+        integer :: ii 
+
+        ! compute the spacings
+        do ii = 1, size(eig, 1) - 1
+            spacings(ii) = eig(ii+1) - eig(ii)
+        end do
+
+        return 
+
+    end function ComputeSpacings
+
+
+    function ComputeNormSpacings(eig) result(norm_spacings)
 
         ! this subroutine computes the normalized spacings between eigenvalues.
         ! in order to do that we need to compute the difference between adjacent
@@ -132,13 +158,9 @@ contains
         real*4, dimension(size(eig, 1)-1) :: spacings, norm_spacings
         ! mean of the spicings
         real*4 :: mean 
-        ! variable to loop
-        integer :: ii
         
         ! compute the spacings
-        do ii = 1, size(eig, 1) - 1
-            spacings(ii) = eig(ii+1) - eig(ii)
-        end do
+        spacings = ComputeSpacings(eig)
         
         ! compute the mean of the spacings 
         mean = sum(spacings) / size(spacings, 1)
@@ -148,10 +170,10 @@ contains
 
         return 
 
-    end function ComputeSpacings
+    end function ComputeNormSpacings
 
 
-    function ComputeSpacingsLocal(eig, range) result(spacings_local)
+    function ComputeNormSpacingsLocal(eig, range) result(spacings_local)
 
         ! this subroutine computes the normalized spacings between eigenvalues.
         ! in order to do that we need to compute the difference between adjacent
@@ -161,7 +183,7 @@ contains
         real*4, dimension(:) :: eig
         real*4, dimension(size(eig)-1) :: spacings, local_avg, spacings_local 
         ! variable to loop
-        integer :: ii, jj
+        integer :: jj
         ! window size 
         integer, intent(in) :: range 
 
@@ -171,9 +193,7 @@ contains
         end if 
 
         ! compute the spacings 
-        do ii = 1, size(eig, 1) - 1
-            spacings(ii) = eig(ii+1) - eig(ii)
-        end do
+        spacings = ComputeSpacings(eig)
         
         ! compute the local averages
         do jj = 1, size(spacings, 1) 
@@ -189,7 +209,7 @@ contains
 
         return  
 
-    end function ComputeSpacingsLocal
+    end function ComputeNormSpacingsLocal
 
 
     subroutine ComputePDF(x, nbins, dist, bin_centers)
@@ -264,6 +284,7 @@ contains
 
     end function ComputeR
 
+
     function str(k) result(k_str)
 
         ! convert an integer to string
@@ -286,12 +307,12 @@ program RandomMatrix
     implicit none
 
     ! N: dimension of the matrix
-    ! ii, trial: variables to cycle
+    ! ii, jj, trial: variables to cycle
     ! ntrials: number of matrices generated to compute the distribution 
     !          distribution of the spacings 
     ! n_bins: number of bins for the histogram
-    ! div: number of local spacings groups
-    integer :: N, ii, trial, ntrials, info, n_bins, div
+    ! div: number of local spacings groups -------------------------------------- TOGLIERE
+    integer :: N, ii, jj, trial, ntrials, info, n_bins !, div
     ! matrix
     complex, dimension(:,:), allocatable :: M
     ! eig: array to store the eigenvalues
@@ -310,6 +331,12 @@ program RandomMatrix
     character(30) :: filename
     ! variable to store <r>
     real*4 :: r_mean 
+    ! div
+    integer, dimension(5) :: div
+    ! local_norm_spacings: array to store the locally normalized spacings
+    !                      of a single matrix for different locality levels
+    real*4, dimension(:, :), allocatable :: local_norm_spacings
+    real*4, dimension(:, :), allocatable :: all_local_s
 
     ! ask the user to enter the dimension of the matrix
     print *, "Please enter the dimension of the matrix: "
@@ -330,22 +357,26 @@ program RandomMatrix
         print *, "Invalid input."
         stop
     end if 
-    if (which_spacing == "l") then
-        print *, "Please enter the number of divisions D to form the local spacings (N/D):"
-        read *, div 
-    end if 
+    ! if (which_spacing == "l") then
+    !     print *, "Please enter the number of divisions D to form the local spacings (N/D):"
+    !     read *, div 
+    ! end if 
+
+    div = (/100, 50, 10, 5, 1/)
+
+
+    ! set the number random matrices which are used to
+    ! compute the spacings distribution 
+    print *, "How many matrices do you want to generate?"
+    read *, ntrials 
 
     ! allocate the memory
     allocate(M(N, N))
     allocate(eig(N))
-    allocate(norm_spacings(N))
-    allocate(all_s((N-2)*100))
-
-    ! set the number random matrices which are used to
-    ! compute the spacings distribution 
-
-    print *, "How many matrices do you want to generate?"
-    read *, ntrials 
+    allocate(norm_spacings(N-1)) ! HO MESSO -1
+    allocate(all_s((N-2)*ntrials))
+    allocate(local_norm_spacings(N-1, size(div))) ! HO MESSO -1
+    allocate(all_local_s((N-2)*ntrials, size(div)))
 
     do trial = 1, ntrials
 
@@ -363,23 +394,34 @@ program RandomMatrix
 
         ! call the function to compute the spacings
         if (which_spacing == "g") then  
-            norm_spacings = ComputeSpacings(eig)
+            norm_spacings = ComputeNormSpacings(eig)
+            ! add the spacings we just computed to the vector of all 
+            ! the spacings 
+            all_s(1+(trial-1)*(N-2):trial*(N-2)) = norm_spacings
         else if (which_spacing == "l") then 
-            norm_spacings = ComputeSpacingsLocal(eig, N/div)
+            do ii = 1, size(div)
+                local_norm_spacings(:, ii) = ComputeNormSpacingsLocal(eig, N/div(ii))
+                all_local_s(1+(trial-1)*(N-2):trial*(N-2), ii) = local_norm_spacings(:, ii)
+            end do 
         end if 
 
         ! add the spacings we just computed to the vector of all 
         ! the spacings 
-        all_s(1+(trial-1)*(N-2):trial*(N-2)) = norm_spacings
+        ! all_s(1+(trial-1)*(N-2):trial*(N-2)) = norm_spacings
 
     end do 
 
     ! compute the <r>
-    r_mean = ComputeR(all_s)
-    if (which_spacing == "l") then 
-        print *, "Locality level = N /", div
-    end if 
-    print *, "<r>", r_mean  
+    if (which_spacing == "g") then 
+        r_mean = ComputeR(all_s)
+        print *, "<r> =", r_mean
+    else if (which_spacing == "l") then 
+        do ii = 1, size(div)
+            print *, "Locality level = N /", div(ii)
+            r_mean = ComputeR(local_norm_spacings(:, ii))
+            print *, "<r> =", r_mean
+        end do 
+    end if   
 
     ! use Rice Rule to compute the optimal number of bins
     ! nbins = 2*N^{1/3}
@@ -389,26 +431,77 @@ program RandomMatrix
     allocate(distribution(n_bins))
 
     ! call the subroutine which computes the pdf
-    call ComputePDF(all_s, n_bins, distribution, hist_bins)
+    ! call ComputePDF(all_s, n_bins, distribution, hist_bins)
+
+    ! save the results in a text file according to the chosen options
+    ! if ((which_matrix == "h") .and. (which_spacing == "g")) then 
+    !     filename = "herm_spacings.txt"
+    !     open(10, file=filename, status='replace')
+    !     do ii = 1, size(hist_bins)
+    !         write(10, *) hist_bins(ii), distribution(ii)
+    !     end do
+    !     write(10, *)
+    !     close(10) 
+    ! else if ((which_matrix == "d") .and. (which_spacing == "g")) then
+    !     filename = "diag_spacings.txt"
+    !     open(10, file=filename, status='replace')
+    !     do ii = 1, size(hist_bins)
+    !         write(10, *) hist_bins(ii), distribution(ii)
+    !     end do
+    !     write(10, *)
+    !     close(10)
+    ! end if 
 
     ! save the results in a text file 
     ! choose the name of the file according to the options the user chose
     if ((which_matrix == "h") .and. (which_spacing == "g")) then 
+        call ComputePDF(all_s, n_bins, distribution, hist_bins)
         filename = "herm_spacings.txt"
+        open(10, file=filename, status='replace')
+        do ii = 1, size(hist_bins)
+            write(10, *) hist_bins(ii), distribution(ii)
+        end do
+        write(10, *)
+        close(10) 
     else if ((which_matrix == "h") .and. (which_spacing == "l")) then 
-        filename = "herm_loc_aver_"//trim(str(div))//".txt"
+        do jj = 1, size(div)
+            call ComputePDF(all_local_s(:, jj), n_bins, distribution, hist_bins)
+            filename = "herm_loc_aver_"//trim(str(div(jj)))//".txt"
+            open(10, file=filename, status='replace')
+            do ii = 1, size(hist_bins)
+                write(10, *) hist_bins(ii), distribution(ii)
+            end do
+            write(10, *)
+            close(10)
+        end do 
     else if ((which_matrix == "d") .and. (which_spacing == "g")) then
+        call ComputePDF(all_s, n_bins, distribution, hist_bins)
         filename = "diag_spacings.txt"
+        open(10, file=filename, status='replace')
+        do ii = 1, size(hist_bins)
+            write(10, *) hist_bins(ii), distribution(ii)
+        end do
+        write(10, *)
+        close(10)
     else if ((which_matrix == "d") .and. (which_spacing == "l")) then
-        filename = "diag_loc_aver_"//trim(str(div))//".txt"
+        do jj = 1, size(div)
+            call ComputePDF(all_local_s(:, jj), n_bins, distribution, hist_bins)
+            filename = "diag_loc_aver_"//trim(str(div(jj)))//".txt"
+            open(10, file=filename, status='replace')
+            do ii = 1, size(hist_bins)
+                write(10, *) hist_bins(ii), distribution(ii)
+            end do
+            write(10, *)
+            close(10)
+        end do 
     end if 
-    open(10, file=filename, status='replace')
-    do ii = 1, size(hist_bins)
-        write(10, *) hist_bins(ii), distribution(ii)
-    end do
-    write(10, *)
-    
-    close(10) 
+
+    ! open(10, file=filename, status='replace')
+    ! do ii = 1, size(hist_bins)
+    !     write(10, *) hist_bins(ii), distribution(ii)
+    ! end do
+    ! write(10, *)
+    ! close(10) 
     
     deallocate(m)
     deallocate(eig)

@@ -1,0 +1,40 @@
+
+
+*******************************************************************************
+Sun Nov  8 19:07:55 2020
+
+
+FIT:    data read from filename
+        format = z
+        #datapoints = 92
+        residuals are weighted equally (unit weight)
+
+function used for fitting: p(x)
+	p(x) = a * (x**alpha) * exp(-b*(x**beta))
+fitted parameters initialized with current variable values
+
+iter      chisq       delta/lim  lambda   a             b             alpha         beta         
+   0 6.5003362584e+00   0.00e+00  3.09e-01    1.000000e+00   1.000000e+00   1.000000e+00   1.000000e+00
+  28 5.7076092700e-03  -5.58e-05  3.09e-01    3.508024e+00   1.350936e+00   1.980071e+00   1.978364e+00
+
+After 28 iterations the fit converged.
+final sum of squares of residuals : 0.00570761
+rel. change during last iteration : -5.58431e-10
+
+degrees of freedom    (FIT_NDF)                        : 88
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.00805352
+variance of residuals (reduced chisquare) = WSSR/ndf   : 6.48592e-05
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+a               = 3.50802          +/- 0.15         (4.275%)
+b               = 1.35094          +/- 0.04325      (3.202%)
+alpha           = 1.98007          +/- 0.03451      (1.743%)
+beta            = 1.97836          +/- 0.03303      (1.669%)
+
+correlation matrix of the fit parameters:
+                a      b      alpha  beta   
+a               1.000 
+b               0.998  1.000 
+alpha           0.979  0.973  1.000 
+beta           -0.977 -0.984 -0.927  1.000 
