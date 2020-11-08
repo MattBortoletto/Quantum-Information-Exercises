@@ -1,12 +1,12 @@
 
 
 *******************************************************************************
-Sun Nov  8 19:07:55 2020
+Sun Nov  8 22:14:38 2020
 
 
 FIT:    data read from filename
         format = z
-        #datapoints = 92
+        #datapoints = 116
         residuals are weighted equally (unit weight)
 
 function used for fitting: p(x)
@@ -14,27 +14,19 @@ function used for fitting: p(x)
 fitted parameters initialized with current variable values
 
 iter      chisq       delta/lim  lambda   a             b             alpha         beta         
-   0 2.2514744094e+00   0.00e+00  2.09e-01    1.000000e+00   1.000000e+00   1.000000e+00   1.000000e+00
- 177 5.9984692442e-03  -4.85e-02  2.09e-07    1.320780e+01   2.784581e+00   2.562643e+00   1.326192e+00
+   0 2.2218255546e+00   0.00e+00  1.84e-01    1.000000e+00   1.000000e+00   1.000000e+00   1.000000e+00
 
-After 177 iterations the fit converged.
-final sum of squares of residuals : 0.00599847
-rel. change during last iteration : -4.8483e-07
+Current data point
+=========================
+#               = 105 out of 116
+x               = -2.11473       
+z               = 0              
 
-degrees of freedom    (FIT_NDF)                        : 88
-rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 0.00825617
-variance of residuals (reduced chisquare) = WSSR/ndf   : 6.81644e-05
+Current set of parameters
+=========================
+a               = -2.11473       
+b               = -1.04035       
+alpha           = 0.441256       
+beta            = 2.64495        
 
-Final set of parameters            Asymptotic Standard Error
-=======================            ==========================
-a               = 13.2078          +/- 2.478        (18.76%)
-b               = 2.78458          +/- 0.1898       (6.814%)
-alpha           = 2.56264          +/- 0.1044       (4.073%)
-beta            = 1.32619          +/- 0.04989      (3.762%)
-
-correlation matrix of the fit parameters:
-                a      b      alpha  beta   
-a               1.000 
-b               1.000  1.000 
-alpha           0.991  0.989  1.000 
-beta           -0.988 -0.989 -0.962  1.000 
+BREAK: Function evaluation yields NaN ("not a number")
