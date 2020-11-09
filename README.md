@@ -4,4 +4,6 @@ Exercises from the course "Quantum information and computing", Physics of Data m
 - **ex01**: precision, performances
 - **ex02**: derived types
 - **ex03**: debugging
+- **ex04**: multi-run script and automated fits
+- **ex05**: random matrix theory
 
