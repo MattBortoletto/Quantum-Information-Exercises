@@ -17,7 +17,7 @@ hermFitFile = "herm_fit.gnu"
 diagFitFile = "diag_fit.gnu"
 
 # write the command for each file
-command_herm_glo = ["gnuplot", "-e", "filename='herm_spacings.txt'", 
+command_herm_glo = ["gnuplot", "-e", "filename='herm_glo.txt'", 
                     "-e", "name='herm_glo'", hermFitFile]
 command_herm_loc_5 = ["gnuplot", "-e", "filename='herm_loc_aver_5.txt'", 
                       "-e", "name='herm_loc_5'", hermFitFile]
@@ -28,7 +28,7 @@ command_herm_loc_50 = ["gnuplot", "-e", "filename='herm_loc_aver_50.txt'",
 command_herm_loc_100 = ["gnuplot", "-e", "filename='herm_loc_aver_100.txt'", 
                         "-e", "name='herm_loc_100'", hermFitFile]
 
-command_diag_glo = ["gnuplot", "-e", "filename='diag_spacings.txt'", 
+command_diag_glo = ["gnuplot", "-e", "filename='diag_glo.txt'", 
                     "-e", "name='diag_glo'", diagFitFile]
 command_diag_loc_5 = ["gnuplot", "-e", "filename='diag_loc_aver_5.txt'", 
                       "-e", "name='diag_loc_5'", diagFitFile]

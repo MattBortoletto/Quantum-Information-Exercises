@@ -382,7 +382,7 @@ program RandomMatrix
     else if (which_spacing == "l") then 
         do ii = 1, size(div)
             print *, "Locality level = N /", div(ii)
-            r_mean = ComputeR(local_norm_spacings(:, ii))
+            r_mean = ComputeR(all_local_s(:, ii))
             print *, "<r> =", r_mean
         end do 
     end if   
@@ -398,7 +398,7 @@ program RandomMatrix
     ! choose the name of the file according to the options the user chose
     if ((which_matrix == "h") .and. (which_spacing == "g")) then 
         call ComputePDF(all_s, n_bins, distribution, hist_bins)
-        filename = "herm_spacings.txt"
+        filename = "herm_glo.txt"
         open(10, file=filename, status='replace')
         do ii = 1, size(hist_bins)
             write(10, *) hist_bins(ii), distribution(ii)
@@ -418,7 +418,7 @@ program RandomMatrix
         end do 
     else if ((which_matrix == "d") .and. (which_spacing == "g")) then
         call ComputePDF(all_s, n_bins, distribution, hist_bins)
-        filename = "diag_spacings.txt"
+        filename = "diag_glo.txt"
         open(10, file=filename, status='replace')
         do ii = 1, size(hist_bins)
             write(10, *) hist_bins(ii), distribution(ii)
