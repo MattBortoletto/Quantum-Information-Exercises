@@ -8,6 +8,7 @@ This program performs matrix diagonalization using the LAPACK cheev subroutine a
 
 ## Contents
 - Ex05-MatteoBortoletto.f90: Fortran code;
+- Ex05-MatteoBortoletto-REPORT.pdf: report written in LaTeX
 - Ex05.x: executable file for the Fortran code;
 - herm_fit.gnu: gnuplot script to fit the spacings distribution of complex hermitian matrices;
 - diag_fit.gnu: gnuplot script to fit the spacings distribution of real diagonal matrices;

@@ -438,8 +438,12 @@ program RandomMatrix
         end do 
     end if 
     
-    deallocate(m)
+    deallocate(M)
     deallocate(eig)
+    deallocate(norm_spacings)
+    deallocate(local_norm_spacings)
+    deallocate(all_s)
+    deallocate(all_local_s)
     deallocate(distribution)
     deallocate(hist_bins)
     
