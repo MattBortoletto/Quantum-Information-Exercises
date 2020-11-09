@@ -33,16 +33,16 @@ q(x) = 3.24 * (x**2) * exp(-1.27*(x**2))
 
 fit p(x) filename via a, b, alpha, beta 
 
-# set encoding iso_8859_1
-# stats filename using 2 nooutput
-# ylabel_position = STATS_max
-# stats filename using 1 nooutput
-# xlabel_position = STATS_max
-# set label sprintf("a = %1.3f \261 %1.3f \
-#                    \n{/Symbol a} = %1.3f \261 %1.3f \
-#                    \nb = %1.3f \261 %1.3f \
-#                    \n{/Symbol b} = %1.3f \261 %1.3f", \
-#                   a, a_err, alpha, alpha_err, b, b_err,beta, beta_err) \
-#                   at 0.68*xlabel_position, 0.7*ylabel_position
+set encoding iso_8859_1
+stats filename using 2 nooutput
+ylabel_position = STATS_max
+stats filename using 1 nooutput
+xlabel_position = STATS_max
+set label sprintf("a = %1.3f \261 %1.3f \
+                   \n{/Symbol a} = %1.3f \261 %1.3f \
+                   \nb = %1.3f \261 %1.3f \
+                   \n{/Symbol b} = %1.3f \261 %1.3f", \
+                  a, a_err, alpha, alpha_err, b, b_err,beta, beta_err) \
+                  at 0.68*xlabel_position, 0.7*ylabel_position
 
 plot filename using 1:2 with p title "data", p(x) title "fit" lw 2, q(x) title "theory"

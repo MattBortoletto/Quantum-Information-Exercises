@@ -4,27 +4,6 @@ module rand_matrix
 
 contains
 
-    function BoxMuller(a, b) result(x) 
-
-        ! this function takes in input two values 'a' and 'b'
-        ! and computes a pair of gaussian distributed variables
-        ! with zero mean and unitary variance using the Box-Muller
-        ! algorithm  
-        
-        real*4, intent(in) :: a, b 
-        real*4, dimension(2) :: x 
-        real*4 :: TwoPi 
-
-        TwoPi = 8.0d0*atan(1.0)
-
-        x(1) = sqrt(-2.0*log(a))*cos(TwoPi*b)
-        x(2) = sqrt(-2.0*log(a))*cos(TwoPi*b)
-        
-        return 
-
-    end function BoxMuller
-
-
     function MatrixInit(d, which_matrix) result(matr) 
 
         ! dimension of the matrix
@@ -35,8 +14,6 @@ contains
         integer :: ii, jj 
         ! real part and imaginary part
         real*4 :: RealPart, ImPart
-        ! gaussian distributed real and imaginary parts
-        !real*4, dimension(2) :: GaussReIm
         ! flag to choose the type of matrix to initialize
         character(1), intent(in) :: which_matrix
 
@@ -46,9 +23,6 @@ contains
                 ! in order to be hermitian, the matrix must have its
                 ! diagonal elements with no imaginary part
                 call random_number(RealPart)
-                !call random_number(ImPart)
-                !GaussReIm = BoxMuller(RealPart, ImPart)
-                !matr(ii, ii) = complex(GaussReIm(1), 0)
                 RealPart = 2.0*RealPart - 1.0
                 matr(ii, ii) = complex(RealPart, 0)
                 ! then fill the rest
@@ -57,8 +31,6 @@ contains
                 do jj = ii + 1, d 
                     call random_number(RealPart)
                     call random_number(ImPart)
-                    !GaussReIm = BoxMuller(RealPart, ImPart)
-                    !matr(ii, jj) = complex(GaussReIm(1), GaussReIm(2))
                     RealPart = 2.0*RealPart - 1.0
                     ImPart = 2.0*ImPart - 1.0
                     matr(ii, jj) = complex(RealPart, ImPart)
@@ -70,9 +42,6 @@ contains
             matr = complex(0.d0, 0.d0)
             do ii = 1, d
                 call random_number(RealPart)
-                !call random_number(ImPart)
-                !GaussReIm = BoxMuller(RealPart, ImPart)
-                !matr(ii, ii) = GaussReIm(1)
                 RealPart = 2.0*RealPart - 1.0
                 matr(ii, ii) = RealPart
             end do
@@ -204,9 +173,6 @@ contains
         ! normalize 
         spacings_local = spacings / local_avg
 
-        ! print *, spacings_local
-        ! print *, " "
-
         return  
 
     end function ComputeNormSpacingsLocal
@@ -287,12 +253,15 @@ contains
 
     function str(k) result(k_str)
 
-        ! convert an integer to string
+        ! this function is used to convert an integer to string
+
         integer, intent(in) :: k
         character(30) :: k_str
 
         write (k_str, *) k
         k_str = adjustl(k_str)
+
+        return 
 
     end function str
 
@@ -303,6 +272,7 @@ end module rand_matrix
 program RandomMatrix 
     
     use rand_matrix
+    ! use debugger 
 
     implicit none
 
@@ -330,7 +300,8 @@ program RandomMatrix
     character(30) :: filename
     ! variable to store <r>
     real*4 :: r_mean 
-    ! div
+    ! vector to store the different divisions which will be used 
+    ! to consider different locality levels
     integer, dimension(5) :: div
     ! array to store the locally normalized spacings
     ! of a single matrix for different locality levels
@@ -466,13 +437,6 @@ program RandomMatrix
             close(10)
         end do 
     end if 
-
-    ! open(10, file=filename, status='replace')
-    ! do ii = 1, size(hist_bins)
-    !     write(10, *) hist_bins(ii), distribution(ii)
-    ! end do
-    ! write(10, *)
-    ! close(10) 
     
     deallocate(m)
     deallocate(eig)
