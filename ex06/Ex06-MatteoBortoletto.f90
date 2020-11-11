@@ -225,7 +225,7 @@ program harmonic_oscillator_1D
     ! hbar = 1.0
     L = 500
     dx = 0.001
-    omega = 1000
+    omega = 100
     m = 1.0
     hbar = 1.0
     ! ------------------------
@@ -254,7 +254,12 @@ program harmonic_oscillator_1D
     end do 
 
     ! normalize ------------------
-    ! H = H / sqrt(dx) 
+    H = H / sqrt(dx) 
+    do ii = 1, N 
+        H(:, ii) = H(:, ii) / norm2(real(H(:, ii)))
+    end do
+
+    eig = eig*sqrt(dx)
     ! ----------------------------
 
     allocate(probabilities(N, N))

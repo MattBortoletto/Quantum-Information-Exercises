@@ -5,7 +5,8 @@ set title "Eigenvalues" font ", 27"
 set xlabel "n"
 set ylabel "E_n"
 set grid
-unset key 
 
-plot "en_250_0.8E-02_0.2E+02_1.000_1.000.txt" 
-#plot "en_t_500_0.1E-03_0.1E+05_1.000_1.000.txt" 
+hbar = 1
+omega = 15
+f(x) = (hbar*omega*(x+1/2))/(0.008**0.5)
+plot "en_500_0.1E-02_0.1E+03_1.000_1.000.txt" title "numerical solution" w l, f(x) title "theoretical values"

@@ -237,7 +237,7 @@ program hermite_polynomals
     ! ---- default values ----
     L = 500
     dx = 0.001
-    omega = 1000
+    omega = 100
     m = 1.0
     hbar = 1.0
     ! ------------------------
@@ -261,6 +261,7 @@ program hermite_polynomals
                         &exp(-(m*omega*grid_points**2)/(2*hbar))* &
                         &evalHermitePoly(sqrt((m*omega)/hbar)*grid_points, ii - 1)
         !print *, eigenf(:, ii)
+        eigenf(:, ii) = eigenf(:, ii) / norm2(real(eigenf(:, ii)))
     end do
 
     allocate (prob(N, k))
