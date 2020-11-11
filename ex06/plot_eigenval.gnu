@@ -7,4 +7,5 @@ set ylabel "E_n"
 set grid
 unset key 
 
-plot "e_500_0.1E-03_0.1E+05_1.000_1.000.txt" 
+plot "en_250_0.8E-02_0.2E+02_1.000_1.000.txt" 
+#plot "en_t_500_0.1E-03_0.1E+05_1.000_1.000.txt" 

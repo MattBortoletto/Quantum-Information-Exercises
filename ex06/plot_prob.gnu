@@ -13,4 +13,6 @@ set ylabel "P(x)"
 set grid
 set key outside
 
-plot for [i=2:k+1] 'p_500_0.1E-03_0.1E+05_1.000_1.000.txt' using 1:i with lines title '{/Symbol Y}_{'.(i-1).'}'
+plot for [i=2:k+1] 'pr_250_0.8E-02_0.2E+02_1.000_1.000.txt' using 1:i with lines title '{/Symbol Y}_{'.(i-1).'}', 
+plot for [i=2:k+1] 'pr_t_3_250_0.8E-02_0.2E+02_1.000_1.000.txt' using 1:i with lines title '{/Symbol Y}_{th,'.(i-1).'}'
+#lc 0*i dashtype i

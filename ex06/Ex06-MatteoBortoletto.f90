@@ -38,7 +38,7 @@ contains
 
         harmpot = 0.d0 
         do ii = 1, N 
-            harmpot(ii, ii) = 0.5*mass*(omega*dx*(ii-L-1)) 
+            harmpot(ii, ii) = 0.5*mass*(omega*dx*(ii-L-1))**2
         end do 
 
         return
@@ -218,9 +218,14 @@ program harmonic_oscillator_1D
     character(:), allocatable :: energies_filename, states_filename, probabilities_filename
     
     ! ---- default values ----
+    ! L = 500
+    ! dx = 1.0e-04
+    ! omega = 1.0e04
+    ! m = 1.0
+    ! hbar = 1.0
     L = 500
-    dx = 1.0e-04
-    omega = 1.0e04
+    dx = 0.001
+    omega = 1000
     m = 1.0
     hbar = 1.0
     ! ------------------------
@@ -248,16 +253,20 @@ program harmonic_oscillator_1D
         call ComputeEigenvalues(H, eig, info)
     end do 
 
+    ! normalize ------------------
+    ! H = H / sqrt(dx) 
+    ! ----------------------------
+
     allocate(probabilities(N, N))
     call ComputeProb(H, probabilities)
 
-    energies_filename = "e_"//trim(str_i(L))//"_"//trim(str_r_e(dx))//"_"//trim(str_r_e(omega))//"_"&
+    energies_filename = "en_"//trim(str_i(L))//"_"//trim(str_r_e(dx))//"_"//trim(str_r_e(omega))//"_"&
                         &//trim(str_r_d(m))//"_"//trim(str_r_d(hbar))//".txt"
 
-    states_filename = "s_"//trim(str_i(L))//"_"//trim(str_r_e(dx))//"_"//trim(str_r_e(omega))//"_"&
+    states_filename = "ef_"//trim(str_i(L))//"_"//trim(str_r_e(dx))//"_"//trim(str_r_e(omega))//"_"&
                       &//trim(str_r_d(m))//"_"//trim(str_r_d(hbar))//".txt"
 
-    probabilities_filename = "p_"//trim(str_i(L))//"_"//trim(str_r_e(dx))//"_"//trim(str_r_e(omega))//"_"&
+    probabilities_filename = "pr_"//trim(str_i(L))//"_"//trim(str_r_e(dx))//"_"//trim(str_r_e(omega))//"_"&
                              &//trim(str_r_d(m))//"_"//trim(str_r_d(hbar))//".txt"
 
     call WriteEigenvalues(eig, energies_filename)
