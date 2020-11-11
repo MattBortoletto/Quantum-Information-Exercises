@@ -7,6 +7,6 @@ set ylabel "E_n"
 set grid
 
 hbar = 1
-omega = 15
-f(x) = (hbar*omega*(x+1/2))/(0.008**0.5)
+omega = 100
+f(x) = hbar*omega*(x+1/2)
 plot "en_500_0.1E-02_0.1E+03_1.000_1.000.txt" title "numerical solution" w l, f(x) title "theoretical values"
