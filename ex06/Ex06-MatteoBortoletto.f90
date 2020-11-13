@@ -146,7 +146,7 @@ contains
 
 
     function str_r_e(k) result(str)
-
+        
         ! converts a real into string (exponential notation)
         character(len=20) :: str 
         real*8, intent(in) :: k
