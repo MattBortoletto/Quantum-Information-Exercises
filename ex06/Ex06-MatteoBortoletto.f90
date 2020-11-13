@@ -10,10 +10,8 @@ contains
         
         complex*16, dimension(:,:) :: lap 
         integer :: grid_size 
-        logical :: periodic_bc 
 
         lap(1, 1) = -2
-
         do ii = 2, grid_size
             lap(ii, ii) = -2
             lap(ii-1, ii) = 1
@@ -211,19 +209,25 @@ program harmonic_oscillator_1D
     real*8, dimension(:), allocatable :: eig, grid_points
     real*8, dimension(:,:), allocatable :: probabilities
     character(:), allocatable :: energies_filename, states_filename, probabilities_filename
+    character(1) :: which_param
     
-    ! ---- default values ----
-    ! L = 500
-    ! dx = 1.0e-04
-    ! omega = 1.0e04
-    ! m = 1.0
-    ! hbar = 1.0
-    L = 500
-    dx = 0.01
-    omega = 5
-    m = 1.0
-    hbar = 1.0
-    ! ------------------------
+    print *, "Do you want to use use custom parameters of the default one (L=500, dx=0.01, omega=5, m=hbar=1)? [c/d]"
+    read *, which_param
+    if (which_param == "d") then 
+        ! ---- default values ----
+        L = 500
+        dx = 0.01
+        omega = 5
+        m = 1.0
+        hbar = 1.0
+        ! ------------------------
+    else if (which_param == "c") then 
+        print *, "Please enter L, dx, omega, m and hbar:"
+        read *, L, dx, omega, m, hbar 
+    else 
+        print *, "Invalid input."
+        stop 
+    end if 
 
     N = L*2 + 1
 
@@ -242,26 +246,24 @@ program harmonic_oscillator_1D
 
     allocate(eig(N))
 
-    ! use the info flag of the subroutine 'zheev' to check if the
+    ! use the 'info' flag of the subroutine 'zheev' to check if the
     ! diagonalization has been successful
     info = 1
     do while (info .ne. 0)
         call ComputeEigenvalues(H, eig, info)
     end do 
 
-    ! normalize ------------------
+    ! normalize 
     H = H / sqrt(dx) 
-
     do ii = 1, N 
         H(:, ii) = H(:, ii) / norm2(real(H(:, ii)))
     end do
 
-    !eig = eig * sqrt(dx)
-    ! ----------------------------
-
+    ! compute the probability densities
     allocate(probabilities(N, N))
     call ComputeProb(H, probabilities)
 
+    ! save the results in text files with proper names
     energies_filename = "en_"//trim(str_i(L))//"_"//trim(str_r_e(dx))//"_"//trim(str_r_e(omega))//"_"&
                         &//trim(str_r_d(m))//"_"//trim(str_r_d(hbar))//".txt"
 
@@ -275,6 +277,6 @@ program harmonic_oscillator_1D
     call WriteEigenvectors(real(H), grid_points, states_filename)
     call WriteEigenvectors(probabilities, grid_points, probabilities_filename)
 
-    deallocate(grid_points, laplacian, harmonic_potential, eig, probabilities)
+    deallocate(H, grid_points, laplacian, harmonic_potential, eig, probabilities)
 
 end program harmonic_oscillator_1D

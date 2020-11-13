@@ -1,124 +1,52 @@
 ! from https://sukhbinder.wordpress.com/hermite-polynomials-fortran-module/
 
-! MODULE hermite
-
-! CONTAINS
-
-!     RECURSIVE FUNCTION HermitePoly(n) RESULT(hp)
-
-!         REAL*8 hp(n + 1)
-!         REAL*8 hp1(n + 1), hp2(n + 1)
-
-!         IF (n .EQ. 0) THEN
-!             hp(1) = 1.0
-!             RETURN
-!         END IF
-
-!         IF (n .EQ. 1) THEN
-!             hp(1) = 2.0
-!             hp(2) = 0.0
-!         ELSE
-!             hp1(1:n + 1) = 0.0
-!             hp1(1:n) = 2.0*HermitePoly(n - 1)
-!             hp2(1:n + 1) = 0.0
-!             hp2(3:) = 2.0*(n - 1)*HermitePoly(n - 2)
-!             hp = hp1 - hp2
-!         END IF
-
-!     END FUNCTION
-
-!     FUNCTION evalHermitePoly(ix, n) RESULT(y)
-
-!         INTEGER n, ip
-!         REAL*8 ix(:), y(size(ix)), h(n + 1)
-
-!         k = size(ix)
-!         h = HermitePoly(n)
-
-!         y(1:k) = h(n + 1)
-!         ip = 1
-!         DO i = n, 1, -1
-!             DO j = 1, k
-!                 y(j) = y(j) + h(i)*ix(j)**ip
-!             END DO
-!             ip = ip + 1
-!         END DO
-
-!     END FUNCTION
-
-MODULE HERMITE
+MODULE hermite
 
 CONTAINS
 
-    RECURSIVE FUNCTION HermitePoly(n) RESULT(hp_coeff)
+    RECURSIVE FUNCTION HermitePoly(n) RESULT(hp)
 
-        INTEGER :: n
-        REAL*8, DIMENSION(n + 1) ::  hp_coeff, coef1, coef2
+        REAL*8 hp(n + 1)
+        REAL*8 hp1(n + 1), hp2(n + 1)
 
         IF (n .EQ. 0) THEN
-            hp_coeff(1) = 1.0
+            hp(1) = 1.0
             RETURN
         END IF
 
         IF (n .EQ. 1) THEN
-            hp_coeff(1) = 2.0
-            hp_coeff(2) = 0.0
+            hp(1) = 2.0
+            hp(2) = 0.0
         ELSE
-
-            coef1(1:n + 1) = 0.0
-            coef1(1:n) = 2.0*HermitePoly(n - 1)
-
-            coef2(1:n + 1) = 0.0
-            coef2(3:) = 2.0*(n - 1)*HermitePoly(n - 2)
-
-            hp_coeff = coef1 - coef2
-
+            hp1(1:n + 1) = 0.0
+            hp1(1:n) = 2.0*HermitePoly(n - 1)
+            hp2(1:n + 1) = 0.0
+            hp2(3:) = 2.0*(n - 1)*HermitePoly(n - 2)
+            hp = hp1 - hp2
         END IF
-
-        RETURN
 
     END FUNCTION
 
-    FUNCTION evalHermitePoly(xi, n) RESULT(y)
+    FUNCTION evalHermitePoly(ix, n) RESULT(y)
 
-        INTEGER :: n, pow_i, ii, jj
-        REAL*8 :: xi(:), y(size(xi)), h_coeff(n + 1)
+        INTEGER n, ip
+        REAL*8 ix(:), y(size(ix)), h(n + 1)
 
-        k = size(xi)
+        k = size(ix)
+        h = HermitePoly(n)
 
-        h_coeff = HermitePoly(n)
-
-        y(1:k) = h_coeff(n + 1)
-
-        pow_i = 1
-
-        DO ii = n, 1, -1
-            DO jj = 1, k
-                ! Adding to the point in j-th position the
-                !  contribution given by the pow_i-th power
-                !  of x_i multiplied by the proper coefficient
-                y(jj) = y(jj) + h_coeff(ii)*xi(jj)**pow_i
+        y(1:k) = h(n + 1)
+        ip = 1
+        DO i = n, 1, -1
+            DO j = 1, k
+                y(j) = y(j) + h(i)*ix(j)**ip
             END DO
-            ! For simplicity, updating the power here
-            pow_i = pow_i + 1
+            ip = ip + 1
         END DO
 
     END FUNCTION
 
-    subroutine ComputeProb(H, prob)
-
-        complex*16, dimension(:, :) :: H
-        real*8, dimension(size(H, 1), size(H, 2)) :: prob
-
-        do ii = 1, size(H, 2)
-            prob(:, ii) = abs(H(:, ii))**2
-        end do
-
-        return
-
-    end subroutine ComputeProb
-
-END MODULE hermite
+END MODULE HERMITE
 
 ! ----------------------------------------------------------------------------------
 
@@ -214,6 +142,20 @@ contains
 
     end subroutine WriteEigenvectors
 
+    subroutine ComputeProb(H, prob)
+
+        complex*16, dimension(:, :) :: H
+        real*8, dimension(size(H, 1), size(H, 2)) :: prob
+        integer :: ii 
+
+        do ii = 1, size(H, 2)
+            prob(:, ii) = abs(H(:, ii))**2
+        end do
+
+        return
+
+    end subroutine ComputeProb
+
 end module Utilities
 
 ! ----------------------------------------------------------------------------------
@@ -230,21 +172,32 @@ program hermite_polynomals
     complex*16, dimension(:, :), allocatable :: eigenf
     real*8, dimension(:), allocatable :: grid_points
     real*8, dimension(:, :), allocatable :: prob
-    character(:), allocatable :: eigenf_filename, prob_filename, energies_filename
+    character(:), allocatable :: eigenf_filename, prob_filename
+    character(1) :: which_param
 
     pi = 4.d0*datan(1.d0)
 
-    ! ---- default values ----
-    L = 500
-    dx = 0.01
-    omega = 5
-    m = 1.0
-    hbar = 1.0
-    ! ------------------------
+    print *, "Do you want to use use custom parameters of the default one (L=500, dx=0.01, omega=5, m=hbar=1)? [c/d]"
+    read *, which_param
+    if (which_param == "d") then 
+        ! ---- default values ----
+        L = 500
+        dx = 0.01
+        omega = 5
+        m = 1.0
+        hbar = 1.0
+        ! ------------------------
+    else if (which_param == "c") then 
+        print *, "Please enter L, dx, omega, m and hbar:"
+        read *, L, dx, omega, m, hbar 
+    else 
+        print *, "Invalid input."
+        stop 
+    end if 
 
     N = L*2 + 1
 
-    print *, "Please enter the number of eigenfunctions you want to generate"
+    print *, "Please enter the number of eigenfunctions you want to generate:"
     read *, k
 
     allocate (grid_points(N))
@@ -260,7 +213,6 @@ program hermite_polynomals
                         &((m*omega)/(pi*hbar))* &
                         &exp(-(m*omega*grid_points**2)/(2*hbar))* &
                         &evalHermitePoly(sqrt((m*omega)/hbar)*grid_points, ii - 1)
-        !print *, eigenf(:, ii)
         eigenf(:, ii) = eigenf(:, ii) / norm2(real(eigenf(:, ii)))
     end do
 
@@ -268,8 +220,6 @@ program hermite_polynomals
 
     call ComputeProb(eigenf, prob)
 
-    energies_filename = "en_t_"//trim(str_i(k))//"_"//trim(str_i(L))//"_"//trim(str_r_e(dx))//"_"//trim(str_r_e(omega))//"_"&
-                        &//trim(str_r_d(m))//"_"//trim(str_r_d(hbar))//".txt"
     eigenf_filename = "ef_t_"//trim(str_i(k))//"_"//trim(str_i(L))//"_"//trim(str_r_e(dx))//"_"//trim(str_r_e(omega))//"_"&
                       &//trim(str_r_d(m))//"_"//trim(str_r_d(hbar))//".txt"
     prob_filename = "pr_t_"//trim(str_i(k))//"_"//trim(str_i(L))//"_"//trim(str_r_e(dx))//"_"//trim(str_r_e(omega))//"_"&
