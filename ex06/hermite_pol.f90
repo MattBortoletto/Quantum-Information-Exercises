@@ -236,8 +236,8 @@ program hermite_polynomals
 
     ! ---- default values ----
     L = 500
-    dx = 0.001
-    omega = 100
+    dx = 0.01
+    omega = 5
     m = 1.0
     hbar = 1.0
     ! ------------------------

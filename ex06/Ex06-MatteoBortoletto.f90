@@ -6,7 +6,7 @@ module HarmonicOscillator1D
 
 contains 
 
-    subroutine DiscretizedLapalacian(lap, grid_size, periodic_bc)
+    subroutine DiscretizedLapalacian(lap, grid_size)
         
         complex*16, dimension(:,:) :: lap 
         integer :: grid_size 
@@ -19,11 +19,6 @@ contains
             lap(ii-1, ii) = 1
             lap(ii, ii-1) = 1
         end do 
-
-        if (periodic_bc) then 
-            lap(1, grid_size) = 1
-            lap(grid_size, 1) = 1
-        end if 
 
         return 
 
@@ -224,8 +219,8 @@ program harmonic_oscillator_1D
     ! m = 1.0
     ! hbar = 1.0
     L = 500
-    dx = 0.001
-    omega = 100
+    dx = 0.01
+    omega = 5
     m = 1.0
     hbar = 1.0
     ! ------------------------
@@ -240,13 +235,14 @@ program harmonic_oscillator_1D
 
     allocate(laplacian(N, N)) 
     allocate(harmonic_potential(N, N))
-    call DiscretizedLapalacian(laplacian, N, .false.)
+    call DiscretizedLapalacian(laplacian, N)
     call HarmonicPotential(harmonic_potential, N, dx, L, m, omega)
 
     H = -((hbar**2)/(2*m*dx**2))*laplacian + harmonic_potential
 
     allocate(eig(N))
-    ! use the info flag of the subroutine 'cheev' to check if the
+
+    ! use the info flag of the subroutine 'zheev' to check if the
     ! diagonalization has been successful
     info = 1
     do while (info .ne. 0)
@@ -255,11 +251,12 @@ program harmonic_oscillator_1D
 
     ! normalize ------------------
     H = H / sqrt(dx) 
+
     do ii = 1, N 
         H(:, ii) = H(:, ii) / norm2(real(H(:, ii)))
     end do
 
-    eig = eig*sqrt(dx)
+    !eig = eig * sqrt(dx)
     ! ----------------------------
 
     allocate(probabilities(N, N))
