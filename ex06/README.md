@@ -36,7 +36,7 @@ The Ex06-MatteoBortoletto.f90 file contains two modules:
     - DiscretizedLapalacian: computes the discretized laplacian;
     - HarmonicPotential: computes the harmonic potential;
     - ComputeEigenvalues: computes the eigenvalues/eigenvectors using the LAPACK subroutine 'zheev';
-    - ComputeProb: computes the probability densities corresponding to one eigenfunction.
+    - ComputeProbabilityDens: computes the probability densities corresponding to one eigenfunction.
 
 - 'Utilities', which contains the following functions/subroutines:
     - str_i: converts an integer into string;

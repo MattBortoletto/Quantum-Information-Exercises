@@ -1,226 +1,51 @@
-module HarmonicOscillator1D
-
-    implicit none 
-    
-    integer :: ii 
-
-contains 
-
-    subroutine DiscretizedLapalacian(lap, grid_size)
-        
-        complex*16, dimension(:,:) :: lap 
-        integer :: grid_size 
-
-        lap(1, 1) = -2
-        do ii = 2, grid_size
-            lap(ii, ii) = -2
-            lap(ii-1, ii) = 1
-            lap(ii, ii-1) = 1
-        end do 
-
-        return 
-
-    end subroutine DiscretizedLapalacian
-
-
-    subroutine HarmonicPotential(harmpot, N, dx, L, mass, omega)
-
-        complex*16, dimension(:,:) :: harmpot 
-        real*8 :: omega, mass, dx
-        integer :: N, L 
-
-        harmpot = 0.d0 
-        do ii = 1, N 
-            harmpot(ii, ii) = 0.5*mass*(omega*dx*(ii-L-1))**2
-        end do 
-
-        return
-
-    end subroutine HarmonicPotential
-
-
-    subroutine ComputeEigenvalues(matr, eig, info)
-
-        ! this subroutine computes the eigenvalues of a complex hermitian matrix
-        ! using the LAPACK subroutine 'cheev', which takes this arguments:
-        ! - jobz = "V": eigenvalues and eigenvectors are computed
-        ! - uplo = "U": upper triangle of A is stored
-        ! - N = size(matr, 1): order of the matrix
-        ! - a = matr: input matrix
-        ! - lda = size(matr, 1): leading dimension of the matrix
-        ! - w: if info = 0, the eigenvalues in ascending order
-        ! - work: complex array of dimension (max(1,lwork))
-        !         on exit, if info = 0, work(1) returns the optimal lwork
-        ! - lwork: length of the array work
-        ! - rwork: workspace
-        !          real array, dimension (max(1, 3*n-2))
-        ! - info: output, if info = 0 the exit is successful
-
-        complex*16, dimension(:, :), intent(in) :: matr
-        real*8, dimension(size(matr, 1)) :: eig 
-        real*8, dimension(:), allocatable :: rwork
-        complex*16, dimension(:), allocatable :: work
-        character(1) :: jobz, uplo
-        integer :: n, lda, lwork, info
-
-        n = size(matr, 1)
-        lda = size(matr, 1)
-        jobz = "V"
-        uplo = "U"
-        allocate(rwork(max(1, 3*size(matr, 1)-2)))   
-
-        ! ------------ find the optimal lwork ------------------------------
-        lwork = -1
-        allocate(work(1))
-        call zheev(jobz, uplo, n, matr, lda, eig, work, lwork, rwork, info)
-        ! on exit, if info = 0, work(1) returns the optimal lwork
-        lwork = int(work(1))
-        deallocate(work) 
-        ! ------------------------------------------------------------------
-
-        ! allocate work using the optimal lwork 
-        allocate(work(lwork))
-        
-        ! perform the diagonalization
-        call zheev(jobz, uplo, n, matr, lda, eig, work, lwork, rwork, info)
-
-        deallocate(rwork, work)
-
-        return 
-
-    end subroutine ComputeEigenvalues
-
-
-    subroutine ComputeProb(H, prob) 
-
-        complex*16, dimension(:,:) :: H  
-        real*8, dimension(size(H, 1), size(H, 2)) :: prob
-
-        do ii = 1, size(H, 2)
-            prob(:, ii) = abs(H(:, ii))**2
-        end do 
-
-        return 
-
-    end subroutine ComputeProb
-
-end module HarmonicOscillator1D
-
-! ----------------------------------------------------------------------------------
-! ----------------------------------------------------------------------------------
-
-module Utilities
-
-    implicit none 
-
-contains 
-
-    function str_i(k) result(str)
-
-        ! converts an integer into string
-        character(len=20) :: str
-        integer, intent(in) :: k
-
-        write (str, *) k
-        str = adjustl(str)
-
-        return 
-
-    end function str_i
-
-
-    function str_r_d(k) result(str)
-
-        ! converts a real into string (decimal notation)
-        character(len=20) :: str
-        real*8, intent(in) :: k
-
-        write (str, "(F10.3)") k
-        str = adjustl(str)
-
-        return 
-
-    end function str_r_d
-
-
-    function str_r_e(k) result(str)
-        
-        ! converts a real into string (exponential notation)
-        character(len=20) :: str 
-        real*8, intent(in) :: k
-
-        write (str, "(E10.1)") k
-        str = adjustl(str)
-
-        return 
-
-    end function str_r_e
-
-
-    subroutine WriteEigenvalues(eig, filename) 
-
-        character(*) :: filename
-        real*8, dimension(:) :: eig 
-        integer :: ii 
-
-        open(unit=73, file=filename, action="write", status="replace")
-        do ii = 1, size(eig) 
-            write(73, *) eig(ii)
-        end do 
-        close(73)
-
-        return 
-
-    end subroutine WriteEigenvalues
-
-
-    subroutine WriteEigenvectors(matr, grid_points, filename) 
-
-        character(*) :: filename
-        real*8, dimension(:,:) :: matr 
-        real*8, dimension(:) :: grid_points  
-        integer :: ii
-
-        open(unit=73, file=filename, action="write", status="replace")
-        do ii = 1, size(matr, 1) 
-                write(73, *) grid_points(ii), matr(ii, :) 
-        end do 
-        close(73)
-
-        return 
-        
-    end subroutine WriteEigenvectors
-
-end module Utilities
-
-! ----------------------------------------------------------------------------------
-! ----------------------------------------------------------------------------------
-
 program harmonic_oscillator_1D
 
     use HarmonicOscillator1D 
     use Utilities
+    use debugger 
 
     implicit none 
 
+    ! N: number of points
+    ! L: half of the interval L_s points
+    ! info: 'zheev' subroutine flag
+    ! jj: variable to loop
     integer :: N, L, info, jj
+    ! dx: grid spacing
+    ! omega: angular frequency of the oscillator
+    ! m: mass
+    ! hbar: Planck constant
     real*8 :: dx, omega, m, hbar
+    ! H: hamiltonian
+    ! laplacian: discretized laplacian 
+    ! harmonic_potential: harmonic potential
     complex*16, dimension(:,:), allocatable :: H, laplacian, harmonic_potential
+    ! eig: eigenvalues array
+    ! grid_points: discretized grid points
     real*8, dimension(:), allocatable :: eig, grid_points
+    ! probability densities array
     real*8, dimension(:,:), allocatable :: probabilities
+    ! output file names
     character(:), allocatable :: energies_filename, states_filename, probabilities_filename
+    ! flag to choose between default/custom parameters
     character(1) :: which_param
+    ! flag to enable debugging 
+    logical :: enable_debug 
+
+    ! ---- enable/disable debugging ----
+    enable_debug = .false.
+    ! ----------------------------------
     
+    ! ---- set the parameters ---------------------------------------------------------------------------------------
     print *, "Do you want to use use custom parameters of the default one (L=500, dx=0.01, omega=5, m=hbar=1)? [c/d]"
     read *, which_param
     if (which_param == "d") then 
-        ! ---- default values ----
+        ! default values
         L = 500
         dx = 0.01
         omega = 5
         m = 1.0
         hbar = 1.0
-        ! ------------------------
     else if (which_param == "c") then 
         print *, "Please enter L, dx, omega, m and hbar:"
         read *, L, dx, omega, m, hbar 
@@ -228,21 +53,36 @@ program harmonic_oscillator_1D
         print *, "Invalid input."
         stop 
     end if 
+    ! ----------------------------------------------------------------------------------------------------------------
 
+    call checkpoint(debug=enable_debug, variable=L, message="L:", end_program=.false.)
+    call checkpoint(debug=enable_debug, variable=dx, message="dx:", end_program=.false.)
+    call checkpoint(debug=enable_debug, variable=omega, message="omega:", end_program=.false.)
+    call checkpoint(debug=enable_debug, variable=m, message="m:", end_program=.false.)
+    call checkpoint(debug=enable_debug, variable=hbar, message="hbar:", end_program=.false.)
+
+    ! compute the number of points
     N = L*2 + 1
 
+    call checkpoint(debug=enable_debug, variable=N, message="Number of points:", end_program=.false.)
+
+    ! compute the values of the grid points 
     allocate(grid_points(N))
     do jj = 1, N 
         ! x_min = -L*dx
         grid_points(jj) = -L*dx + dx*(jj-1)
     end do 
 
+    !call checkpoint(debug=(size(grid_points)==N), variable=N, message="grid_points dimension is correct!", end_program=.false.)
+
+    ! ---- compute the hamiltonian -------------------------------
     allocate(laplacian(N, N)) 
     allocate(harmonic_potential(N, N))
     call DiscretizedLapalacian(laplacian, N)
     call HarmonicPotential(harmonic_potential, N, dx, L, m, omega)
 
     H = -((hbar**2)/(2*m*dx**2))*laplacian + harmonic_potential
+    ! ------------------------------------------------------------
 
     allocate(eig(N))
 
@@ -253,15 +93,21 @@ program harmonic_oscillator_1D
         call ComputeEigenvalues(H, eig, info)
     end do 
 
+    call checkpoint(debug=enable_debug, array_variable=eig, message="Eigenvalues:", end_program=.false.)
+
     ! normalize 
     H = H / sqrt(dx) 
     do ii = 1, N 
         H(:, ii) = H(:, ii) / norm2(real(H(:, ii)))
     end do
 
+    call checkpoint(debug=enable_debug, matrix_variable=H, message="H:", end_program=.false.)
+
     ! compute the probability densities
     allocate(probabilities(N, N))
-    call ComputeProb(H, probabilities)
+    call ComputeProbabilityDens(H=H, prob=probabilities)
+
+    call checkpoint(debug=enable_debug, matrix_variable=probabilities, message="Probability densities:", end_program=.false.)
 
     ! save the results in text files with proper names
     energies_filename = "en_"//trim(str_i(L))//"_"//trim(str_r_e(dx))//"_"//trim(str_r_e(omega))//"_"&
