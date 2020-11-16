@@ -22,6 +22,8 @@ set title "Eigenvalues" font ", 27"
 set xlabel "n"
 set ylabel "E_n"
 set grid
+#set object rectangle center 50, 350 size 100, 700 fillstyle border rgb "red"
+#set arrow from 50, 700 to screen .32, .45 front lt rgb "red"
 hbar = 1
 omega = 5
 f(x) = hbar*omega*(x+1/2)
