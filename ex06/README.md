@@ -14,12 +14,14 @@ This program computes the (first k) eigenvalues and eigenvectors for the quantum
 - plot_eigenval.gnu: gnuplot script to plot the eigenvalues;
 - plot_eigenvect.gnu: gnuplot script to plot the eigenvectors;
 - plot_prob.gnu: gnuplot script to plot the probability densities;
+- plot_eigenval_diff.gnu: gnuplot script to plot the error in the computation of the eigenvalues; 
 - compile.sh: bash script that compiles and executes the Fortran programs;
 - run_plot.py: Python script that runs the gnuplot scripts to plot the data;
 - debugger.f90: Fortran module for debugging;
 - Output files (* = txt/pdf/log)): the notation is the following
+    - en_err_L_Dx_omega_m_hbar.txt: text files with the difference between the numerical and theoretical eigenfunctions;
     - data_L_Dx_omega_m_hbar.txt: text file with the numerical eigenfunctions;
-    - data_t_k_L_Dx_omega_m_hbar.txt: text file with the first k theoretical eigenfunctions.
+    - data_t_k_L_Dx_omega_m_hbar.txt: text file with the first k theoretical eigenfunctions;
   where data = [en, ef, pr] = [energies, eigenfunctions, probability densities].
   Output plots:
   - eigenvalues.pdf: plot of the energies;
@@ -36,7 +38,8 @@ The Ex06-MatteoBortoletto.f90 file contains two modules:
     - DiscretizedLapalacian: computes the discretized laplacian;
     - HarmonicPotential: computes the harmonic potential;
     - ComputeEigenvalues: computes the eigenvalues/eigenvectors using the LAPACK subroutine 'zheev';
-    - ComputeProbabilityDens: computes the probability densities corresponding to one eigenfunction.
+    - ComputeProbabilityDens: computes the probability densities corresponding to one eigenfunction;
+    - ComputeThEnergy: computes the theoretical eigenvalues.
 
 - 'Utilities', which contains the following functions/subroutines:
     - str_i: converts an integer into string;

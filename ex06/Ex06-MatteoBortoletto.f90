@@ -22,11 +22,12 @@ program harmonic_oscillator_1D
     complex*16, dimension(:,:), allocatable :: H, laplacian, harmonic_potential
     ! eig: eigenvalues array
     ! grid_points: discretized grid points
-    real*8, dimension(:), allocatable :: eig, grid_points
+    ! th_energy: theoretical eigenvalues array 
+    real*8, dimension(:), allocatable :: eig, grid_points, th_energy, en_error 
     ! probability densities array
     real*8, dimension(:,:), allocatable :: probabilities
     ! output file names
-    character(:), allocatable :: energies_filename, states_filename, probabilities_filename
+    character(:), allocatable :: energies_filename, states_filename, probabilities_filename, en_error_filename
     ! flag to choose between default/custom parameters
     character(1) :: which_param
     ! flag to enable debugging 
@@ -95,6 +96,13 @@ program harmonic_oscillator_1D
 
     call checkpoint(debug=enable_debug, array_variable=eig, message="Eigenvalues:", end_program=.false.)
 
+    ! compute the theoretical eigenvalues 
+    allocate(th_energy(N))
+    call ComputeThEnergy(th_energy, hbar, omega)
+    ! compute the error
+    allocate(en_error(N))
+    en_error = abs(eig - th_energy)
+
     ! normalize 
     H = H / sqrt(dx) 
     do ii = 1, N 
@@ -113,6 +121,9 @@ program harmonic_oscillator_1D
     energies_filename = "en_"//trim(str_i(L))//"_"//trim(str_r_e(dx))//"_"//trim(str_r_e(omega))//"_"&
                         &//trim(str_r_d(m))//"_"//trim(str_r_d(hbar))//".txt"
 
+    en_error_filename = "en_err_"//trim(str_i(L))//"_"//trim(str_r_e(dx))//"_"//trim(str_r_e(omega))//"_"&
+                        &//trim(str_r_d(m))//"_"//trim(str_r_d(hbar))//".txt"
+
     states_filename = "ef_"//trim(str_i(L))//"_"//trim(str_r_e(dx))//"_"//trim(str_r_e(omega))//"_"&
                       &//trim(str_r_d(m))//"_"//trim(str_r_d(hbar))//".txt"
 
@@ -120,9 +131,10 @@ program harmonic_oscillator_1D
                              &//trim(str_r_d(m))//"_"//trim(str_r_d(hbar))//".txt"
 
     call WriteEigenvalues(eig, energies_filename)
+    call WriteEigenvalues(en_error, en_error_filename)
     call WriteEigenvectors(real(H), grid_points, states_filename)
     call WriteEigenvectors(probabilities, grid_points, probabilities_filename)
 
-    deallocate(H, grid_points, laplacian, harmonic_potential, eig, probabilities)
+    deallocate(H, grid_points, laplacian, harmonic_potential, eig, th_energy, en_error, probabilities)
 
 end program harmonic_oscillator_1D

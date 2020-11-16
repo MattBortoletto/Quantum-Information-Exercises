@@ -14,7 +14,7 @@ contains
         
         ! laplacian matrix
         complex*16, dimension(:,:) :: lap 
-        ! points in the grid 
+        ! grid size
         integer :: grid_size 
 
         ! the discretized laplacian has -2 in the diagonal
@@ -123,5 +123,20 @@ contains
         return 
 
     end subroutine ComputeProbabilityDens
+
+
+    subroutine ComputeThEnergy(th_en, hbar, omega)
+
+        ! this subroutine computes the theoretical
+        ! values of the eigenvalues
+
+        real*8, dimension(:) :: th_en 
+        real*8 :: omega, hbar 
+
+        do ii = 1, size(th_en)
+            th_en(ii) = hbar*omega*(ii + 0.5)
+        end do
+
+    end subroutine ComputeThEnergy
 
 end module HarmonicOscillator1D

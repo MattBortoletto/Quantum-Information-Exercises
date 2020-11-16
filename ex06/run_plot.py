@@ -8,18 +8,6 @@ while (k <= 0):
     except ValueError:
         print("Error! The input must be an integer.")
 
-# fileSource = "Ex06-MatteoBortoletto.f90"
-# fileExec = "Ex06.x"
-
-# # compile the Fortran code 
-# subprocess.call(["gfortran", fileSource, "-o", fileExec, "-O3", "-framework Accelerate"]) 
-
-# if there already exists the plot, delete it
-# eigenval_plot = "eigenvalues.pdf"
-# eigenvect_plot = "first_"+str(k)+"_eigenfunc.pdf"
-# if os.path.exists(eigenval_plot):
-#     os.remove(eigenvect_plot)
-
 # execute the gnuplot script
 eigenval_plotFile = "plot_eigenval.gnu"
 eigenvect_plotFile = "plot_eigenvect.gnu"
