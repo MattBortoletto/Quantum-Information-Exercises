@@ -22,7 +22,7 @@ module TimeEvolution
         ! compute the actual transform 
         call dfftw_execute_dft(n, array, ft) 
         ! deallocate
-        call dfftw_destry_plan 
+        call dfftw_destroy_plan 
 
         ft = ft / sqrt(real(size(array)))
 
@@ -45,7 +45,7 @@ module TimeEvolution
         ! compute the actual transform 
         call dfftw_execute_dft(n, array, ift) 
         ! deallocate
-        call dfftw_destry_plan 
+        call dfftw_destroy_plan 
 
         ift = ift / sqrt(real(size(array)))
 

@@ -51,26 +51,26 @@ contains
     end function str_r_e
 
 
-    subroutine WriteEigenvalues(eig, filename) 
+    subroutine WriteRealVector(vect, filename) 
 
         ! this subroutine writes a vector into an output file
 
         character(*) :: filename
-        real*8, dimension(:) :: eig 
+        real*8, dimension(:) :: vect 
         integer :: ii 
 
         open(unit=73, file=filename, action="write", status="replace")
-        do ii = 1, size(eig) 
-            write(73, *) eig(ii)
+        do ii = 1, size(vect) 
+            write(73, *) vect(ii)
         end do 
         close(73)
 
         return 
 
-    end subroutine WriteEigenvalues
+    end subroutine WriteRealVector
 
 
-    subroutine WriteEigenvectors(matr, grid_points, filename) 
+    subroutine WriteRealMatrix(matr, grid_points, filename) 
 
         ! this subroutine writes a matrix into an output file
 
@@ -87,6 +87,6 @@ contains
 
         return 
         
-    end subroutine WriteEigenvectors
+    end subroutine WriteRealMatrix
 
 end module Utilities
