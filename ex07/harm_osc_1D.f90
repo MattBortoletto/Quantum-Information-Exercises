@@ -3,7 +3,7 @@ module HarmonicOscillator1D
     implicit none
     
     ! variable to loop
-    integer :: ii 
+    integer :: ii  
 
 contains 
 
@@ -139,62 +139,5 @@ contains
 
     end subroutine ComputeThEnergy
 
-
-    subroutine psiTimeEvol(psi_0, x_min, x_max, t_min, t_max, N, dx, m, hbar, omega)
-
-        ! this subroutine computes the time evolution of the psi subject to 
-        ! the "shifted" harmonic potential 
-
-        complex*16, dimension(:,:) :: psi_0 
-        real*8 :: x_min, x_max, t_min, t_max, dx, m, hbar, omega, t 
-        integer :: N, t_len 
-        complex*16, dimension(:,:), allocatable :: psi
-        complex*16, dimension(:), allocatable :: temp,temp2
-        type(C_PTR) :: planf,planb
-        
-        allocate(psi(N, t_len))
-        allocate(temp(N))
-        allocate(temp2(N))
-
-        psi(:, 1) = psi_0 
-
-        call dfftw_plan_dft_1d(planf, N, temp, temp2, FFTW_FORWARD, FFTW_ESTIMATE);
-	    call dfftw_plan_dft_1d(planb, N, temp2, temp, FFTW_BACKWARD, FFTW_ESTIMATE);
-
-        temp = psi_0
-
-        t = 0.0
-
-        ! do ii = 2, T_len 
-        !     call 
-        ! end do 
-
-
-
-
-
-
-
-
-
-        ! ! ---- compute the position grid ---------
-        ! N = L*2 + 1
-        ! allocate(x_grid_points(N))
-        ! do jj = 1, N 
-        !     ! x_min = -L*dx
-        !     x_grid_points(jj) = -L*dx + dx*(jj-1)
-        ! end do 
-        ! ! ---------------------------------------
-
-        ! ! ---- compute the position grid ---------
-        ! dt = 
-        ! allocate(t_grid_points(t_len))
-        ! do jj = 1, N 
-        !     ! x_min = -L*dx
-        !     t_grid_points(jj) = -L*dx + dx*(jj-1)
-        ! end do 
-        ! ! ---------------------------------------
-
-    end subroutine psiTimeEvol
 
 end module HarmonicOscillator1D
