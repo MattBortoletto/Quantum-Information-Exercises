@@ -22,7 +22,7 @@ module TimeEvolution
         ! compute the actual transform 
         call dfftw_execute_dft(n, array, ft) 
         ! deallocate
-        call dfftw_destroy_plan 
+        call dfftw_destroy_plan(n)
 
         ft = ft / sqrt(real(size(array)))
 
@@ -42,12 +42,14 @@ module TimeEvolution
 
         ! create a plan 
         call dfftw_plan_dft_1d(n, size(array), array, ift, FFTW_BACKWARD, FFTW_ESTIMATE)
+
         ! compute the actual transform 
         call dfftw_execute_dft(n, array, ift) 
-        ! deallocate
-        call dfftw_destroy_plan 
 
-        ift = ift / sqrt(real(size(array)))
+        ! deallocate
+        call dfftw_destroy_plan(n) 
+
+        ift = ift / sqrt(real(size(array))) 
 
         return 
 
@@ -70,12 +72,12 @@ module TimeEvolution
         allocate(evol_op_T(t_len))
         !allocate(V_t(N, t_len))
 
-        evol_op_T = exp(dcmplx(0.d0, -dt*(p_grid)**2/(2*m)))
-        
-        do ii = 1, t_len
+        evol_op_T = exp(dcmplx(0.d0, -dt*(p_grid)**2/(2*m*hbar)))
+
+        do ii = 1, t_len-2
 
             t_i = ii * dt 
-            evol_op_V = exp(dcmplx(0.d0,dt*m*(omega**2)*(x_grid-t_i)**2)/(4*hbar))
+            evol_op_V = exp(dcmplx(0.d0, -dt*m*(omega**2)*(x_grid-t_i)**2)/(4*hbar))
             
             ! apply the position space operator 
             psi_t(:, ii+1) = psi_t(:, ii+1) * evol_op_V

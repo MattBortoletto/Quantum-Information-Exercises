@@ -21,15 +21,15 @@ program time_evolution
 
 
     ! ---- initialize parameters ----
-    L = 500
-    t_len = 300  
-    dx = 0.01
+    L = 100
+    t_len = 1000  
+    dx = 0.1
     N = 2*L + 1
     T = 3.0
     dt = T / t_len ! t is in [0:T]
     m = 1
     hbar = 1
-    omega = 5
+    omega = 0.5
     pi = 4.d0 * datan(1.d0)
     ! -------------------------------
 
@@ -39,6 +39,8 @@ program time_evolution
     allocate(harmonic_potential(N, N))
     allocate(eig(N))
     allocate(psi_t(N, t_len+1))
+
+    print *, "grids"
 
     ! ---- compute the grid points ----
     ! x grid  
@@ -57,12 +59,16 @@ program time_evolution
     
     ! print *, p_grid 
 
+    print *, "laplacian"
+
     ! ---- compute the hamiltonian -------------------------------
     call DiscretizedLapalacian(laplacian, N)
     call HarmonicPotential(harmonic_potential, N, dx, L, m, omega)
 
     H = -((hbar**2)/(2*m*dx**2))*laplacian + harmonic_potential
     ! ------------------------------------------------------------
+
+    print *, "diagonalization"
 
     ! ---- diagonalization ----------------------------------------
     ! use the 'info' flag of the subroutine 'zheev' to check if the
@@ -74,14 +80,20 @@ program time_evolution
     H = H / sqrt(dx) 
     ! -------------------------------------------------------------
 
+    print *, "save psi0" 
+
     ! the starting state is the ground state 
     psi_t(:, 1) = H(:, 1)
     
     deallocate(eig, H) ! harmonic_potential, laplacian 
 
-    ! ---- compute the time evolution of psi -------------------
+    print *, "time evolution"
+
+    ! ---- compute the time evolution of psi -------------------------
     call psiTimeEvol(psi_t, x_grid, p_grid, t_len, dt, omega, m, hbar)
-    ! ----------------------------------------------------------
+    ! ----------------------------------------------------------------
+
+    print *, "write" 
 
     call WriteRealMatrix(realpart(psi_t), x_grid, 'psi_real_time_evol.txt')
     call WriteRealMatrix(imagpart(psi_t), x_grid, 'psi_imag_time_evol.txt')
