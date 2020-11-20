@@ -8,28 +8,31 @@ program time_evolution
     implicit none 
 
     complex*16, dimension(:,:), allocatable :: psi_t
+    complex*16, dimension(:), allocatable :: tmp
     integer :: L, t_len, N, info, jj 
-    real*8 :: dx, omega, m, hbar, T, dt, pi 
+    real*8 :: dx, omega, m, hbar, T, dt, pi, t_max, q0, dp 
     ! H: hamiltonian
     ! laplacian: discretized laplacian 
     ! harmonic_potential: harmonic potential
     complex*16, dimension(:,:), allocatable :: H, laplacian, harmonic_potential
     ! eig: eigenvalues array
-    ! x_grid
+    ! x_grid 
     ! p_grid
     real*8, dimension(:), allocatable :: eig, x_grid, p_grid 
+    real*8, dimension(:,:), allocatable :: prob_t 
 
 
     ! ---- initialize parameters ----
-    L = 100
-    t_len = 1000  
-    dx = 0.1
+    L = 500
+    t_len = 300  
+    dx = 0.01
     N = 2*L + 1
+    t_max = 1.0
     T = 3.0
-    dt = T / t_len ! t is in [0:T]
+    dt = t_max / t_len ! t is in [0:T] ???
     m = 1
     hbar = 1
-    omega = 0.5
+    omega = 1d1
     pi = 4.d0 * datan(1.d0)
     ! -------------------------------
 
@@ -39,6 +42,8 @@ program time_evolution
     allocate(harmonic_potential(N, N))
     allocate(eig(N))
     allocate(psi_t(N, t_len+1))
+    allocate(prob_t(N, t_len+1))
+    allocate(tmp(N))
 
     print *, "grids"
 
@@ -84,19 +89,33 @@ program time_evolution
 
     ! the starting state is the ground state 
     psi_t(:, 1) = H(:, 1)
+    !psi_t(:, 1) = psi_t(:, 1) / norm2(real(psi_t(:, 1)))
+    prob_t(:, 1) = abs(psi_t(:, 1))**2 
+
+    ! call WriteRealVector(realpart(psi_t(:, 1)), 'psi_0.txt')
     
     deallocate(eig, H) ! harmonic_potential, laplacian 
 
     print *, "time evolution"
 
-    ! ---- compute the time evolution of psi -------------------------
-    call psiTimeEvol(psi_t, x_grid, p_grid, t_len, dt, omega, m, hbar)
-    ! ----------------------------------------------------------------
+    ! ---- compute the time evolution of psi ---------------------------------------------
+    ! call psiTimeEvol(psi_t, prob_t, x_grid, p_grid, t_len, dt, omega, m, hbar, T)
+    tmp = psi_t(:, 1)
+    dp = (2*pi) / (dx*N) 
+    do jj = 1, t_len 
+        ! t_i = jj*dt 
+        q0 = jj*dt / T  
+        call update(tmp, N, dx, q0, x_grid(N), dt, dp)
+        psi_t(:, jj+1) = tmp 
+        prob_t(:, jj+1) = abs(tmp)**2
+    end do 
+    ! ------------------------------------------------------------------------------------
 
     print *, "write" 
 
     call WriteRealMatrix(realpart(psi_t), x_grid, 'psi_real_time_evol.txt')
     call WriteRealMatrix(imagpart(psi_t), x_grid, 'psi_imag_time_evol.txt')
+    call WriteRealMatrix(prob_t, x_grid, 'prob_time_evol.txt')
 
     print *, "END!"
     

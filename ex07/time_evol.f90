@@ -56,54 +56,97 @@ module TimeEvolution
     end function InverseFourierTransform
 
 
-    subroutine psiTimeEvol(psi_t, x_grid, p_grid, t_len, dt, omega, m, hbar)
+    subroutine psiTimeEvol(psi_t, prob_t, x_grid, p_grid, t_len, dt, omega, m, hbar, T)
 
         ! this subroutine computes the time evolution of the psi subject to 
         ! the "shifted" harmonic potential 
 
         complex*16, dimension(:,:) :: psi_t
+        real*8, dimension(:,:) :: prob_t 
+        complex*16, dimension(:), allocatable :: tmp 
         complex*16, dimension(:), allocatable :: evol_op_V, evol_op_T 
-        !real*8, dimension(:,:), allocatable :: V_t 
         real*8, dimension(:) :: x_grid, p_grid 
-        real*8 :: t_i, dt, omega, m, hbar 
+        real*8 :: t_i, dt, omega, m, hbar, T 
         integer :: t_len, ii
 
         allocate(evol_op_V(t_len))
         allocate(evol_op_T(t_len))
-        !allocate(V_t(N, t_len))
+        allocate(tmp(size(psi_t, 1)))
 
-        evol_op_T = exp(dcmplx(0.d0, -dt*(p_grid)**2/(2*m*hbar)))
+        tmp = psi_t(:, 1)
 
-        do ii = 1, t_len-2
+        ! evol_op_T = exp(dcmplx(0.d0, -dt*(p_grid)**2/(2*m*hbar)))
+        evol_op_T = exp( -dt * dcmplx(0.d0,(p_grid)**2) / (2*m*hbar) )
+
+        do ii = 1, t_len-1
 
             t_i = ii * dt 
-            evol_op_V = exp(dcmplx(0.d0, -dt*m*(omega**2)*(x_grid-t_i)**2)/(4*hbar))
-            
+            ! evol_op_V = exp(-dt*m * dcmplx(0.d0,(omega**2)*(x_grid-t_i/T)**2) / (4*hbar) ) 
+            evol_op_V = exp(-dt*m * dcmplx(0.d0,(omega**2)*(x_grid-t_i)**2) / (4*hbar) ) 
+
             ! apply the position space operator 
-            psi_t(:, ii+1) = psi_t(:, ii+1) * evol_op_V
-            
+            tmp = tmp * evol_op_V
+
             ! flip to momentum space using the FT 
-            psi_t(:, ii+1) = FourierTransform(psi_t(:, ii+1))
+            tmp = FourierTransform(tmp)
 
             ! apply the momentum space operator
-            psi_t(:, ii+1) = psi_t(:, ii+1) * evol_op_T
+            tmp = tmp * evol_op_T
 
             ! flip to position space using the IFT
-            psi_t(:, ii+1) = InverseFourierTransform(psi_t(:, ii+1))
+            tmp = InverseFourierTransform(tmp)
 
             ! apply again the position space operator 
-            psi_t(:, ii+1) = psi_t(:, ii+1) * evol_op_V
+            tmp = tmp * evol_op_V
 
-            ! checking if the norm is preserved (up to some finite precision)
-            ! write(int_to_str,'(i3.3)') ii
-            ! call debug(deb,psi_t(:,1),abs(sum(abs(psi_t(:,1)*sqrt(step))**2)&
-            !     -1).ge.1d-4,&
-            !     'no norm after '//trim(int_to_str)//' unitary(?) operator')
+            psi_t(:, ii+1) = tmp 
+            
+            prob_t(:, ii+1) = abs(tmp)**2
             
         end do
+
+        deallocate(tmp) 
 
         return 
 
     end subroutine psiTimeEvol
+
+
+    subroutine update(psi, N, dx, q0, xmax, dt, dp)
+
+        integer :: ii, N 
+        complex*16, dimension(:) :: psi
+        complex*16, dimension(:), allocatable :: psi_fft 
+        real*8 :: dx, q0, xmax, dt, dp 
+        integer*8 :: plan 
+
+        allocate(psi_fft(size(psi)))
+
+        do ii = 1, N 
+            psi(ii) = psi(ii)*exp(-0.5*cmplx(0, (ii*dx-q0-xmax)**2)*dt)
+        end do 
+
+        call dfftw_plan_dft_1d(plan, N, psi, psi_fft, FFTW_FORWARD, FFTW_ESTIMATE)
+        call dfftw_execute_dft(plan, psi, psi_fft) 
+        call dfftw_destroy_plan(plan)
+
+        do ii = 1, N/2
+            psi_fft(ii) = psi_fft(ii)*exp(-0.5*cmplx(0, ((ii-1)*dp)**2)*dt)
+        end do 
+
+        do ii = N/2+1, N 
+            psi_fft(ii) = psi_fft(ii)*exp(-0.5*cmplx(0, ((ii-1-N)*dp)**2)*dt)
+        end do 
+
+        call dfftw_plan_dft_1d(plan, N, psi_fft, psi, FFTW_BACKWARD, FFTW_ESTIMATE)
+        call dfftw_execute_dft(plan, psi_fft, psi) 
+        call dfftw_destroy_plan(plan)
+
+        do ii = 1, N 
+            psi(ii) = psi(ii)*exp(-0.5*cmplx(0, (ii*dx-q0-xmax)**2)*dt)/N 
+        end do
+        
+    end subroutine update 
+
 
 end module TimeEvolution
