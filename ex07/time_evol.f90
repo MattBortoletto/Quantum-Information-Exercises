@@ -81,8 +81,8 @@ module TimeEvolution
         do ii = 1, t_len-1
 
             t_i = ii * dt 
-            ! evol_op_V = exp(-dt*m * dcmplx(0.d0,(omega**2)*(x_grid-t_i/T)**2) / (4*hbar) ) 
-            evol_op_V = exp(-dt*m * dcmplx(0.d0,(omega**2)*(x_grid-t_i)**2) / (4*hbar) ) 
+            evol_op_V = exp(-dt*m * dcmplx(0.d0,(omega**2)*(x_grid-t_i/T)**2) / (4*hbar) ) 
+            ! evol_op_V = exp(-dt*m * dcmplx(0.d0,(omega**2)*(x_grid-t_i)**2) / (4*hbar) ) 
 
             ! apply the position space operator 
             tmp = tmp * evol_op_V
@@ -105,7 +105,7 @@ module TimeEvolution
             
         end do
 
-        deallocate(tmp) 
+        deallocate(evol_op_T, evol_op_V, tmp)
 
         return 
 
@@ -145,6 +145,8 @@ module TimeEvolution
         do ii = 1, N 
             psi(ii) = psi(ii)*exp(-0.5*cmplx(0, (ii*dx-q0-xmax)**2)*dt)/N 
         end do
+
+        deallocate(psi_fft) 
         
     end subroutine update 
 

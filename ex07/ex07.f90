@@ -10,7 +10,7 @@ program time_evolution
     complex*16, dimension(:,:), allocatable :: psi_t
     complex*16, dimension(:), allocatable :: tmp
     integer :: L, t_len, N, info, jj 
-    real*8 :: dx, omega, m, hbar, T, dt, pi, t_max, q0, dp 
+    real*8 :: dx, omega, m, hbar, T, dt, pi, t_max, q0, dp, x_max 
     ! H: hamiltonian
     ! laplacian: discretized laplacian 
     ! harmonic_potential: harmonic potential
@@ -27,8 +27,9 @@ program time_evolution
     t_len = 300  
     dx = 0.01
     N = 2*L + 1
+    x_max = 5.0
     t_max = 1.0
-    T = 3.0
+    T = 0.2
     dt = t_max / t_len ! t is in [0:T] ???
     m = 1
     hbar = 1
@@ -91,24 +92,22 @@ program time_evolution
     psi_t(:, 1) = H(:, 1)
     !psi_t(:, 1) = psi_t(:, 1) / norm2(real(psi_t(:, 1)))
     prob_t(:, 1) = abs(psi_t(:, 1))**2 
-
-    ! call WriteRealVector(realpart(psi_t(:, 1)), 'psi_0.txt')
     
-    deallocate(eig, H) ! harmonic_potential, laplacian 
+    deallocate(eig, H, harmonic_potential, laplacian)
 
     print *, "time evolution"
 
     ! ---- compute the time evolution of psi ---------------------------------------------
-    ! call psiTimeEvol(psi_t, prob_t, x_grid, p_grid, t_len, dt, omega, m, hbar, T)
-    tmp = psi_t(:, 1)
-    dp = (2*pi) / (dx*N) 
-    do jj = 1, t_len 
-        ! t_i = jj*dt 
-        q0 = jj*dt / T  
-        call update(tmp, N, dx, q0, x_grid(N), dt, dp)
-        psi_t(:, jj+1) = tmp 
-        prob_t(:, jj+1) = abs(tmp)**2
-    end do 
+    call psiTimeEvol(psi_t, prob_t, x_grid, p_grid, t_len, dt, omega, m, hbar, T)
+    ! tmp = psi_t(:, 1)
+    ! dp = (2*pi) / (dx*N) 
+    ! do jj = 1, t_len 
+    !     ! t_i = jj*dt 
+    !     q0 = jj * dt / T  
+    !     call update(tmp, N, dx, q0, x_max, dt, dp)
+    !     psi_t(:, jj+1) = tmp 
+    !     prob_t(:, jj+1) = abs(tmp)**2
+    ! end do 
     ! ------------------------------------------------------------------------------------
 
     print *, "write" 
