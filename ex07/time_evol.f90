@@ -10,7 +10,7 @@ module TimeEvolution
 
     function FourierTransform(array) result(ft) 
 
-        ! this function computed the Fourier transfor 
+        ! this function computes the Fourier transform
         ! using the FFTW package
 
         complex*16, dimension(:) :: array 
@@ -33,7 +33,7 @@ module TimeEvolution
 
     function InverseFourierTransform(array) result(ift)
 
-        ! this function computed the Fourier transfor 
+        ! this function computes the inverse Fourier transform
         ! using the FFTW package
 
         complex*16, dimension(:) :: array 
@@ -66,7 +66,7 @@ module TimeEvolution
         complex*16, dimension(:), allocatable :: tmp 
         complex*16, dimension(:), allocatable :: evol_op_V, evol_op_T 
         real*8, dimension(:) :: x_grid, p_grid 
-        real*8 :: t_i, dt, omega, m, hbar, T 
+        real*8 :: t_i, dt, omega, m, hbar, T, q0 
         integer :: t_len, ii
 
         allocate(evol_op_V(t_len))
@@ -75,14 +75,14 @@ module TimeEvolution
 
         tmp = psi_t(:, 1)
 
-        ! evol_op_T = exp(dcmplx(0.d0, -dt*(p_grid)**2/(2*m*hbar)))
-        evol_op_T = exp( -dt * dcmplx(0.d0,(p_grid)**2) / (2*m*hbar) )
+        evol_op_T = exp( - (dt*dcmplx(0.d0,(p_grid)**2)) / (2*m*hbar) )
 
         do ii = 1, t_len-1
 
             t_i = ii * dt 
-            evol_op_V = exp(-dt*m * dcmplx(0.d0,(omega**2)*(x_grid-t_i/T)**2) / (4*hbar) ) 
-            ! evol_op_V = exp(-dt*m * dcmplx(0.d0,(omega**2)*(x_grid-t_i)**2) / (4*hbar) ) 
+            q0 = t_i / T 
+
+            evol_op_V = exp( - (dt*m*dcmplx(0.d0,(omega**2)*((x_grid-q0)**2))) / (4*hbar) ) 
 
             ! apply the position space operator 
             tmp = tmp * evol_op_V
@@ -99,8 +99,8 @@ module TimeEvolution
             ! apply again the position space operator 
             tmp = tmp * evol_op_V
 
+            ! store the results 
             psi_t(:, ii+1) = tmp 
-            
             prob_t(:, ii+1) = abs(tmp)**2
             
         end do
@@ -110,45 +110,5 @@ module TimeEvolution
         return 
 
     end subroutine psiTimeEvol
-
-
-    subroutine update(psi, N, dx, q0, xmax, dt, dp)
-
-        integer :: ii, N 
-        complex*16, dimension(:) :: psi
-        complex*16, dimension(:), allocatable :: psi_fft 
-        real*8 :: dx, q0, xmax, dt, dp 
-        integer*8 :: plan 
-
-        allocate(psi_fft(size(psi)))
-
-        do ii = 1, N 
-            psi(ii) = psi(ii)*exp(-0.5*cmplx(0, (ii*dx-q0-xmax)**2)*dt)
-        end do 
-
-        call dfftw_plan_dft_1d(plan, N, psi, psi_fft, FFTW_FORWARD, FFTW_ESTIMATE)
-        call dfftw_execute_dft(plan, psi, psi_fft) 
-        call dfftw_destroy_plan(plan)
-
-        do ii = 1, N/2
-            psi_fft(ii) = psi_fft(ii)*exp(-0.5*cmplx(0, ((ii-1)*dp)**2)*dt)
-        end do 
-
-        do ii = N/2+1, N 
-            psi_fft(ii) = psi_fft(ii)*exp(-0.5*cmplx(0, ((ii-1-N)*dp)**2)*dt)
-        end do 
-
-        call dfftw_plan_dft_1d(plan, N, psi_fft, psi, FFTW_BACKWARD, FFTW_ESTIMATE)
-        call dfftw_execute_dft(plan, psi_fft, psi) 
-        call dfftw_destroy_plan(plan)
-
-        do ii = 1, N 
-            psi(ii) = psi(ii)*exp(-0.5*cmplx(0, (ii*dx-q0-xmax)**2)*dt)/N 
-        end do
-
-        deallocate(psi_fft) 
-        
-    end subroutine update 
-
 
 end module TimeEvolution

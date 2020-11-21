@@ -1,10 +1,13 @@
-set terminal png font "Latin Modern Math, "
-#set encoding utf8
-set output 'prob.png'
+set terminal pdf size 8, 5 font "Latin Modern Math, 25"
+set output 'prob.pdf'
 
-stats 'prob_time_evol.txt' using 2 nooutput
+set title "Probability density time evolution" font ", 27"
+set xlabel "x"
+set ylabel "|{/Symbol Y}(x)|^2"
+set grid
+set autoscale xy
+set key outside 
 
-set xlabel 'x' 
-set ylabel '|{/Symbol Y}(x)|^2' 
+stats 'prob_time_evol_0.020.txt' using 2 nooutput
 
-plot for [i=1:300:10] 'prob_time_evol.txt' u 1:(column(i+1)) with lines notitle
+plot for [i=1:300:30] 'prob_time_evol_0.020.txt' u 1:(column(i+1)) with lines title "t=".i

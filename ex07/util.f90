@@ -27,7 +27,7 @@ contains
         character(len=20) :: str
         real*8, intent(in) :: k
 
-        write (str, "(F10.3)") k
+        write (str, "(F10.5)") k
         str = adjustl(str)
 
         return 
