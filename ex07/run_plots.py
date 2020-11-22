@@ -7,14 +7,16 @@ print("Running...")
 plotFile = "plot_test.gnu"
 
 # write the command for each file
-command_0020 = ["gnuplot", "-e", "filename='prob_time_evol_0.020.txt'", 
-                "-e", "T='0.020'", plotFile]
-command_0001 = ["gnuplot", "-e", "filename='prob_time_evol_0.001.txt'", 
+command_1 = ["gnuplot", "-e", "filename='prob_time_evol_0.00010.txt'", 
+                "-e", "T='0.0001'", plotFile]
+command_2 = ["gnuplot", "-e", "filename='prob_time_evol_0.00050.txt'", 
+                "-e", "T='0.0005'", plotFile]
+command_3 = ["gnuplot", "-e", "filename='prob_time_evol_0.00100.txt'", 
                 "-e", "T='0.001'", plotFile]
-command_0100 = ["gnuplot", "-e", "filename='prob_time_evol_0.100.txt'", 
-                "-e", "T='0.100'", plotFile]
+command_4 = ["gnuplot", "-e", "filename='prob_time_evol_0.00500.txt'", 
+                "-e", "T='0.005'", plotFile]
 
-commands = [command_0020, command_0001, command_0100] 
+commands = [command_1, command_2, command_3, command_4] 
 
 # run the commands
 for i in commands:

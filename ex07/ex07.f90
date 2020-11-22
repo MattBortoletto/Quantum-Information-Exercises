@@ -8,7 +8,6 @@ program time_evolution
     implicit none 
 
     complex*16, dimension(:,:), allocatable :: psi_t
-    complex*16, dimension(:), allocatable :: tmp
     integer :: L, t_len, N, info, jj 
     real*8 :: dx, omega, m, hbar, T, dt, pi, t_max
     ! H: hamiltonian
@@ -18,20 +17,20 @@ program time_evolution
     ! eig: eigenvalues array
     ! x_grid 
     ! p_grid
-    real*8, dimension(:), allocatable :: eig, x_grid, p_grid 
-    real*8, dimension(:,:), allocatable :: prob_t 
+    real*8, dimension(:), allocatable :: eig, x_grid, p_grid !, mean_t
+    real*8, dimension(:,:), allocatable :: prob_t, V_t 
 
     ! ---- initialize parameters -----------------------------------------------------------------
     L = 500
-    t_len = 500  
-    dx = 0.01
+    t_len = 1000
+    dx = 0.02
     N = 2*L + 1
     t_max = 1.0
-    T = 0.0005
+    T = 0.1
     dt = t_max / t_len 
     m = 1
     hbar = 1
-    omega = 1
+    omega = 20
     pi = 4.d0 * datan(1.d0)
     ! --------------------------------------------------------------------------------------------
 
@@ -43,7 +42,8 @@ program time_evolution
     allocate(eig(N))
     allocate(psi_t(N, t_len+1))
     allocate(prob_t(N, t_len+1))
-    allocate(tmp(N))
+    allocate(V_t(N, t_len+1))
+    !allocate(mean_t(t_len))
     ! --------------------------------------------------------------------------------------------
 
     ! ---- compute the grid points ---------------------------------------------------------------
@@ -79,6 +79,7 @@ program time_evolution
     ! --------------------------------------------------------------------------------------------
 
     ! ---- the starting state is the ground state ------------------------------------------------
+    V_t(:, 1) = 0.d0
     psi_t(:, 1) = H(:, 1)
     ! psi_t(:, 1) = psi_t(:, 1) / norm2(real(psi_t(:, 1)))
     prob_t(:, 1) = abs(psi_t(:, 1))**2 
@@ -90,13 +91,21 @@ program time_evolution
     deallocate(eig, H, harmonic_potential, laplacian)
 
     ! ---- compute the time evolution of psi -----------------------------------------------------
-    call psiTimeEvol(psi_t, prob_t, x_grid, p_grid, t_len, dt, omega, m, hbar, T)
+    call psiTimeEvol(psi_t, prob_t, x_grid, p_grid, t_len, dt, omega, m, hbar, T, V_t)
+    ! --------------------------------------------------------------------------------------------
+
+    ! ---- compute the time evolution of the mean ------------------------------------------------
+    ! do jj = 1, t_len 
+    !     mean_t(jj) = sum(prob_t(:, 1) * prob_t(:, jj+1))
+    ! end do 
     ! --------------------------------------------------------------------------------------------
 
     ! ---- save results --------------------------------------------------------------------------
     !call WriteRealMatrix(realpart(psi_t), x_grid, 'psi_real_time_evol_'//trim(str_r_d(T))//'.txt')
     !call WriteRealMatrix(imagpart(psi_t), x_grid, 'psi_imag_time_evol_'//trim(str_r_d(T))//'.txt')
+    !call WriteRealMatrix(V_t, x_grid, 'V_time_evol_'//trim(str_r_d(T))//'.txt')
     call WriteRealMatrix(prob_t, x_grid, 'prob_time_evol_'//trim(str_r_d(T))//'.txt')
+    !call WriteRealVector(mean_t, 'pr_mean_time_evol_'//trim(str_r_d(T))//'.txt')
     ! --------------------------------------------------------------------------------------------
     
 end program time_evolution

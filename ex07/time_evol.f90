@@ -56,13 +56,13 @@ module TimeEvolution
     end function InverseFourierTransform
 
 
-    subroutine psiTimeEvol(psi_t, prob_t, x_grid, p_grid, t_len, dt, omega, m, hbar, T)
+    subroutine psiTimeEvol(psi_t, prob_t, x_grid, p_grid, t_len, dt, omega, m, hbar, T, V_t)
 
         ! this subroutine computes the time evolution of the psi subject to 
         ! the "shifted" harmonic potential 
 
         complex*16, dimension(:,:) :: psi_t
-        real*8, dimension(:,:) :: prob_t 
+        real*8, dimension(:,:) :: prob_t, V_t 
         complex*16, dimension(:), allocatable :: tmp 
         complex*16, dimension(:), allocatable :: evol_op_V, evol_op_T 
         real*8, dimension(:) :: x_grid, p_grid 
@@ -82,7 +82,7 @@ module TimeEvolution
             t_i = ii * dt 
             q0 = t_i / T 
 
-            evol_op_V = exp( - (dt*m*dcmplx(0.d0,(omega**2)*((x_grid-q0)**2))) / (4*hbar) ) 
+            evol_op_V = exp(-(dt*m*dcmplx(0.d0,(omega**2)*((x_grid-q0)**2)))/(4*hbar)) 
 
             ! apply the position space operator 
             tmp = tmp * evol_op_V
@@ -102,6 +102,7 @@ module TimeEvolution
             ! store the results 
             psi_t(:, ii+1) = tmp 
             prob_t(:, ii+1) = abs(tmp)**2
+            V_t(:, ii+1) = 0.5*m*(omega**2)*((x_grid-q0)**2)
             
         end do
 

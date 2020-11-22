@@ -15,8 +15,15 @@ set xlabel 'x'
 set ylabel 'P(x)'
 set cblabel 't'
 
-set pm3d
-set palette defined (0 '#052a36',  1 '#73cdeb')
-set cbrange [0:100]
+tmax = 900
+step = 10
 
-plot for [i=1:100:5] filename u 1:(column(i+1)) with lines notitle palette cb (i)
+set pm3d
+#set palette defined (0 '#052a36',  1 '#73cdeb')
+#set palette functions sqrt(gray), gray**3, sin(gray*2*pi) 
+set cbrange [0:tmax]
+
+set xrange [-3:10]
+
+
+plot for [i=1:tmax:step] filename u 1:(column(i+1)) with lines notitle palette cb (i)
