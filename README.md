@@ -7,4 +7,5 @@ Exercises from the course "Quantum information and computing", Physics of Data m
 - **ex04**: multi-run script and automated fits
 - **ex05**: random matrix theory
 - **ex06**: one-dimensional quantum harmonic oscillator
+- **ex07**: time-dependent Schrödinger equation
 
