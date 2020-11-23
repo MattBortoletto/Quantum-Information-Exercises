@@ -76,63 +76,14 @@ module DiagNorm
         complex*16 :: imm 
         integer :: plan
         complex*16, dimension(:) :: psi_x, psi_p
-        
 
         N_t = int(T/dt)
 
         imm = cmplx(0.0, 1.0)
 
-        ! do tt = 1, N_t
-
-        !     print *, tt 
-
-        !     min = L/2 + tt*dt/T 
-
-        !     do ii = 1, size(psi_x) 
-        !         psi_x(ii) = psi_x(ii) * exp(-imm*dt*0.25*(((ii-1)*dx - min)**2))
-        !     end do 
-
-        !     call dfftw_plan_dft_1d(plan, size(psi_x), psi_x, psi_p, &
-        !                         FFTW_FORWARD, FFTW_ESTIMATE)
-        !     call dfftw_execute_dft(plan, psi_x, psi_p)
-        !     call dfftw_destroy_plan(plan)
-
-        !     call Normalize(psi_p, dp)
-
-        !     do ii = 2, (size(psi_x)+1)/2
-        !         psi_p(ii) = psi_p(ii) * exp(-imm*dt*0.5*(((ii-1)*dp)**2))
-        !         psi_p(size(psi_x)+2-ii) = psi_p(size(psi_x)+2-ii) * exp(-imm*dt*0.5*(((ii-1)*dp)**2))
-        !     end do 
-
-        !     psi_p((size(psi_x)+2)/2) = psi_p((size(psi_x)+2)/2) * exp(-imm*dt*0.5*(((atan(1.0)/dx)**2)))
-
-        !     call dfftw_plan_dft_1d(plan, size(psi_p), psi_p, psi_x, &
-        !                         FFTW_BACKWARD, FFTW_ESTIMATE)
-        !     call dfftw_execute_dft(plan, psi_p, psi_x)
-        !     call dfftw_destroy_plan(plan)
-
-        !     call Normalize(psi_x, dx)
-
-        !     do ii = 1, size(psi_x)
-        !         psi_x(ii) = psi_x(ii) * exp(-imm*dt*0.25*(((ii-1)*dx - min)**2))
-        !     end do
-
-        !     call Normalize(psi_x, dx)
-
-        !     mean = 0.0
-        !     do ii = 1, size(psi_x)
-        !         mean = mean + (dx**2)*((real(psi_x(ii)))**2+(aimag(psi_x(ii)))**2)*(ii-1)
-        !     end do 
-
-        !     open(73, file="mean_pos.txt", access="append")
-        !     write(73,*) min, mean
-        !     close(73)
-
-        ! end do 
-
         do tt = 1, N_t
 
-            print *, tt 
+            print *, "t = ", tt 
 
             min = L/2 + tt*dt/T
 
@@ -222,7 +173,7 @@ program time_evol
         psi_x(ii) = cmplx(ev(ii, 1), 0.0)
     end do 
 
-    call Normalize(psi_x, dx) 
+    call NormalizePsi(psi_x, dx) 
 
     call TimeEvol(psi_x, psi_p, T, dt, dx, dp, L)
 

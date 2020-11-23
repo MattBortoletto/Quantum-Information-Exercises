@@ -61,7 +61,7 @@ contains
 
         open(unit=73, file=filename, action="write", status="replace")
         do ii = 1, size(vect) 
-            write(73, *) vect(ii)
+            write(73, *) ii-1, vect(ii)
         end do 
         close(73)
 

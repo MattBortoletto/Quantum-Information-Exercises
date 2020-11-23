@@ -1,6 +1,6 @@
 # this gnuplot script must be run using the following command:
 # -------------------------------------------------------------
-# $ gnuplot -e "filename='foo.txt'" -e "T='foo'" plot.gnu
+# $ gnuplot -e "filename='foo.txt'" -e "T='foo'" plot_test.gnu
 # -------------------------------------------------------------
 # where 'foo.txt' is the file you want to fit and plot and 'foo' 
 # is T.
@@ -15,7 +15,7 @@ set xlabel 'x'
 set ylabel 'P(x)'
 set cblabel 't'
 
-tmax = 900
+tmax = 9000
 step = 10
 
 set pm3d
@@ -23,7 +23,7 @@ set pm3d
 #set palette functions sqrt(gray), gray**3, sin(gray*2*pi) 
 set cbrange [0:tmax]
 
-set xrange [-3:10]
+set xrange [-3:4]
 
 
 plot for [i=1:tmax:step] filename u 1:(column(i+1)) with lines notitle palette cb (i)
