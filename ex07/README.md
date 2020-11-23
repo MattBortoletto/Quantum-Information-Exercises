@@ -7,7 +7,7 @@ Quantum information and computing - Exercise 6
 This program computes the time evolution for of the ground state for an Hamiltonian with shifted potential.  
 
 ## Contents
-- Ex07-MatteoBortoletto.f90: Fortran code;
+- ex07.f90: Fortran code;
 - time_evol.f90: Fortran code that computes the time evolution using the split-operator method;
 - Ex07-MatteoBortoletto-REPORT.pdf: report written in LaTeX;
 - Ex07.x: executable file for the Fortran code;
