@@ -1,6 +1,7 @@
 module TimeEvolution 
 
     use, intrinsic :: iso_c_binding
+    use Utilities
 
     implicit none 
 
@@ -56,7 +57,7 @@ module TimeEvolution
     end function InverseFourierTransform
 
 
-    subroutine psiTimeEvol(psi_t, prob_t, x_grid, p_grid, t_len, dt, omega, m, hbar, T, V_t)
+    subroutine psiTimeEvol(psi_t, prob_t, x_grid, p_grid, t_len, dt, omega, m, hbar, T, V_t, dx) 
 
         ! this subroutine computes the time evolution of the psi subject to 
         ! the "shifted" harmonic potential 
@@ -66,15 +67,20 @@ module TimeEvolution
         complex*16, dimension(:), allocatable :: tmp 
         complex*16, dimension(:), allocatable :: evol_op_V, evol_op_T 
         real*8, dimension(:) :: x_grid, p_grid 
-        real*8 :: t_i, dt, omega, m, hbar, T, q0 
+        real*8 :: t_i, dt, omega, m, hbar, T, q0, dx, dp 
         integer :: t_len, ii
 
         allocate(evol_op_V(t_len))
         allocate(evol_op_T(t_len))
         allocate(tmp(size(psi_t, 1)))
 
+        dp = (2*4.d0*datan(1.d0)) / (dx*size(psi_t, 1))
+
         tmp = psi_t(:, 1)
 
+        call NormalizePsi(tmp, dx)
+
+        ! kinetic operator
         evol_op_T = exp( - (dt*dcmplx(0.d0,(p_grid)**2)) / (2*m*hbar) )
 
         do ii = 1, t_len-1
@@ -82,6 +88,7 @@ module TimeEvolution
             t_i = ii * dt 
             q0 = t_i / T 
 
+            ! potential operator 
             evol_op_V = exp(-(dt*m*dcmplx(0.d0,(omega**2)*((x_grid-q0)**2)))/(4*hbar)) 
 
             ! apply the position space operator 
@@ -90,14 +97,20 @@ module TimeEvolution
             ! flip to momentum space using the FT 
             tmp = FourierTransform(tmp)
 
+            call NormalizePsi(tmp, dp)
+
             ! apply the momentum space operator
             tmp = tmp * evol_op_T
 
             ! flip to position space using the IFT
             tmp = InverseFourierTransform(tmp)
 
+            call NormalizePsi(tmp, dx)
+
             ! apply again the position space operator 
             tmp = tmp * evol_op_V
+
+            call NormalizePsi(tmp, dx)
 
             ! store the results 
             psi_t(:, ii+1) = tmp 

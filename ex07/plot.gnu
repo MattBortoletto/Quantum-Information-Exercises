@@ -5,6 +5,7 @@
 # where 'foo.txt' is the file you want to fit and plot and 'foo' 
 # is T.
 
+set encoding utf8
 set terminal pdf size 7, 5 font "Latin Modern Math, 25"
 set output sprintf("%s%s%s", "prob_", T, ".pdf")
 
@@ -17,8 +18,8 @@ set grid
 
 stats filename using 2 nooutput
 
-tmax = 9000
-step = 10
+tmax = 90
+step = 5
 
 #set palette defined (0 '#052a36',  1 '#73cdeb')
 #set palette functions sqrt(gray), gray**3, sin(gray*2*pi) 

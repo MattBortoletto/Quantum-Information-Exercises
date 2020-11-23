@@ -1,5 +1,7 @@
 module Utilities
 
+    use debugger
+
     implicit none 
 
 contains 
@@ -88,5 +90,35 @@ contains
         return 
         
     end subroutine WriteRealMatrix
+
+
+    subroutine NormalizePsi(psi, dx)
+
+        ! this subroutine normalizes the psi and then checks that
+        ! the normalization has been done properly
+
+        ! the Checkpoint subroutine is contained in the 'debugger' module
+    
+        complex*16, dimension(:), allocatable :: psi
+        real*8 :: dx, norm
+        integer :: ii
+        
+        ! normalize 
+        norm = 0.0
+        do ii = 1, size(psi)
+           norm = norm + (real(psi(ii))**2 + aimag(psi(ii))**2) * dx
+        end do
+    
+        psi = psi / sqrt(norm)
+    
+        ! check 
+        norm = 0.0
+        do ii = 1, size(psi)
+            norm = norm + (real(psi(ii))**2 + aimag(psi(ii))**2) * dx
+        end do
+    
+        call Checkpoint(debug=(abs(norm-1.0) .gt. 0.0001), message="Normalization error!", end_program=.true.) 
+    
+      end subroutine NormalizePsi
 
 end module Utilities

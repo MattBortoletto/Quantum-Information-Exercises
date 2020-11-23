@@ -7,28 +7,49 @@ program time_evolution
 
     implicit none 
 
+    ! complex matrix for the time evolution of the psi
+    ! the first column contains the x grid points and the
+    ! other columns the psi at the different time steps
     complex*16, dimension(:,:), allocatable :: psi_t
+    ! L: semi-length of the space interval (number of points)
+    ! t_len: number of points for t
+    ! N: number of points for x 
+    ! info: stats flag
+    ! jj: variable to loop
     integer :: L, t_len, N, info, jj 
-    real*8 :: dx, omega, m, hbar, T, dt, pi !, t_max
+    ! dx: discretization for x
+    ! omega: angular frequency
+    ! m: mass 
+    ! hbar: Planck constant
+    ! T: hamiltonian constant
+    ! dt: discretization for t
+    ! pi: greek pi
+    real*8 :: dx, omega, m, hbar, T, dt, pi 
     ! H: hamiltonian
     ! laplacian: discretized laplacian 
     ! harmonic_potential: harmonic potential
     complex*16, dimension(:,:), allocatable :: H, laplacian, harmonic_potential
     ! eig: eigenvalues array
-    ! x_grid 
-    ! p_grid
+    ! x_grid: x points
+    ! p_grid: p points
+    ! mean_t: mean position of the pdf at time t
     real*8, dimension(:), allocatable :: eig, x_grid, p_grid, mean_t
+    ! prob_t: probability density at time t. The first column contains 
+    !         the x grid and the others the time evolution of the probability 
+    !         density
+    ! V_t: time evolution of the potential. The first column contains the x
+    !      grid and the others the time evolution of the potential
     real*8, dimension(:,:), allocatable :: prob_t, V_t 
 
     ! ---- initialize parameters -----------------------------------------------------------------
     L = 500
     dx = 0.01
     N = 2*L + 1
-    !t_len = 1000
-    !t_max = 1.0
-    T = 10
+
+    print *, "Please enter the value of T: "
+    read *, T
+
     dt = 0.01
-    !dt = t_max / t_len 
     t_len = int( T / dt )
     print *, t_len 
     m = 1
@@ -38,15 +59,9 @@ program time_evolution
     ! --------------------------------------------------------------------------------------------
 
     ! ---- allocate memory -----------------------------------------------------------------------
-    allocate(x_grid(N))
-    allocate(p_grid(N))
-    allocate(laplacian(N, N)) 
-    allocate(harmonic_potential(N, N))
-    allocate(eig(N))
-    allocate(psi_t(N, t_len+1))
-    allocate(prob_t(N, t_len+1))
-    allocate(V_t(N, t_len+1))
-    allocate(mean_t(t_len))
+    allocate(x_grid(N), p_grid(N), laplacian(N, N), harmonic_potential(N, N), eig(N),& 
+             &psi_t(N, t_len+1), prob_t(N, t_len+1), V_t(N, t_len+1), mean_t(t_len), stat=info)
+    call Checkpoint(debug=info .ne. 0, message="Memory allocation fail!", end_program=.true.)
     ! --------------------------------------------------------------------------------------------
 
     ! ---- compute the grid points ---------------------------------------------------------------
@@ -63,6 +78,8 @@ program time_evolution
     do jj = N/2+1, N 
         p_grid(jj) = (jj-1-N) * (2*pi)/(dx*N) 
     end do 
+    !call Checkpoint(debug=.false., array_variable=x_grid, message="x_grid:", end_program=.false.)
+    !call Checkpoint(debug=.false., array_variable=p_grid, message="p_grid:", end_program=.false.)
     ! --------------------------------------------------------------------------------------------
 
     ! ---- compute the hamiltonian ---------------------------------------------------------------
@@ -74,10 +91,8 @@ program time_evolution
     ! ---- diagonalization -----------------------------------------------------------------------
     ! use the 'info' flag of the subroutine 'zheev' to check if the
     ! diagonalization has been successful
-    info = 1
-    do while (info .ne. 0)
-        call ComputeEigenvalues(H, eig, info)
-    end do 
+    call ComputeEigenvalues(H, eig, info)
+    call Checkpoint(debug=info .ne. 0, message="Diagonalization failed!", end_program=.true.)
     H = H / sqrt(dx) 
     ! --------------------------------------------------------------------------------------------
 
@@ -90,22 +105,24 @@ program time_evolution
     deallocate(eig, H, harmonic_potential, laplacian)
 
     ! ---- compute the time evolution of psi -----------------------------------------------------
-    call psiTimeEvol(psi_t, prob_t, x_grid, p_grid, t_len, dt, omega, m, hbar, T, V_t)
+    call psiTimeEvol(psi_t, prob_t, x_grid, p_grid, t_len, dt, omega, m, hbar, T, V_t, dx)
     ! --------------------------------------------------------------------------------------------
 
     ! ---- compute the time evolution of the mean ------------------------------------------------
+    mean_t = 0.d0 
     do jj = 1, t_len 
-        mean_t(jj) = sum(prob_t(:, 1) * prob_t(:, jj+1) * dx) 
+        mean_t(jj) = sum(prob_t(:, jj) * x_grid * dx)
     end do 
-    print *, mean_t(9000)
     ! --------------------------------------------------------------------------------------------
 
     ! ---- save results --------------------------------------------------------------------------
-    !call WriteRealMatrix(realpart(psi_t), x_grid, 'psi_real_time_evol_'//trim(str_r_d(T))//'.txt')
-    !call WriteRealMatrix(imagpart(psi_t), x_grid, 'psi_imag_time_evol_'//trim(str_r_d(T))//'.txt')
-    !call WriteRealMatrix(V_t, x_grid, 'V_time_evol_'//trim(str_r_d(T))//'.txt')
+    call WriteRealMatrix(realpart(psi_t), x_grid, 'psi_real_time_evol_'//trim(str_r_d(T))//'.txt')
+    call WriteRealMatrix(imagpart(psi_t), x_grid, 'psi_imag_time_evol_'//trim(str_r_d(T))//'.txt')
+    call WriteRealMatrix(V_t, x_grid, 'V_time_evol_'//trim(str_r_d(T))//'.txt')
     call WriteRealMatrix(prob_t, x_grid, 'prob_time_evol_'//trim(str_r_d(T))//'.txt')
     call WriteRealVector(mean_t, 'pr_mean_time_evol_'//trim(str_r_d(T))//'.txt')
     ! --------------------------------------------------------------------------------------------
+
+    deallocate(psi_t, prob_t, x_grid, p_grid, mean_t, V_t)
     
 end program time_evolution
