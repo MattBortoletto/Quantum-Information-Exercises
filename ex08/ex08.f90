@@ -8,14 +8,15 @@ program density_matrices
     ! N: number of subsystems
     ! D: dimension of each Hilbert space
     ! ii: variable to loop 
-    integer :: N, D, ii, jj 
+    ! which_subsystem: 1 if A (left), 2 if B (right)
+    integer :: N, D, ii, jj
     ! psi_pure: psi for a separable state
     ! psi_gen: general psi 
     complex*16, dimension(:), allocatable :: psi_sep, psi_gen 
     ! rho_sep: density matrix for a separable state
     ! rho_gen: density matrix for a general state
     ! sep_coeff: coefficients for the separable state
-    complex*16, dimension(:,:), allocatable :: rho_sep, rho_gen, sep_coeff 
+    complex*16, dimension(:,:), allocatable :: rho_sep, rho_gen, sep_coeff, rho_A, rho_B
     ! RePart: real part
     ! ImPart: imaginary part
     real*8 :: RePart, ImPart
@@ -28,8 +29,8 @@ program density_matrices
     ! read *, D, N 
     ! ----
 
-    N = 5
-    D = 2
+    N = 2
+    D = 3
 
     ! ---- allocate memory ----
     allocate(psi_sep(D**N))
@@ -77,6 +78,20 @@ program density_matrices
     trace_gen = ComplexSquareMatrixTrace(rho_gen)
     print *, "Trace(rho_sep) =", trace_sep
     print *, "Trace(rho_gen) =", trace_gen
+    ! METTERE UN CHECKPOINT
     ! ------------------------------------
+
+    ! ---- compute the reduced density matrix for the general density matrix ----
+    ! Notation:  
+    ! rho_gen = rho_{AB} with A = left system, B = right system 
+    allocate(rho_A(D**(N-1), D**(N-1)))
+    allocate(rho_B(D**(N-1), D**(N-1)))
+    call ReducedDensityMatrixA(rho_gen, D, rho_A)
+    call ReducedDensityMatrixB(rho_gen, D, rho_B) 
+
+    print *, "Trace(rho_A) =", ComplexSquareMatrixTrace(rho_A)
+    print *, "Trace(rho_B) =", ComplexSquareMatrixTrace(rho_B)
+
+    
 
 end program density_matrices

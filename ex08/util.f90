@@ -191,6 +191,49 @@ contains
 
     end subroutine BuildSeparableState
             
-        
+    
+    subroutine ReducedDensityMatrixB(rho, D, rho_B) 
+
+        ! computes the reduced density matrix for N=2
+
+        integer :: D, jj, kk, ll
+        complex*16, dimension(:,:) :: rho 
+        ! the reduced density matrix has dimension D^{N-1} x D^{N-1}
+        complex*16, dimension(size(rho,1)/D, size(rho,2)/D) :: rho_B
+
+
+        rho_B = 0.d0
+        do jj = 1, size(rho,1)/D  
+            do kk = jj, size(rho,1)/D 
+                do ll = 1, size(rho,1)/D 
+                    rho_B(jj, kk) = rho_B(jj, kk) + rho((ll-1)*D+jj, (ll-1)*D+kk)
+                end do 
+                if (jj /= kk) rho_B(kk, jj) = conjg(rho_B(jj, kk))
+            end do 
+        end do 
+
+    end subroutine ReducedDensityMatrixB
+
+
+    subroutine ReducedDensityMatrixA(rho, D, rho_A) 
+
+        ! computes the reduced density matrix for N=2
+
+        integer :: D, jj, kk, ll
+        complex*16, dimension(:,:) :: rho 
+        ! the reduced density matrix has dimension D^{N-1} x D^{N-1}
+        complex*16, dimension(size(rho,1)/D, size(rho,2)/D) :: rho_A
+
+        rho_A = 0.d0
+        do jj = 1, size(rho,1)/D  
+            do kk = jj, size(rho,1)/D 
+                do ll = 1, size(rho,1)/D
+                    rho_A(jj, kk) = rho_A(jj, kk) + rho((jj-1)*D+ll, (kk-1)*D+ll)
+                end do 
+                if (jj /= kk) rho_A(kk, jj) = conjg(rho_A(jj, kk))
+            end do 
+        end do 
+
+    end subroutine ReducedDensityMatrixA
 
 end module Utilities
