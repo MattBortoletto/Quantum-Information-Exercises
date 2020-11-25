@@ -236,4 +236,30 @@ contains
 
     end subroutine ReducedDensityMatrixA
 
+
+    subroutine WriteComplex16Matr(matr, trace, filename) 
+
+        complex*16, dimension(:,:) :: matr
+        complex*16 :: trace 
+        character(*) :: filename 
+        integer :: ll
+
+        open(unit = 73, file = filename, action = "write", status = "replace") 
+        
+        write(73, *) "MATRIX:"
+        do ll = 1, size(matr, 1)
+            write(73, *) matr(ll, :) 
+        end do
+        write(73, *) " "
+        ! write(73, *) "DIMENSION: rows =",  M%dim(1), ",  columns = ", M%dim(2)
+        ! write(73, *) " "
+        write(73, *) "TRACE:", trace 
+        write(73, *) " "
+
+        close(73)
+
+        return 
+
+    end subroutine WriteComplex16Matr
+
 end module Utilities

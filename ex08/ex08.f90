@@ -91,7 +91,6 @@ program density_matrices
 
     print *, "Trace(rho_A) =", ComplexSquareMatrixTrace(rho_A)
     print *, "Trace(rho_B) =", ComplexSquareMatrixTrace(rho_B)
-
     
 
 end program density_matrices
