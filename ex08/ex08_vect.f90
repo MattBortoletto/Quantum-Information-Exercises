@@ -1,7 +1,8 @@
 program density_matrices
 
     use Utilities
-    use debugger 
+    use debugger
+    use DensityMatrices   
 
     implicit none 
 
@@ -12,11 +13,11 @@ program density_matrices
     integer :: N, D, ii, jj
     ! psi_pure: psi for a separable state
     ! psi_gen: general psi 
-    complex*16, dimension(:), allocatable :: psi_sep, psi_gen 
+    complex*16, dimension(:), allocatable :: psi_sep, psi_gen, sep_coeff
     ! rho_sep: density matrix for a separable state
     ! rho_gen: density matrix for a general state
     ! sep_coeff: coefficients for the separable state
-    complex*16, dimension(:,:), allocatable :: rho_sep, rho_gen, sep_coeff, rho_A, rho_B
+    complex*16, dimension(:,:), allocatable :: rho_sep, rho_gen, rho_A, rho_B
     ! RePart: real part
     ! ImPart: imaginary part
     real*8 :: RePart, ImPart
@@ -35,18 +36,18 @@ program density_matrices
     ! ---- allocate memory ----
     allocate(psi_sep(D**N))
     allocate(psi_gen(D**N))
-    allocate(sep_coeff(D, N))
+    allocate(sep_coeff(D*N))
     ! -------------------------
 
     ! ---- initialize the state in case of separable state ----
-    do ii = 1, N
+    do ii = 0, N-1
         do jj = 1, D 
             call random_number(RePart)
             call random_number(ImPart)
-            sep_coeff(jj, ii) = dcmplx(RePart, ImPart) 
+            sep_coeff(ii*D+jj) = dcmplx(RePart, ImPart) 
         end do 
-        sep_coeff(:, ii) = sep_coeff(:, ii) / sqrt(sum(abs(sep_coeff(:, ii))**2))
-        if (abs(sum(abs(sep_coeff(:, ii))**2) - 1) .ge. 1e-4) then 
+        sep_coeff(ii*D+1:ii*N+jj) = sep_coeff(ii*D+1:ii*N+jj) / sqrt(sum(abs(sep_coeff(ii*D+1:ii*N+jj))**2))
+        if (abs(sum(abs(sep_coeff(ii*D+1:ii*N+jj))**2) - 1) .ge. 1e-4) then 
             print *, "Normalization error!"
             stop 
         end if 
@@ -57,13 +58,13 @@ program density_matrices
     do ii = 1, size(psi_gen)
         call random_number(RePart)
         call random_number(ImPart)
-        psi_gen(ii) = dcmplx(RePart, ImPart) 
+        psi_gen(ii) = dcmplx(RePart, ImPart)  
     end do 
     psi_gen = psi_gen / sqrt(sum(abs(psi_gen)**2))
     ! ----
 
     ! ---- initialize the separable state using the coefficients matrix ----
-    call BuildSeparableState(sep_coeff, psi_sep)
+    call BuildSeparableStateFromVect(sep_coeff, psi_sep, N, D)
     ! ----
 
     ! ---- compute the density matrices ----
