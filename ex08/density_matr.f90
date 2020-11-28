@@ -4,7 +4,46 @@ module DensityMatrices
 
 contains 
 
-    !subroutine InitPureSepState(D, N, state)
+    subroutine InitPureSepState(sep_coeff)
+
+        integer :: ii, jj, N, D 
+        real*8 :: RePart, ImPart 
+        complex*16, dimension(:,:) :: sep_coeff 
+
+        N = size(sep_coeff, 2)
+        D = size(sep_coeff, 1) 
+
+        do ii = 1, N
+            do jj = 1, D 
+                call random_number(RePart)
+                call random_number(ImPart)
+                sep_coeff(jj, ii) = dcmplx(RePart, ImPart) 
+            end do 
+            sep_coeff(:, ii) = sep_coeff(:, ii) / sqrt(sum(abs(sep_coeff(:, ii))**2))
+            if (abs(sum(abs(sep_coeff(:, ii))**2) - 1) .ge. 1e-4) then 
+                print *, "Normalization error!"
+                stop 
+            end if 
+        end do 
+
+    end subroutine InitPureSepState
+
+
+    subroutine InitPureGenState(psi_gen) 
+
+        integer :: ii
+        real*8 :: RePart, ImPart 
+        complex*16, dimension(:) :: psi_gen 
+        
+        do ii = 1, size(psi_gen)
+            call random_number(RePart)
+            call random_number(ImPart)
+            psi_gen(ii) = dcmplx(RePart, ImPart) 
+        end do 
+        psi_gen = psi_gen / sqrt(sum(abs(psi_gen)**2))
+        
+    end subroutine InitPureGenState
+
     
     function ComplexSquareMatrixTrace(matrix) result(trace) 
 
@@ -40,7 +79,7 @@ contains
         psi = dcmplx(1d0) 
         do ii = 1, D**N 
             do jj = 1, N 
-                print *, mod( (ii-1) / (D**(N-jj)), D)
+                ! print *, mod( (ii-1) / (D**(N-jj)), D)
                 psi(ii) = psi(ii) * coeff_matrix(mod( (ii-1) / (D**(N-jj)) , D) + 1, jj)
             end do
         end do 
@@ -59,7 +98,7 @@ contains
         do ii = 1, D**N 
             psi(ii) = dcmplx(1d0) 
             do jj = 1, N 
-                print *, mod( (ii-1) / (D**(N-jj)), D)
+                ! print *, mod( (ii-1) / (D**(N-jj)), D)
                 psi(ii) = psi(ii) * coeff_vect(mod( (ii-1) / (D**(N-jj)) , D) + 1)
             end do
         end do 
