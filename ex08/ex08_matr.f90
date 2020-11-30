@@ -22,11 +22,11 @@ program density_matrices
     complex*16 :: trace_sep, trace_gen 
 
     ! ---- ask the user to enter D and N ----------------------------------------------------
-    ! print *, &
-    ! "Please enter the dimension of each Hilbert space and the number of subsystems [D,N]:"
-    ! read *, D, N 
-    N = 2
-    D = 3
+    print *, &
+    "Please enter the dimension of each Hilbert space and the number of subsystems [D,N]:"
+    read *, D, N 
+    ! N = 2
+    ! D = 3
     ! ---------------------------------------------------------------------------------------
 
     ! ---- allocate memory ------------------------------------------------------------------
