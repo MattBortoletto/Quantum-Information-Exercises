@@ -1,6 +1,6 @@
 Matteo Bortoletto
 
-Quantum information and computing - Exercise 6
+Quantum information and computing - Exercise 7
 
 # Time-dependent Schrödinger equation
 

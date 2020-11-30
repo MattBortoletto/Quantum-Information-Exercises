@@ -22,13 +22,6 @@ program density_matrices
     !complex*16 :: trace_sep, trace_gen 
     real*8 :: start_gen, end_gen, start_sep, end_sep, time_sep, time_gen
 
-    ! ---- ask the user to enter D and N ----------------------------------------------------
-    !print *, &
-    !"Please enter the dimension of each Hilbert space and the number of subsystems [D,N]:"
-    !read *, D, N 
-    ! N = 2
-    ! D = 3
-    ! ---------------------------------------------------------------------------------------
     D = 2
 
     open(unit=73, file='cpu_times.txt')

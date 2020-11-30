@@ -16,6 +16,8 @@ program density_matrices
     ! rho_sep: density matrix for a separable state
     ! rho_gen: density matrix for a general state
     ! sep_coeff: coefficients for the separable state
+    ! rho_A: reduced density matrix for subsystem A
+    ! rho_B: reduced density matrix for subsystem B
     complex*16, dimension(:,:), allocatable :: rho_sep, rho_gen, sep_coeff, rho_A, rho_B
     ! trace_sep: trace of the density matrix for separable states
     ! trace_gen: trace of the density matrix for general states

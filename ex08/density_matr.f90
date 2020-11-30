@@ -6,6 +6,8 @@ contains
 
     subroutine InitPureSepState(sep_coeff)
 
+        ! initializes a pure separable state
+
         integer :: ii, jj, N, D 
         real*8 :: RePart, ImPart 
         complex*16, dimension(:,:) :: sep_coeff 
@@ -30,6 +32,8 @@ contains
 
 
     subroutine InitPureGenState(psi_gen) 
+
+        ! initializes a pure generic state
 
         integer :: ii
         real*8 :: RePart, ImPart 
@@ -151,6 +155,8 @@ contains
 
 
     subroutine WriteComplex16Matr(matr, trace, filename) 
+
+        ! writes a complex*16 matrix in a text file
 
         complex*16, dimension(:,:) :: matr
         complex*16 :: trace 
