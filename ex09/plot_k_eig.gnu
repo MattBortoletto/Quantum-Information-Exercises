@@ -15,8 +15,6 @@ set xlabel "λ"
 set ylabel "e"
 set grid
 
-stats filename using 2 nooutput
-ylabel_position = STATS_min
-set key left bottom at 0.2, ylabel_position - 0.25
+set key left bottom 
 
 plot for [i=2:k+1] filename using 1:i with lines title 'e_{'.(i-1).'}'
