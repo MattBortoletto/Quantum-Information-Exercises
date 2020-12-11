@@ -7,52 +7,69 @@ program qim
 
     implicit none 
 
-    integer :: N, kk, info 
-    real*8 :: lambda 
+    integer :: N, kk, info, ii, ll  
+    !real*8 :: lambda 
     complex*16, dimension(:,:), allocatable :: isingH 
-    real*8, dimension(:), allocatable :: eig
-    real*8 :: start, end 
+    real*8, dimension(:), allocatable :: eig, lambda 
+    ! real*8 :: start, end 
 
-    !N = 2
-    lambda = 1
-    kk = 3
+    ! N = 2
+    ! lambda = 1
+    allocate(lambda(21))
+    kk = 1
+    lambda = (/((ii*0.15), ii=0,20)/) 
 
-    do N = 2, 15
+    do N = 2, 5
 
-        print *, "-----", N, "------------------" 
+        open(unit=73, file='eig_'//trim(str_i(N))//'.txt', action="write")
 
-        print *, "init"
+        do ll = 1, size(lambda)
 
-        call cpu_time(start)
+            print *, "---- N:", N, "---- lambda:", lambda(ll), "----------" 
 
-        ! ---- initialize the Hamiltonian ----
-        allocate(isingH(2**N, 2**N), stat=info)
-        call checkpoint(debug=(info.ne.0), message="Allocation failed!", &
-                        end_program=.true.)
-        call IsingHamiltonian(isingH, N, lambda)
-        ! ------------------------------------
+            !print *, "init"
 
-        print *, "diag" 
+            !call cpu_time(start)
 
-        ! ---- diagonalize -------------------
-        allocate(eig(2**N))
-        call checkpoint(debug=(info.ne.0), message="Allocation failed!", &
-                        end_program=.true.)
-        call Diagonalize(isingH, eig, info)
-        call checkpoint(debug=(info.ne.0), message="Diagonalization failed!", &
-                        end_program=.true.)
-        ! ------------------------------------
+            ! ---- initialize the Hamiltonian ----
+            allocate(isingH(2**N, 2**N), stat=info)
+            call checkpoint(debug=(info.ne.0), message="Allocation failed!", &
+                            end_program=.true.)
+            !call IsingHamiltonian(isingH, N, lambda(ll))
+            call IsingHamiltonian(isingH, N, lambda(ll))
+            ! ------------------------------------
 
-        call cpu_time(end)
+            !print *, "diag" 
 
-        print *, end - start 
+            ! ---- diagonalize -------------------
+            allocate(eig(2**N))
+            call checkpoint(debug=(info.ne.0), message="Allocation failed!", &
+                            end_program=.true.)
+            call Diagonalize(isingH, eig, info)
+            call checkpoint(debug=(info.ne.0), message="Diagonalization failed!", &
+                            end_program=.true.)
+            ! ------------------------------------
 
-        print *, "finish"
+            !call cpu_time(end)
+            !print *, end - start 
 
-        ! ---- deallocate memory -------------
-        deallocate(eig, isingH)
-        ! ------------------------------------
+            !print *, "finish"
+            !print *, eig(:kk)
+
+            ! ---- save the first kk eigenvalues divided by N (energy density) ---- 
+            do ii = 1, size(eig(:kk)) 
+                write(73, *) lambda(ll), eig(:kk) / N 
+            end do 
+            ! ------------------------------------
+
+            ! ---- deallocate memory -------------
+            deallocate(eig, isingH)
+            ! ------------------------------------
+
+        end do 
+
+        close(73)
 
     end do 
 
-end program qim 
+end program qim

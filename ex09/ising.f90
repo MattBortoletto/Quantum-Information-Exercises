@@ -6,44 +6,70 @@ module Ising
 
     subroutine IsingHamiltonian(H, N, lambda)  
 
+        ! computes the Hamiltonian for the one-dimensional quantum 
+        ! Ising model 
+
+        ! Hamiltonian
         complex*16, dimension(:,:) :: H
-        complex*16, dimension(:,:), allocatable :: offdiag  
+        ! diagonal terms
         complex*16, dimension(:), allocatable :: diag
-        integer :: N, ii, jj, kk, info 
+        ! N: number of subsystems
+        ! ii, jj: variables to loop 
+        ! info: stat flag
+        integer :: N, ii, jj, info  
+        ! lambda
         real*8 :: lambda 
 
-        allocate(diag(2**N), offdiag(2**N, 2**N), stat=info)
+        allocate(diag(2**N), stat=info)
         if (info .ne. 0) then 
             print *, "Allocation error!"
             stop 
         end if 
 
+        ! first fill the diagonal terms
+        diag = N 
         do ii = 0, 2**N-1
             do jj = 0, N-1 
                 diag(ii+1) = diag(ii+1) - 2*mod(ii/(2**jj), 2) 
             end do 
         end do
         
+        ! then compute the interaction terms 
         do ii = 0, 2**N-1
             do jj = 0, 2**N-1
-                offdiag(jj+1, ii+1) = 0
-                do kk = 1, N-1 
-                    if (ieor(ii, jj) == (2**(kk-1)+2**kk)) then 
-                        offdiag(jj+1, ii+1) = offdiag(jj+1, ii+1) + 1
-                    end if 
-                end do 
+                H(jj+1, ii+1) = ComputeInter(jj, ii, N) 
             end do 
         end do 
 
+        ! add the two terms to find the complete Hamiltonian
         do ii = 1, 2**N 
-            H(ii, ii) = lambda*diag(ii) + offdiag(ii, ii) 
+            H(ii, ii) = lambda*diag(ii) + H(ii, ii) 
         end do 
 
-        deallocate(diag, offdiag)
+        deallocate(diag)
 
         return 
 
     end subroutine IsingHamiltonian
+
+
+    function ComputeInter(q, p, N) result(res) 
+
+        ! computes the interaction term, which 
+        ! acts like a XOR, at position (q,p)
+
+        integer :: q, p, N, ii, res 
+
+        res = 0
+        do ii = 1, N-1
+            if (xor(q,p) == (2**(ii-1)+2**ii)) then 
+                res = res + 1
+            end if 
+        end do 
+
+        return 
+
+    end function ComputeInter 
 
 
     subroutine Diagonalize(matr, eig, info)
