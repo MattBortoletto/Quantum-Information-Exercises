@@ -11,21 +11,19 @@ program qim
     !real*8 :: lambda 
     complex*16, dimension(:,:), allocatable :: isingH 
     real*8, dimension(:), allocatable :: eig, lambda 
-    ! real*8 :: start, end 
+    !real*8 :: start, end 
 
-    ! N = 2
-    ! lambda = 1
     allocate(lambda(21))
-    kk = 1
+    kk = 4
     lambda = (/((ii*0.15), ii=0,20)/) 
 
-    do N = 2, 5
+    do N = 2, 10
 
         open(unit=73, file='eig_'//trim(str_i(N))//'.txt', action="write")
 
         do ll = 1, size(lambda)
 
-            print *, "---- N:", N, "---- lambda:", lambda(ll), "----------" 
+            print *, "---- N:", N, "--------------- lambda:", lambda(ll), "----" 
 
             !print *, "init"
 
@@ -35,7 +33,6 @@ program qim
             allocate(isingH(2**N, 2**N), stat=info)
             call checkpoint(debug=(info.ne.0), message="Allocation failed!", &
                             end_program=.true.)
-            !call IsingHamiltonian(isingH, N, lambda(ll))
             call IsingHamiltonian(isingH, N, lambda(ll))
             ! ------------------------------------
 
@@ -54,11 +51,10 @@ program qim
             !print *, end - start 
 
             !print *, "finish"
-            !print *, eig(:kk)
 
             ! ---- save the first kk eigenvalues divided by N (energy density) ---- 
             do ii = 1, size(eig(:kk)) 
-                write(73, *) lambda(ll), eig(:kk) / N 
+                write(73, *) lambda(ll), eig(:kk) / (N-1)
             end do 
             ! ------------------------------------
 
