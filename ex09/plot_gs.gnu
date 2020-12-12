@@ -1,4 +1,4 @@
-set terminal pdf size 8, 5 font "Latin Modern Math, 25"
+set terminal pdf size 9, 5 font "Latin Modern Math, 25"
 set output "gs.pdf"
 
 set encoding utf8
