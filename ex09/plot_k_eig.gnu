@@ -17,4 +17,4 @@ set grid
 
 set key left bottom 
 
-plot for [i=2:k+1] filename using 1:i with lines title 'e_{'.(i-1).'}'
+plot for [i=2:k+1] filename using 1:i with lines title 'e_{'.(i-2).'}'

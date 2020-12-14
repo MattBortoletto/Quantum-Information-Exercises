@@ -30,8 +30,9 @@ module Ising
         diag = N 
         do ii = 0, 2**N-1
             do jj = 0, N-1 
-                diag(ii+1) = diag(ii+1) - 2*mod(ii/(2**jj), 2) 
+                diag(ii+1) = diag(ii+1) - 2*mod(ii/(2**jj), 2)
             end do 
+            diag(ii+1) = diag(ii+1) * lambda 
         end do
         
         ! then compute the interaction terms 
@@ -43,7 +44,7 @@ module Ising
 
         ! add the two terms to find the complete Hamiltonian
         do ii = 1, 2**N 
-            H(ii, ii) = lambda*diag(ii) + H(ii, ii) 
+            H(ii, ii) = diag(ii) + H(ii, ii) 
         end do 
 
         deallocate(diag)
@@ -62,7 +63,7 @@ module Ising
 
         res = 0
         do ii = 1, N-1
-            if (xor(q,p) == (2**(ii-1)+2**ii)) then 
+            if ((2**(ii-1)+2**ii) == xor(q,p)) then 
                 res = res + 1
             end if 
         end do 
