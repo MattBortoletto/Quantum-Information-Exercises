@@ -214,19 +214,34 @@ module Ising
 
         ! Real space Renormalization Group 
 
+        ! input Hamiltonian
         real*8, dimension(:,:) :: H_N
+        ! H_2N: double size Hamiltonian
+        ! H_2N_L: left part Hamiltonian
+        ! H_2N_R: right part Hamiltonian
+        ! Htmp: temporary variable to save H_2N
         real*8, dimension(:,:), allocatable :: H_2N, H_2N_L, H_2N_R, Htmp
+        ! N: number of subsystems
+        ! niter: number of iterations for the RSRG
+        ! ii: variable to loop 
+        ! info: stat flag
         integer :: N, niter, ii, info 
+        ! projector
         real*8, dimension(:,:), allocatable :: P
+        ! Pauli matrix 
         real*8, dimension(2,2) :: sigma_x
+        ! eigenvalues vector
         real*8, dimension(:), allocatable :: eig
+        ! ground state value
         real*8 :: gs 
 
+        ! define sigma_x
         sigma_x(1, 1) = 0
         sigma_x(1, 2) = 1
         sigma_x(2, 1) = 1
         sigma_x(2, 2) = 0
 
+        ! allocate memory
         allocate(H_2N(2**(2*N), 2**(2*N)), &
                  H_2N_L(2**N, 2**N), &
                  H_2N_R(2**N, 2**N), &
@@ -235,10 +250,10 @@ module Ising
         call checkpoint(debug=(info.ne.0), message="Allocation failed!", &
                         end_program=.true.)
 
-        ! build H_2N
+        ! build the first H_2N
         H_2N_L = KroneckerProd(idmatr(2**(N-1)), sigma_x)
         H_2N_R = KroneckerProd(sigma_x, idmatr(2**(N-1)))
-        H_2N = KroneckerProd(H_N,  idmatr(2**N)) + KroneckerProd(idmatr(2**N), H_N) + KroneckerProd(H_2N_L, H_2N_R)
+        H_2N = KroneckerProd(H_N, idmatr(2**N)) + KroneckerProd(idmatr(2**N), H_N) + KroneckerProd(H_2N_L, H_2N_R)
 
         do ii = 1, niter 
 
@@ -249,7 +264,7 @@ module Ising
             call checkpoint(debug=(info.ne.0), message="Diagonalization failed!", &
                             end_program=.true.)
                             
-            ! build the projector
+            ! build the projector P 
             P = H_2N(:, 1:2**N) 
 
             H_2N = Htmp 
@@ -257,9 +272,7 @@ module Ising
             ! project: Htilde_N = P^+ H_2N P
             H_N = matmul(transpose(P), matmul(H_2N, P))
             
-            ! build Htilde_2N = HtildeN_L + HtildeN_R + HtildeN_int
-            !                   HtildeN*1 + 1*HtildeN + Atilde_N*Btilde_N
-            ! where Atilde_N = P^+ A P, Btilde_N = P^+ B P 
+            ! build the interaction term
             H_2N_L = matmul(transpose(P), matmul(KroneckerProd(idmatr(2**N), H_2N_L), P))
             H_2N_R = matmul(transpose(P), matmul(KroneckerProd(H_2N_R, idmatr(2**N)), P))
 
@@ -272,8 +285,10 @@ module Ising
         call checkpoint(debug=(info.ne.0), message="Diagonalization failed!", &
                         end_program=.true.)
         
+        ! save the ground state 
         gs = eig(1)
 
+        ! deallocate memory
         deallocate(H_2N, H_2N_L, H_2N_R, Htmp, P, eig)
 
         return 

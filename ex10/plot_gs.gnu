@@ -1,4 +1,4 @@
-set terminal pdf size 9, 5 font "Latin Modern Math, 25"
+set terminal pdf size 7, 5 font "Latin Modern Math, 25"
 set encoding utf8
 
 #set title "Ground state density for different N"
@@ -14,9 +14,13 @@ plot "gs_N2.txt" u 1:2 w l title "N=2", \
      f(x) title "Mean field" dt 2
 
 set output "gs_N3.pdf"
-plot "gs_N2.txt" u 1:2 w l title "N=2", \
+plot "gs_N3.txt" u 1:2 w l title "N=3", \
      f(x) title "Mean field" dt 2
 
 set output "gs_N4.pdf"
-plot "gs_N2.txt" u 1:2 w l title "N=2", \
+plot "gs_N4.txt" u 1:2 w l title "N=4", \
+     f(x) title "Mean field" dt 2
+
+set output "gs_N5.pdf"
+plot "gs_N5.txt" u 1:2 w l title "N=5", \
      f(x) title "Mean field" dt 2

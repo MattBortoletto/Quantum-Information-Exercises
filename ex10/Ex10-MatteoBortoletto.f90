@@ -7,23 +7,30 @@ program rsrg_ising
 
     implicit none 
 
-    integer :: N, kk, info, ii, ll, niter
+    ! N: number of subsystems
+    ! info: stat flag
+    ! ii, ll: variables to loop
+    ! niter: number of iterations for the RSRG
+    integer :: N, info, ii, ll, niter
+    ! Ising Hamiltonian
     real*8, dimension(:,:), allocatable :: isingH 
+    ! vector of field strenght values
     real*8, dimension(:), allocatable :: lambda 
+    ! ground state value
     real*8 :: gs 
 
     allocate(lambda(21))
-    kk = 4
+
     niter = 100
     lambda = (/((ii*0.15), ii=0,20)/) 
 
-    do N = 2, 4
+    do N = 2, 5
 
         open(unit=73, file='gs_N'//trim(str_i(N))//'.txt', action="write")
 
         do ll = 1, size(lambda)
 
-            print *, "---- N:", N, "--------------- lambda:", lambda(ll), "----" 
+            print *, "---- N:", N, "--------------- lambda:", lambda(ll) 
 
             ! ---- initialize the Hamiltonian -------------------------------------
             allocate(isingH(2**N, 2**N), stat=info)
@@ -37,7 +44,7 @@ program rsrg_ising
             ! ---------------------------------------------------------------------
 
             ! ---- save the results -----------------------------------------------
-            write(73, *) lambda(ll), gs / (n*2**(niter+1))
+            write(73, *) lambda(ll), gs / (N*2.0**(niter+1))
             ! ---------------------------------------------------------------------
 
             ! ---- deallocate memory ----------------------------------------------
