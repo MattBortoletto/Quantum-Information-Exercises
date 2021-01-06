@@ -295,4 +295,94 @@ module Ising
 
     end function RSRG 
 
+
+    function RSRG1(H_N, N, niter) result(gs)
+
+        ! Real space Renormalization Group 
+
+        ! input Hamiltonian
+        real*8, dimension(:,:) :: H_N
+        ! H_2N: double size Hamiltonian
+        ! H_2N_L: left part Hamiltonian
+        ! H_2N_R: right part Hamiltonian
+        ! Htmp: temporary variable to save H_2N
+        real*8, dimension(:,:), allocatable :: H_2N, H_2N_L, H_2N_R, Htmp
+        ! N: number of subsystems
+        ! niter: number of iterations for the RSRG
+        ! ii: variable to loop 
+        ! info: stat flag
+        integer :: N, niter, ii, info 
+        ! projector
+        real*8, dimension(:,:), allocatable :: P
+        ! Pauli matrix 
+        real*8, dimension(2,2) :: sigma_x
+        ! eigenvalues vector
+        real*8, dimension(:), allocatable :: eig
+        ! ground state final value
+        real*8 :: gs 
+        ! ground state temporary value 
+        real*8, dimension(100) :: gs_tmp
+
+        ! define sigma_x
+        sigma_x(1, 1) = 0
+        sigma_x(1, 2) = 1
+        sigma_x(2, 1) = 1
+        sigma_x(2, 2) = 0
+
+        ! allocate memory
+        allocate(H_2N(2**(2*N), 2**(2*N)), &
+                 H_2N_L(2**N, 2**N), &
+                 H_2N_R(2**N, 2**N), &
+                 Htmp(2**(2*N), 2**(2*N)), &
+                 eig(2**(2*N)), stat=info)
+        call checkpoint(debug=(info.ne.0), message="Allocation failed!", &
+                        end_program=.true.)
+
+        ! build the first H_2N
+        H_2N_L = KroneckerProd(idmatr(2**(N-1)), sigma_x)
+        H_2N_R = KroneckerProd(sigma_x, idmatr(2**(N-1)))
+        H_2N = KroneckerProd(H_N, idmatr(2**N)) + KroneckerProd(idmatr(2**N), H_N) + KroneckerProd(H_2N_L, H_2N_R)
+
+        do ii = 1, niter 
+
+            Htmp = H_2N 
+
+            ! diagonalize 
+            call DiagonalizeR(H_2N, eig, info)
+            call checkpoint(debug=(info.ne.0), message="Diagonalization failed!", &
+                            end_program=.true.)
+
+            gs_tmp(ii) = eig(1)
+            
+            if (ii .ne. 1) then 
+                if (abs(gs_tmp(ii)/(N*2.0**(ii)) - gs_tmp(ii-1)/(N*2.0**(ii-1))) .le. 1e-10) then 
+                    gs = gs_tmp(ii)/(N*2.0**(ii))
+                    print *, "Convergence at iteration", ii, abs(gs_tmp(ii)/(N*2.0**(ii)) - gs_tmp(ii-1)/(N*2.0**(ii-1)))
+                    exit 
+                end if 
+            end if 
+                            
+            ! build the projector P 
+            P = H_2N(:, 1:2**N) 
+
+            H_2N = Htmp 
+
+            ! project: Htilde_N = P^+ H_2N P
+            H_N = matmul(transpose(P), matmul(H_2N, P))
+            
+            ! build the interaction term
+            H_2N_L = matmul(transpose(P), matmul(KroneckerProd(idmatr(2**N), H_2N_L), P))
+            H_2N_R = matmul(transpose(P), matmul(KroneckerProd(H_2N_R, idmatr(2**N)), P))
+
+            H_2N = KroneckerProd(H_N, idmatr(2**N)) + KroneckerProd(idmatr(2**N), H_N) + KroneckerProd(H_2N_L, H_2N_R)
+            
+        end do 
+
+        ! deallocate memory
+        deallocate(H_2N, H_2N_L, H_2N_R, Htmp, P, eig)
+
+        return 
+
+    end function RSRG1
+
 end module Ising 
