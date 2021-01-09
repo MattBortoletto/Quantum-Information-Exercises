@@ -267,7 +267,7 @@ module Ising
             gs_tmp = eig(1)
             if (N == 2 .and. lambda == 0) then 
                 open(unit=67, file='error_gs_N2.txt', action="write", access="append")
-                write(67, *) ii, abs(-1 - gs_tmp/(N*2.0**(ii)))
+                write(67, *) ii, abs(- 1 - gs_tmp/(N*2.0**(ii)))
                 close(67)
             end if 
                             
