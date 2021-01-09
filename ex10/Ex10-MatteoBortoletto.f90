@@ -24,7 +24,7 @@ program rsrg_ising
     niter = 100
     lambda = (/((ii*0.15), ii=0,20)/) 
 
-    do N = 2, 5
+    do N = 2, 4
 
         open(unit=73, file='gs_N'//trim(str_i(N))//'.txt', action="write")
 
@@ -40,7 +40,8 @@ program rsrg_ising
             ! ---------------------------------------------------------------------
 
             ! ---- use Real Space Renormalization Group ---------------------------
-            gs = RSRG1(isingH, N, niter) 
+            gs = RSRG(isingH, N, niter, lambda(ll)) 
+            !gs = RSRG1(isingH, N, niter) 
             ! ---------------------------------------------------------------------
 
             ! ---- save the results -----------------------------------------------

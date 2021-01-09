@@ -25,6 +25,12 @@ set output "gs_N5.pdf"
 plot "gs_N5.txt" u 1:2 w l title "RSRG", \
      f(x) title "MF" dt 2
 
+set output "error_gs_N2.pdf"
+set logscale y
+set xlabel "iteration"
+set ylabel "log(error)"
+plot "error_gs_N2.txt" u 1:2 w lp title "N=2, λ=0"
+
 g(x, y) = abs(f(x) - y)
 set output "gs_diff.pdf"
 set key at graph 0.25,0.98

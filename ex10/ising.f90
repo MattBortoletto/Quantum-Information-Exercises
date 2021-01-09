@@ -210,9 +210,9 @@ module Ising
     end function idmatr
 
 
-    function RSRG(H_N, N, niter) result(gs)
+    function RSRG(H_N, N, niter, lambda) result(gs)
 
-        ! Real space Renormalization Group 
+        ! Real space Renormalization Group with fixed number of iterations
 
         ! input Hamiltonian
         real*8, dimension(:,:) :: H_N
@@ -233,7 +233,7 @@ module Ising
         ! eigenvalues vector
         real*8, dimension(:), allocatable :: eig
         ! ground state value
-        real*8 :: gs 
+        real*8 :: gs, gs_tmp, lambda
 
         ! define sigma_x
         sigma_x(1, 1) = 0
@@ -263,6 +263,13 @@ module Ising
             call DiagonalizeR(H_2N, eig, info)
             call checkpoint(debug=(info.ne.0), message="Diagonalization failed!", &
                             end_program=.true.)
+
+            gs_tmp = eig(1)
+            if (N == 2 .and. lambda == 0) then 
+                open(unit=67, file='error_gs_N2.txt', action="write", access="append")
+                write(67, *) ii, abs(-1 - gs_tmp/(N*2.0**(ii)))
+                close(67)
+            end if 
                             
             ! build the projector P 
             P = H_2N(:, 1:2**N) 
@@ -286,7 +293,7 @@ module Ising
                         end_program=.true.)
         
         ! save the ground state 
-        gs = eig(1)
+        gs = eig(1)/(N*2.0**(niter+1))
 
         ! deallocate memory
         deallocate(H_2N, H_2N_L, H_2N_R, Htmp, P, eig)
@@ -298,7 +305,7 @@ module Ising
 
     function RSRG1(H_N, N, niter) result(gs)
 
-        ! Real space Renormalization Group 
+        ! Real space Renormalization Group with convergence check 
 
         ! input Hamiltonian
         real*8, dimension(:,:) :: H_N
