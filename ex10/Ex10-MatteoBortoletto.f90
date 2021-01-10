@@ -40,8 +40,8 @@ program rsrg_ising
             ! ---------------------------------------------------------------------
 
             ! ---- use Real Space Renormalization Group ---------------------------
-            gs = RSRG(isingH, N, niter, lambda(ll)) 
-            !gs = RSRG1(isingH, N, niter) 
+            !gs = RSRG(isingH, N, niter, lambda(ll)) 
+            gs = RSRG1(isingH, N, niter) 
             ! ---------------------------------------------------------------------
 
             ! ---- save the results -----------------------------------------------
